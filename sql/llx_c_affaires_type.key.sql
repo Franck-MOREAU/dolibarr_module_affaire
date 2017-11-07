@@ -1,5 +1,5 @@
--- ===================================================================
--- Copyright (C) 2014 HENRY Florian	<florian.henry@atm-consulting.fr>
+-- ========================================================================
+-- Copyright (C) 2015 	   Florian Henry  <florian.henry@atm-consulting.fr>
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -14,7 +14,6 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program. If not, see <http://www.gnu.org/licenses/>.
 --
--- ===================================================================
+-- ========================================================================
 
-
-ALTER TABLE llx_lead_extrafields ADD INDEX idxlead_extrafields (fk_object);
+ALTER TABLE llx_c_affaires_type ADD UNIQUE INDEX uk_c_affaires_type_code(code);

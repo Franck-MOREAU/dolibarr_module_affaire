@@ -14,7 +14,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-CREATE TABLE IF NOT EXISTS llx_c_lead_type
+CREATE TABLE IF NOT EXISTS llx_c_affaires_type
 (
   rowid       integer AUTO_INCREMENT PRIMARY KEY,
   code 		varchar(10) NOT NULL,

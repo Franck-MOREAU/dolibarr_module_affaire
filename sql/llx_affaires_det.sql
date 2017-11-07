@@ -1,5 +1,5 @@
 -- ========================================================================
--- Copyright (C) 2015 	   Florian Henry  <florian.henry@atm-consulting.fr>
+-- Copyright (C) 2014 Florian HENRY	<florian.henry@atm-consulting.fr>
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -16,4 +16,16 @@
 --
 -- ========================================================================
 
-ALTER TABLE llx_c_lead_type ADD UNIQUE INDEX uk_c_lead_type_code(code);
+CREATE TABLE IF NOT EXISTS llx_affaires_det
+(
+  rowid                     integer AUTO_INCREMENT PRIMARY KEY,
+  fk_gamme                 integer NOT NULL,
+  fk_silhouette            integer NOT NULL,
+  fk_genre                 integer NOT NULL,
+  fk_carrosserie           integer NOT NULL,
+  fk_status                integer NOT NULL,
+  fk_marque_trt            integer,
+  fk_motifs                varchar(255),
+  fk_commande              integer
+) ENGINE=innodb;
+

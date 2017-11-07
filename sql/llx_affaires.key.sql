@@ -14,11 +14,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ALTER TABLE llx_lead ADD INDEX idx_llx_lead_fk_c_status (fk_c_status);
-ALTER TABLE llx_lead ADD CONSTRAINT llx_lead_ibfk_1 FOREIGN KEY (fk_c_status) REFERENCES llx_c_lead_status (rowid);
+ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_fk_c_type (fk_c_type);
+ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_2 FOREIGN KEY (fk_c_type) REFERENCES llx_c_lead_type (rowid);
 
-ALTER TABLE llx_lead ADD INDEX idx_llx_lead_fk_c_type (fk_c_type);
-ALTER TABLE llx_lead ADD CONSTRAINT llx_lead_ibfk_2 FOREIGN KEY (fk_c_type) REFERENCES llx_c_lead_type (rowid);
-
-ALTER TABLE llx_lead ADD INDEX idx_llx_lead_fk_soc (fk_soc);
-ALTER TABLE llx_lead ADD CONSTRAINT llx_lead_ibfk_3 FOREIGN KEY (fk_soc) REFERENCES llx_societe (rowid);
+ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_fk_soc (fk_soc);
+ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_3 FOREIGN KEY (fk_soc) REFERENCES llx_societe (rowid);

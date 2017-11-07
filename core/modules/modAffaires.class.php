@@ -184,40 +184,94 @@ class modAffaires extends DolibarrModules
 		$this->dictionnaries = array(
 			'langs' => 'lead@lead',
 			'tabname' => array(
-				MAIN_DB_PREFIX . "c_lead_status",
-				MAIN_DB_PREFIX . "c_lead_type"
+				MAIN_DB_PREFIX . "c_affaires_status",
+				MAIN_DB_PREFIX . "c_affaires_type",
+				MAIN_DB_PREFIX . "c_affaires_gamme",
+				MAIN_DB_PREFIX . "c_affaires_silouhette",
+				MAIN_DB_PREFIX . "c_affaires_genre",
+				MAIN_DB_PREFIX . "c_affaires_carrosserie",
+				MAIN_DB_PREFIX . "c_affaires_marques",
+				MAIN_DB_PREFIX . "c_affaires_motif_perte_lead"
 			),
 			'tablib' => array(
-				"LeadStatusDict",
-				"LeadTypeDict"
+				"Affaires -- status",
+				"Affaires -- type",
+				"Affaires -- Gammes de véhicules",
+				"Affaires -- Géométries d'essieux",
+				"Affaires -- Genres de véhicules",
+				"Affaires -- Carrosseries",
+				"Affaires -- Marques de véhicules",
+				"Affaires -- Motifs de perte d'affaires"	
 			),
 			'tabsql' => array(
-				'SELECT f.rowid as rowid, f.code, f.label, f.active FROM ' . MAIN_DB_PREFIX . 'c_lead_status as f',
-				'SELECT f.rowid as rowid, f.code, f.label, f.active FROM ' . MAIN_DB_PREFIX . 'c_lead_type as f'
+				'SELECT f.rowid as rowid, f.code, f.label, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_status as f',
+				'SELECT f.rowid as rowid, f.code, f.label, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_type as f',
+				'SELECT f.rowid as rowid, f.gamme as nom, f.cv as canal, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_gamme as f',
+				'SELECT f.rowid as rowid, f.silouhette as nom, f.cv as canal, f.rep as reprise, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_silouhette as f',
+				'SELECT f.rowid as rowid, f.genre as nom, f.rep as reprise, f.cv as canal, f.del_rg as delais, f.labelexcel, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_genre as f',
+				'SELECT f.rowid as rowid, f.carrosserie as nom, f.labelexcel, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_carrosserie as f',
+				'SELECT f.rowid as rowid, f.marque as nom, f.labelexcel, f.active  FROM ' . MAIN_DB_PREFIX . 'c_affaires_marques as f',
+				'SELECT f.rowid as rowid, f.motif as nom, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_motif_perte_lead as f'
 			),
 			'tabsqlsort' => array(
-				'code ASC',
-				'code ASC'
+				'rowid ASC',
+				'rowid ASC',
+				'rowid ASC',
+				'rowid ASC',
+				'rowid ASC',
+				'rowid ASC',
+				'rowid ASC',
+				'rowid ASC'
 			),
 			'tabfield' => array(
 				"code,label",
-				"code,label"
+				"code,label",
+				"nom,canal",
+				"nom,canal,reprise",
+				"nom,canal,reprise,delais,labelexcel",
+				"nom",
+				"nom,labelexcel",
+				"nom"
 			),
 			'tabfieldvalue' => array(
-				"code,label",
-				"code,label"
+					"code,label",
+					"code,label",
+					"nom,canal",
+					"nom,canal,reprise",
+					"nom,canal,reprise,delais,labelexcel",
+					"nom",
+					"nom,labelexcel",
+					"nom"
 			),
 			'tabfieldinsert' => array(
 				"code,label",
-				"code,label"
+				"code,label",
+				"gamme,cv",
+				"silouhette,cv,rep",
+				"genre,cv,rep,del_rg,labelexcel",
+				"carrosserie,labelexcel",
+				"marque,labelexcel",
+				"motif"
 			),
 			'tabrowid' => array(
-				"rowid",
-				"rowid"
+					"rowid",
+					"rowid",
+					"rowid",
+					"rowid",
+					"rowid",
+					"rowid",
+					"rowid",
+					"rowid"
 			),
 			'tabcond' => array(
-				'$conf->lead->enabled',
-				'$conf->lead->enabled'
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled',
+				'$conf->affaires->enabled'
 			)
 		);
 
