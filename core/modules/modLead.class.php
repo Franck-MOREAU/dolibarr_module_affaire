@@ -28,7 +28,7 @@ include_once DOL_DOCUMENT_ROOT . "/core/modules/DolibarrModules.class.php";
 /**
  * Description and activation class for module Lead
  */
-class modAffaire extends DolibarrModules
+class modAffaires extends DolibarrModules
 {
 
 	/**
@@ -52,7 +52,7 @@ class modAffaire extends DolibarrModules
 
 		// Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
 		// It is used to group modules in module setup page
-		$this->family = "crm";
+		$this->family = "other";
 		// Module label (no space allowed)
 		// used if translation string 'ModuleXXXName' not found
 		// (where XXX is value of numeric property 'numero' of module)
