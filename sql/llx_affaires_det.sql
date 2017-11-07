@@ -18,14 +18,20 @@
 
 CREATE TABLE IF NOT EXISTS llx_affaires_det
 (
-  rowid                     integer AUTO_INCREMENT PRIMARY KEY,
-  fk_gamme                 integer NOT NULL,
-  fk_silhouette            integer NOT NULL,
-  fk_genre                 integer NOT NULL,
-  fk_carrosserie           integer NOT NULL,
-  fk_status                integer NOT NULL,
-  fk_marque_trt            integer,
-  fk_motifs                varchar(255),
-  fk_commande              integer
+rowid                     integer AUTO_INCREMENT PRIMARY KEY,
+fk_affaires				 integer NOT NULL,
+fk_gamme                 integer NOT NULL,
+fk_silhouette            integer NOT NULL,
+fk_genre                 integer NOT NULL,
+fk_carrosserie           integer NOT NULL,
+fk_status                integer NOT NULL,
+fk_marque_trt            integer,
+fk_motifs                varchar(255),
+fk_commande              integer,
+spec					 varchar(255),
+fk_user_author	int(11) NOT NULL,
+datec			datetime NOT NULL,
+fk_user_mod		int(11) NOT NULL,
+tms	 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ) ENGINE=innodb;
 
