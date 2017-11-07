@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/dolibarr_module_mydoliboard"/>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/dolibarr_module_mylist"/>
 	<buildpathentry combineaccessrules="false" kind="prj" path="/dolibarr"/>
-	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/dolibarr_module_referenceletters"/>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/dolibarr_module_subtotal"/>
 	<buildpathentry kind="src" path=""/>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/dolibarr_module_volvo"/>
+	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 </buildpath>

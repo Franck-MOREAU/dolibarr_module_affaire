@@ -28,7 +28,7 @@ include_once DOL_DOCUMENT_ROOT . "/core/modules/DolibarrModules.class.php";
 /**
  * Description and activation class for module Lead
  */
-class modLead extends DolibarrModules
+class modAffaire extends DolibarrModules
 {
 
 	/**
@@ -46,9 +46,9 @@ class modLead extends DolibarrModules
 		// Id for module (must be unique).
 		// Use a free id here
 		// (See in Home -> System information -> Dolibarr for list of used modules id).
-		$this->numero = 103111;
+		$this->numero = 101751;
 		// Key text used to identify module (for permissions, menus, etc...)
-		$this->rights_class = 'lead';
+		$this->rights_class = 'affaires';
 
 		// Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
 		// It is used to group modules in module setup page
@@ -56,16 +56,16 @@ class modLead extends DolibarrModules
 		// Module label (no space allowed)
 		// used if translation string 'ModuleXXXName' not found
 		// (where XXX is value of numeric property 'numero' of module)
-		$this->name = preg_replace('/^mod/i', '', get_class($this));
+		$this->name = 'Affaires';
 		// Module description
 		// used if translation string 'ModuleXXXDesc' not found
 		// (where XXX is value of numeric property 'numero' of module)
-		$this->description = "Description of module Lead";
+		$this->description = "Module de suivis des affaires";
 		// Possible values for version are: 'development', 'experimental' or version
-		$this->version = '1.12';
+		$this->version = '1.0';
 		// Key used in llx_const table to save module status enabled/disabled
 		// (where MYMODULE is value of property name of module in uppercase)
-		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
+		$this->const_name = 'MAIN_MODULE_AFFAIRE';
 		// Where to store the module in setup page
 		// (0=common,1=interface,2=others,3=very specific)
 		$this->special = 0;
@@ -74,7 +74,7 @@ class modLead extends DolibarrModules
 		// use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png
 		// use this->picto='pictovalue@module'
-		$this->picto = 'lead@lead'; // mypicto@lead
+		$this->picto = 'affaires@affaires'; // mypicto@lead
 		                            // Defined all module parts (triggers, login, substitutions, menus, css, etc...)
 		                            // for default path (eg: /lead/core/xxxxx) (0=disable, 1=enable)
 		                            // for specific path of parts (eg: /lead/core/modules/barcode)
@@ -95,7 +95,7 @@ class modLead extends DolibarrModules
 		// Set this to relative path of css if module has its own css file
 		// 'css' => '/lead/css/mycss.css.php',
 		// Set here all hooks context managed by module
-			'hooks' => array('commonobject','commcard','propalcard','contractcard','ordercard','searchform'),
+			'hooks' => array('commonobject','searchform'),
 		// Set here all workflow context managed by module
 		// 'workflow' => array('order' => array('WORKFLOW_ORDER_AUTOCREATE_INVOICE'))
 				);
@@ -103,14 +103,14 @@ class modLead extends DolibarrModules
 		// Data directories to create when module is enabled.
 		// Example: this->dirs = array("/lead/temp");
 		$this->dirs = array(
-			'/lead',
-			'/lead/stats'
+			'/affaires',
+			'/affaires/stats'
 		);
 
 		// Config pages. Put here list of php pages
 		// stored into lead/admin directory, used to setup module.
 		$this->config_page_url = array(
-			"admin_lead.php@lead"
+			"admin_affaires.php@affaires"
 		);
 
 		// Dependencies
@@ -125,77 +125,30 @@ class modLead extends DolibarrModules
 		);
 		// Minimum version of Dolibarr required by module
 		$this->need_dolibarr_version = array(
-			3,
-			7
+			6,
+			0
 		);
 		$this->langfiles = array(
-			"lead@lead"
-		); // langfiles@lead
-		                                       // Constants
-		                                       // List of particular constants to add when module is enabled
-		                                       // (key, 'chaine', value, desc, visible, 'current' or 'allentities', deleteonunactive)
-		                                       // Example:
+			"affaires@affaires"
+		); 
+		
 		$this->const = array(
 			0 => array(
-				'LEAD_ADDON',
+				'AFFAIRES_ADDON',
 				'chaine',
-				'mod_lead_simple',
+				'mod_affaires_simple',
 				'Numbering lead rule',
 				0,
 				'current',
 				1
 			),
-			1 => array(
-				'LEAD_UNIVERSAL_MASK',
-				'chaine',
-				'',
-				'Numbering lead rule',
-				0,
-				'current',
-				1
-			),
-			2 => array(
-				'LEAD_NB_DAY_COSURE_AUTO',
-				'chaine',
-				'30',
-				'Numbering lead rule',
-				0,
-				'current',
-				1
-			),
-			3 => array(
-				'LEAD_GRP_USER_AFFECT',
-				'chaine',
-				'',
-				'User Group that can affected',
-				0,
-				'current',
-				1
-			),
-			4 => array(
-				'LEAD_FORCE_USE_THIRDPARTY',
-				'yesno',
-				'1',
-				'force LEad to use customer',
-				0,
-				'current',
-				1
-			),
-			5 => array(
-				'LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT',
-				'yesno',
-				'0',
-				'Allow to attach several leads to a single contract',
-				0,
-				'current',
-				1
-			)
+			
 		);
 
 		// Array to add new pages in new tabs
 		// Example:
-		$this->tabs = array(
-			'thirdparty:+tabLead:Module103111Name:lead@lead:$user->rights->lead->read && ($object->client > 0 || $soc->client > 0):/lead/lead/list.php?socid=__ID__',
+		//$this->tabs = array(
+			//'thirdparty:+tabLead:Module103111Name:lead@lead:$user->rights->lead->read && ($object->client > 0 || $soc->client > 0):/lead/lead/list.php?socid=__ID__',
 			//'invoice:+tabAgefodd:AgfMenuSess:agefodd@agefodd:/lead/lead/list.php?search_invoiceid=__ID__',
 			//'propal:+tabAgefodd:AgfMenuSess:agefodd@agefodd:/lead/lead/list.php?search_propalid=__ID__',
 		// // To add a new tab identified by code tabname1
@@ -204,7 +157,7 @@ class modLead extends DolibarrModules
 		// 'objecttype:+tabname2:Title2:langfile@lead:$user->rights->othermodule->read:/lead/mynewtab2.php?id=__ID__',
 		// // To remove an existing tab identified by code tabname
 		// 'objecttype:-tabname'
-				);
+		//		);
 		// where objecttype can be
 		// 'thirdparty' to add a tab in third party view
 		// 'intervention' to add a tab in intervention view
@@ -223,9 +176,9 @@ class modLead extends DolibarrModules
 		// 'categories_x' to add a tab in category view
 		// (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
 		// Dictionnaries
-		if (! isset($conf->lead->enabled)) {
-			$conf->lead = (object) array();
-			$conf->lead->enabled = 0;
+		if (! isset($conf->affaires->enabled)) {
+			$conf->affaires = (object) array();
+			$conf->affaires->enabled = 0;
 		}
 
 		$this->dictionnaries = array(
@@ -274,9 +227,9 @@ class modLead extends DolibarrModules
 		$r = 0;
 		// Example:
 
-		$this->boxes[$r][1] = "box_lead_current@lead";
-		$r ++;
-		$this->boxes[$r][1] = "box_lead_late@lead";
+		//$this->boxes[$r][1] = "box_lead_current@lead";
+		//$r ++;
+		//$this->boxes[$r][1] = "box_lead_late@lead";
 		/*
 		 * $this->boxes[$r][1] = "myboxb.php"; $r++;
 		 */
@@ -284,28 +237,28 @@ class modLead extends DolibarrModules
 		// Permissions
 		$this->rights = array(); // Permission array used by this module
 		$r = 0;
-		$this->rights[$r][0] = 1031111;
-		$this->rights[$r][1] = 'See Leads';
+		$this->rights[$r][0] = 1017511;
+		$this->rights[$r][1] = 'Voir les affaires';
 		$this->rights[$r][3] = 1;
 		$this->rights[$r][4] = 'read';
 		$r ++;
 
-		$this->rights[$r][0] = 1031112;
-		$this->rights[$r][1] = 'Update Leads';
+		$this->rights[$r][0] = 1017512;
+		$this->rights[$r][1] = 'Modifier les affaires';
 		$this->rights[$r][3] = 1;
 		$this->rights[$r][4] = 'write';
 		$r ++;
 
-		$this->rights[$r][0] = 1031113;
-		$this->rights[$r][1] = 'Delete Leads';
+		$this->rights[$r][0] = 1017513;
+		$this->rights[$r][1] = 'Supprimer les affaires';
 		$this->rights[$r][3] = 1;
 		$this->rights[$r][4] = 'delete';
 		$r ++;
 
-		$this->rights[$r][0] = 1031114;
-		$this->rights[$r][1] = 'Export Leads';
+		$this->rights[$r][0] = 1017514;
+		$this->rights[$r][1] = 'Etendre a toutes les affaires';
 		$this->rights[$r][3] = 1;
-		$this->rights[$r][4] = 'export';
+		$this->rights[$r][4] = 'all';
 		$r ++;
 
 		// $r++;
@@ -316,465 +269,218 @@ class modLead extends DolibarrModules
 		$this->menu[$r] = array(
 			'fk_menu' => 0,
 			'type' => 'top',
-			'titre' => 'Module103111Name',
-			'mainmenu' => 'lead',
+			'titre' => 'Affaires',
+			'mainmenu' => 'affaires',
 			'leftmenu' => '0',
-			'url' => '/lead/index.php',
-			'langs' => 'lead@lead',
+			'url' => '/affaires/index.php',
+			'langs' => 'affaires@affaires',
 			'position' => 100,
-			'enabled' => '$user->rights->lead->read',
-			'perms' => '$user->rights->lead->read',
+			'enabled' => '$user->rights->affaires->read',
+			'perms' => '$user->rights->affaires->read',
 			'target' => '',
 			'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-			'fk_menu' => 'fk_mainmenu=lead',
+			'fk_menu' => 'fk_mainmenu=affaires',
 			'type' => 'left',
-			'titre' => 'Module103111Name',
-			'leftmenu' => 'Module103111Name',
-			'url' => '/lead/lead/list.php',
-			'langs' => 'lead@lead',
+			'titre' => 'Affaires',
+			'leftmenu' => 'affaires',
+			'url' => '/affaires/form/list.php',
+				'langs' => 'affaires@affaires',
 			'position' => 100+$r,
-			'enabled' => '$user->rights->volvo->stat_all',
-			'perms' => '$user->rights->volvo->stat_all',
+			'enabled' => '$user->rights->affaires->all',
+			'perms' => '$user->rights->affaires->all',
 			'target' => '',
 			'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-			'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=Module103111Name',
+			'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
 			'type' => 'left',
-			'titre' => 'LeadListCurrent',
-			'url' => '/lead/lead/list.php?viewtype=current',
-			'langs' => 'lead@lead',
+			'titre' => 'Affaires en cours',
+			'url' => '/affaires/form/list.php?viewtype=current',
+			'langs' => 'affaires@affaires',
 			'position' => 100+$r,
-			'enabled' => '$user->rights->volvo->stat_all',
-			'perms' => '$user->rights->volvo->stat_all',
+			'enabled' => '$user->rights->affaires->all',
+			'perms' => '$user->rights->affaires->all',
 			'target' => '',
 			'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=Module103111Name',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
 				'type' => 'left',
 				'titre' => 'Affaires chaude',
-				'url' => '/lead/lead/list.php?viewtype=hot',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=hot',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->volvo->stat_all',
-				'perms' => '$user->rights->volvo->stat_all',
+				'enabled' => '$user->rights->affaires->all',
+				'perms' => '$user->rights->affaires->all',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=Module103111Name',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
 				'type' => 'left',
 				'titre' => 'Affaires traitées',
-				'url' => '/lead/lead/list.php?viewtype=won',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=won',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->volvo->stat_all',
-				'perms' => '$user->rights->volvo->stat_all',
+				'enabled' => '$user->rights->affaires->all',
+				'perms' => '$user->rights->affaires->all',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=Module103111Name',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
 				'type' => 'left',
 				'titre' => 'Affaires sans suite',
-				'url' => '/lead/lead/list.php?viewtype=cancel',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=cancel',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->volvo->stat_all',
-				'perms' => '$user->rights->volvo->stat_all',
+				'enabled' => '$user->rights->affaires->all',
+				'perms' => '$user->rights->affaires->all',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=Module103111Name',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
 				'type' => 'left',
 				'titre' => 'Affaires perdues',
-				'url' => '/lead/lead/list.php?viewtype=lost',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=lost',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->volvo->stat_all',
-				'perms' => '$user->rights->volvo->stat_all',
+				'enabled' => '$user->rights->affaires->all',
+				'perms' => '$user->rights->affaires->all',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead',
+				'fk_menu' => 'fk_mainmenu=affaires',
 				'type' => 'left',
 				'titre' => 'Portefeuille',
 				'leftmenu' => 'my',
-				'url' => '/volvo/lead/lead_portfolio.php',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/lead_portfolio.php',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->read',
-				'perms' => '$user->rights->lead->read',
+				'enabled' => '$user->rights->affaires->read',
+				'perms' => '$user->rights->affaires->read',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=my',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=my',
 				'type' => 'left',
-				'titre' => 'LeadCreate',
-				'url' => '/lead/lead/card.php?action=create',
-				'langs' => 'lead@lead',
+				'titre' => 'Nouvelle affaire',
+				'url' => '/affaires/form/card.php?action=create',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->write',
-				'perms' => '$user->rights->lead->write',
+				'enabled' => '$user->rights->affaires->write',
+				'perms' => '$user->rights->affaires->write',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-			'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=my',
+			'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=my',
 			'type' => 'left',
-			'titre' => 'LeadListMyLead',
+			'titre' => 'Mes affaires',
 			'leftmenu' => 'mylead',
-			'url' => '/lead/lead/list.php?viewtype=my',
-			'langs' => 'lead@lead',
+			'url' => '/affaires/form/list.php?viewtype=my',
+			'langs' => 'affaires@affaires',
 			'position' => 100+$r,
-			'enabled' => '$user->rights->lead->read',
-			'perms' => '$user->rights->lead->read',
+			'enabled' => '$user->rights->affaires->read',
+			'perms' => '$user->rights->affaires->read',
 			'target' => '',
 			'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
 				'type' => 'left',
 				'titre' => 'mes affaires en cours',
-				'url' => '/lead/lead/list.php?viewtype=mycurrent',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=mycurrent',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->read',
-				'perms' => '$user->rights->lead->read',
+				'enabled' => '$user->rights->affaires->read',
+				'perms' => '$user->rights->affaires->read',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
 				'type' => 'left',
 				'titre' => 'mes affaires Chaudes',
-				'url' => '/lead/lead/list.php?viewtype=myhot',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=myhot',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->read',
-				'perms' => '$user->rights->lead->read',
+				'enabled' => '$user->rights->affaires->read',
+				'perms' => '$user->rights->affaires->read',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
 				'type' => 'left',
 				'titre' => 'mes affaires traitées',
-				'url' => '/lead/lead/list.php?viewtype=mywon',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=mywon',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->read',
-				'perms' => '$user->rights->lead->read',
+				'enabled' => '$user->rights->affaires->read',
+				'perms' => '$user->rights->affaires->read',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
 				'type' => 'left',
 				'titre' => 'mes affaires sans suite',
-				'url' => '/lead/lead/list.php?viewtype=mycancel',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=mycancel',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->read',
-				'perms' => '$user->rights->lead->read',
+				'enabled' => '$user->rights->affaires->read',
+				'perms' => '$user->rights->affaires->read',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
 				'type' => 'left',
 				'titre' => 'mes affaires perdues',
-				'url' => '/lead/lead/list.php?viewtype=mylost',
-				'langs' => 'lead@lead',
+				'url' => '/affaires/form/list.php?viewtype=mylost',
+				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
-				'enabled' => '$user->rights->lead->read',
-				'perms' => '$user->rights->lead->read',
+				'enabled' => '$user->rights->affaires->read',
+				'perms' => '$user->rights->affaires->read',
 				'target' => '',
 				'user' => 0
 		);
 		$r ++;
-
-
-
-
-
-// 		$this->menu[$r] = array(
-// 			'fk_menu' => 'fk_mainmenu=lead,fk_leftmenu=Module103111Name',
-// 			'type' => 'left',
-// 			'titre' => 'LeadListLate',
-// 			'url' => '/lead/lead/list.php?viewtype=late',
-// 			'langs' => 'lead@lead',
-// 			'position' => 100+$r,
-// 			'enabled' => '$user->rights->lead->read',
-// 			'perms' => '$user->rights->lead->read',
-// 			'target' => '',
-// 			'user' => 0
-// 		);
-// 		$r ++;
-
-		// Exports
-		$r = 0;
-		$r ++;
-		$this->export_code [$r] = $this->rights_class . '_' . $r;
-		$this->export_label [$r] = 'ExportDataset_lead';
-		$this->export_icon [$r] = 'lead@lead';
-		$this->export_permission [$r] = array (
-				array (
-						"lead",
-						"export"
-				)
-		);
-		$this->export_fields_array [$r] = array (
-				'l.rowid' => 'Id',
-				'l.ref' => 'Ref',
-				'l.ref_ext' => 'LeadRefExt',
-				'l.ref_int' => 'LeadRefInt',
-				'so.nom' => 'Company',
-				'dictstep.code' => 'LeadStepCode',
-				'dictstep.label' => 'LeadStepLabel',
-				'dicttype.code' => 'LeadTypeCode',
-				'dicttype.label' => 'LeadTypeLabel',
-				'l.date_closure' => 'LeadDeadLine',
-				'l.amount_prosp' => 'LeadAmountGuess',
-				'l.description' => 'LeadDescription',
-		);
-		$this->export_TypeFields_array [$r] = array (
-				'l.rowid' => 'Text',
-				'l.ref' => 'Text',
-				'l.ref_ext' => 'Text',
-				'l.ref_int' => 'Text',
-				'so.nom' => 'Text',
-				'dictstep.code' => 'Text',
-				'dictstep.label' => 'Text',
-				'dicttype.code' => 'Text',
-				'dicttype.label' => 'Text',
-				'l.date_closure' => 'Date',
-				'l.amount_prosp' => 'Numeric',
-				'l.description' => 'Text',
-		);
-		$this->export_entities_array [$r] = array (
-				'l.rowid' => 'lead@lead',
-				'l.ref' => 'lead@lead',
-				'l.ref_ext' => 'lead@lead',
-				'l.ref_int' => 'lead@lead',
-				'so.nom' => 'company',
-				'dictstep.code' => 'lead@lead',
-				'dictstep.label' => 'lead@lead',
-				'dicttype.code' => 'lead@lead',
-				'dicttype.label' => 'lead@lead',
-				'l.date_closure' => 'lead@lead',
-				'l.amount_prosp' => 'lead@lead',
-				'l.description' => 'lead@lead',
-		);
-
-		$this->export_sql_start [$r] = 'SELECT DISTINCT ';
-		$this->export_sql_end [$r] = ' FROM ' . MAIN_DB_PREFIX . 'lead as l';
-		$this->export_sql_end [$r] .=  " LEFT JOIN " . MAIN_DB_PREFIX . "societe as so ON so.rowid=l.fk_soc";
-		$this->export_sql_end [$r] .=  " LEFT JOIN " . MAIN_DB_PREFIX . "user as usr ON usr.rowid=l.fk_user_resp";
-		$this->export_sql_end [$r] .=  " LEFT JOIN " . MAIN_DB_PREFIX . "c_lead_status as dictstep ON dictstep.rowid=l.fk_c_status";
-		$this->export_sql_end [$r] .=  " LEFT JOIN " . MAIN_DB_PREFIX . "c_lead_type as dicttype ON dicttype.rowid=l.fk_c_type";
-		$this->export_sql_end [$r] .=  " LEFT JOIN " . MAIN_DB_PREFIX . "lead_extrafields as extra ON extra.fk_object=l.rowid";
-		$this->export_sql_end [$r] .= ' WHERE l.entity IN (' . getEntity("lead", 1) . ')';
-
-		// Add extra fields
-		$sql="SELECT name, label, type, param FROM ".MAIN_DB_PREFIX."extrafields WHERE elementtype = 'lead'";
-		$resql=$this->db->query($sql);
-		if ($resql)    // This can fail when class is used on old database (during migration for example)
-		{
-			while ($obj=$this->db->fetch_object($resql))
-			{
-				$fieldname='extra.'.$obj->name;
-				$fieldlabel=ucfirst($obj->label);
-				$typeFilter="Text";
-				switch($obj->type)
-				{
-					case 'int':
-					case 'double':
-					case 'price':
-						$typeFilter="Numeric";
-						break;
-					case 'date':
-					case 'datetime':
-						$typeFilter="Date";
-						break;
-					case 'boolean':
-						$typeFilter="Boolean";
-						break;
-					case 'sellist':
-						$typeFilter="List:".$obj->param;
-						break;
-				}
-				$this->export_fields_array[$r][$fieldname]=$fieldlabel;
-				$this->export_TypeFields_array[$r][$fieldname]=$typeFilter;
-				$this->export_entities_array[$r][$fieldname]='lead';
-			}
-		}
-
-
-
-		//Export propal not linked with lead
-		$r ++;
-		$this->export_code [$r] = $this->rights_class . '_' . $r;
-		$this->export_label [$r] = 'ExportDataset_leadPropal';
-		$this->export_icon [$r] = 'lead@lead';
-		$this->export_permission [$r] = array (
-				array (
-						"lead",
-						"export"
-				)
-		);
-		$this->export_fields_array [$r] = array (
-				'p.rowid' => 'Id',
-				'p.ref' => 'Ref',
-				'so.nom' => 'Company',
-				'p.total' => 'TotalTTC',
-				'p.fk_statut' => 'Status',
-		);
-		$this->export_TypeFields_array [$r] = array (
-				'p.rowid' => 'Text',
-				'p.ref' => 'Text',
-				'so.nom' => 'Text',
-				'p.total' => 'Numeric',
-				'p.fk_statut' => 'Status',
-		);
-		$this->export_entities_array [$r] = array (
-				'p.rowid' => 'propal',
-				'p.ref' => 'propal',
-				'so.nom' => 'company',
-				'p.total' => 'propal',
-				'p.fk_statut' => 'propal',
-		);
-
-		$this->export_sql_start [$r] = 'SELECT DISTINCT ';
-		$this->export_sql_end [$r] = ' FROM ' . MAIN_DB_PREFIX . 'propal as p';
-		$this->export_sql_end [$r] .=  " INNER JOIN " . MAIN_DB_PREFIX . "societe as so ON so.rowid=p.fk_soc";
-		$this->export_sql_end [$r] .= ' WHERE so.entity IN (' . getEntity("societe", 1) . ')';
-		$this->export_sql_end [$r] .= '  AND p.rowid NOT IN (SELECT t.fk_source FROM ' . MAIN_DB_PREFIX . 'element_element as t WHERE t.sourcetype=\'propal\' AND t.targettype=\'lead\')';
-
-
-		// Example:
-		// $this->export_code[$r]=$this->rights_class.'_'.$r;
-		// // Translation key (used only if key ExportDataset_xxx_z not found)
-		// $this->export_label[$r]='CustomersInvoicesAndInvoiceLines';
-		// // Condition to show export in list (ie: '$user->id==3').
-		// // Set to 1 to always show when module is enabled.
-		// $this->export_enabled[$r]='1';
-		// $this->export_permission[$r]=array(array("facture","facture","export"));
-		// $this->export_fields_array[$r]=array(
-		// 's.rowid'=>"IdCompany",
-		// 's.nom'=>'CompanyName',
-		// 's.address'=>'Address',
-		// 's.cp'=>'Zip',
-		// 's.ville'=>'Town',
-		// 's.fk_pays'=>'Country',
-		// 's.tel'=>'Phone',
-		// 's.siren'=>'ProfId1',
-		// 's.siret'=>'ProfId2',
-		// 's.ape'=>'ProfId3',
-		// 's.idprof4'=>'ProfId4',
-		// 's.code_compta'=>'CustomerAccountancyCode',
-		// 's.code_compta_fournisseur'=>'SupplierAccountancyCode',
-		// 'f.rowid'=>"InvoiceId",
-		// 'f.facnumber'=>"InvoiceRef",
-		// 'f.datec'=>"InvoiceDateCreation",
-		// 'f.datef'=>"DateInvoice",
-		// 'f.total'=>"TotalHT",
-		// 'f.total_ttc'=>"TotalTTC",
-		// 'f.tva'=>"TotalVAT",
-		// 'f.paye'=>"InvoicePaid",
-		// 'f.fk_statut'=>'InvoiceStatus',
-		// 'f.note'=>"InvoiceNote",
-		// 'fd.rowid'=>'LineId',
-		// 'fd.description'=>"LineDescription",
-		// 'fd.price'=>"LineUnitPrice",
-		// 'fd.tva_tx'=>"LineVATRate",
-		// 'fd.qty'=>"LineQty",
-		// 'fd.total_ht'=>"LineTotalHT",
-		// 'fd.total_tva'=>"LineTotalTVA",
-		// 'fd.total_ttc'=>"LineTotalTTC",
-		// 'fd.date_start'=>"DateStart",
-		// 'fd.date_end'=>"DateEnd",
-		// 'fd.fk_product'=>'ProductId',
-		// 'p.ref'=>'ProductRef'
-		// );
-		// $this->export_entities_array[$r]=array('s.rowid'=>"company",
-		// 's.nom'=>'company',
-		// 's.address'=>'company',
-		// 's.cp'=>'company',
-		// 's.ville'=>'company',
-		// 's.fk_pays'=>'company',
-		// 's.tel'=>'company',
-		// 's.siren'=>'company',
-		// 's.siret'=>'company',
-		// 's.ape'=>'company',
-		// 's.idprof4'=>'company',
-		// 's.code_compta'=>'company',
-		// 's.code_compta_fournisseur'=>'company',
-		// 'f.rowid'=>"invoice",
-		// 'f.facnumber'=>"invoice",
-		// 'f.datec'=>"invoice",
-		// 'f.datef'=>"invoice",
-		// 'f.total'=>"invoice",
-		// 'f.total_ttc'=>"invoice",
-		// 'f.tva'=>"invoice",
-		// 'f.paye'=>"invoice",
-		// 'f.fk_statut'=>'invoice',
-		// 'f.note'=>"invoice",
-		// 'fd.rowid'=>'invoice_line',
-		// 'fd.description'=>"invoice_line",
-		// 'fd.price'=>"invoice_line",
-		// 'fd.total_ht'=>"invoice_line",
-		// 'fd.total_tva'=>"invoice_line",
-		// 'fd.total_ttc'=>"invoice_line",
-		// 'fd.tva_tx'=>"invoice_line",
-		// 'fd.qty'=>"invoice_line",
-		// 'fd.date_start'=>"invoice_line",
-		// 'fd.date_end'=>"invoice_line",
-		// 'fd.fk_product'=>'product',
-		// 'p.ref'=>'product'
-		// );
-		// $this->export_sql_start[$r] = 'SELECT DISTINCT ';
-		// $this->export_sql_end[$r] = ' FROM (' . MAIN_DB_PREFIX . 'facture as f, '
-		// . MAIN_DB_PREFIX . 'facturedet as fd, ' . MAIN_DB_PREFIX . 'societe as s)';
-		// $this->export_sql_end[$r] .= ' LEFT JOIN ' . MAIN_DB_PREFIX
-		// . 'product as p on (fd.fk_product = p.rowid)';
-		// $this->export_sql_end[$r] .= ' WHERE f.fk_soc = s.rowid '
-		// . 'AND f.rowid = fd.fk_facture';
-		// $r++;
+		
 	}
 
 	/**
@@ -820,6 +526,6 @@ class modLead extends DolibarrModules
 	 */
 	private function loadTables()
 	{
-		return $this->_load_tables('/lead/sql/');
+		return $this->_load_tables('/affaires/sql/');
 	}
 }
