@@ -65,7 +65,7 @@ class modAffaires extends DolibarrModules
 		$this->version = '1.0';
 		// Key used in llx_const table to save module status enabled/disabled
 		// (where MYMODULE is value of property name of module in uppercase)
-		$this->const_name = 'MAIN_MODULE_AFFAIRE';
+		$this->const_name = 'MAIN_MODULE_AFFAIRES';
 		// Where to store the module in setup page
 		// (0=common,1=interface,2=others,3=very specific)
 		$this->special = 0;
