@@ -27,5 +27,5 @@ description	 	text,
 fk_user_author	int(11) NOT NULL,
 datec			datetime NOT NULL,
 fk_user_mod		int(11) NOT NULL,
-tms	 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+tms	 			timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )ENGINE=InnoDB;
