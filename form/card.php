@@ -108,6 +108,16 @@ elseif ($action == 'edit') {
 	print 'Commercial: '.$user->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
+	
+	print '<tr>';
+	print '<td width="50%">';
+	print "Client: " . $object->thirdparty->getNomUrl(1);
+	print '</td>';
+	print '<td width="50%">';
+	print 'Contremarque: '.$object->contremarque->getNomUrl(1);
+	print '</td>';
+	print '</tr>';
+	
 	print '</table>';
 
 	/*
