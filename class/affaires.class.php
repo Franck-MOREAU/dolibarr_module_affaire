@@ -1321,7 +1321,7 @@ class Affaires_det extends CommonObject
  				include_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
  				$cmd = new Commande($this->db);
  				$cmd->fetch($this->fk_commande);
- 				$return.= ' - Commande: ' . $cmd->ref . ' du ' . dol_print_date($cmd->date,'day') . ' ' . $cmd->getLibStatut(2);
+ 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' ' . $cmd->getLibStatut(2);
  			}
  		}
  		
