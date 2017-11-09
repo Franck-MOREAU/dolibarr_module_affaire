@@ -1071,7 +1071,7 @@ class Affaires_det extends CommonObject
 				$line->tms = $this->db->jdate($obj->tms);
 				
 				$line->gamme_label = $line->gamme[$line->fk_gamme]->gamme;
-				$line->silhouette_label = $line->silhouette[$line->fk_silhouette]->silouhette;
+				$line->silhouette_label = $line->silhouette[$line->fk_silhouette]->silhouette;
 				$line->genre_label = $line->genre[$line->fk_genre]->genre;
 				$line->carrosserie_label = $line->carrosserie[$line->fk_carrosserie]->carrosserie;
 				$line->status_label = $line->status[$line->fk_c_status];
