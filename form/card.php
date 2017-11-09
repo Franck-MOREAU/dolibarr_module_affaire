@@ -100,32 +100,32 @@ elseif ($action == 'edit') {
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("Numéro d'affaire").': ' . $object->ref;
+	print $langs->trans("affnum").': ' . $object->ref;
 	print '</td>';
 	print '<td width="50%">';
 	$user = new User($db);
 	$user->fetch($object->fk_user_resp);
-	print $langs->trans("Commercial").': '.$user->getNomUrl(1);
+	print $langs->trans("userresp").': '.$user->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("Client").': ' . $object->thirdparty->getNomUrl(1);
+	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
 	print '</td>';
 	print '<td width="50%">';
 	if($object->fk_ctm>0){
-		print $langs->trans("Contremarque").': '.$object->contremarque->getNomUrl(1);
+		print $langs->trans("ctm").': '.$object->contremarque->getNomUrl(1);
 	}
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("Canal de vente").': ' . $object->type_label;
+	print $langs->trans("cv").': ' . $object->type_label;
 	print '</td>';
 	print '<td width="50%">';
-	print $langs->trans("Année").': '.$object->year;
+	print $langs->trans("year").': '.$object->year;
 	print '</td>';
 	print '</tr>';
 	
