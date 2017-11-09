@@ -68,9 +68,10 @@ INSERT INTO `llx_c_affaires_gamme` (`rowid`, `gamme`, `cv`, `Active`) VALUES
 (14, 'Tautliner', 6, 1),
 (15, 'Savoyarde', 6, 1),
 (16, 'Benne', 6, 1),
-(17, 'Porte Container', 6, 1);
+(17, 'Porte Container', 6, 1),
+(18, 'FMX', 4, 1);
 
-INSERT INTO `llx_c_volvo_genre` (`rowid`, `genre`, `rep`, `cv`, `del_rg`) VALUES
+INSERT INTO `llx_c_affaires_genre` (`rowid`, `genre`, `rep`, `cv`, `del_rg`) VALUES
 (1, 'Porteur', 1, 4, 54),
 (2, 'Tracteur Routier', 1, 4, 24),
 (3, 'Véhicule Utilitaire léger', 1, 5, 15),
@@ -79,7 +80,7 @@ INSERT INTO `llx_c_volvo_genre` (`rowid`, `genre`, `rep`, `cv`, `del_rg`) VALUES
 (6, 'Semie Remorque', 1, 6, 15),
 (7, 'Ensemble articulé', 1, 0, 24);
 
-INSERT INTO `llx_c_volvo_marques` (`rowid`, `marque`, `active`, `labelexcel`) VALUES
+INSERT INTO `llx_c_affaires_marques` (`rowid`, `marque`, `active`, `labelexcel`) VALUES
 (1, 'Volvo', 1, 'VOLVO'),
 (2, 'Renault', 1, 'RENAULT'),
 (3, 'Mercedes', 1, 'MERCEDES'),
@@ -96,7 +97,7 @@ INSERT INTO `llx_c_volvo_marques` (`rowid`, `marque`, `active`, `labelexcel`) VA
 (14, 'Schmitz', 1, 'SCHMITZ'),
 (15, 'Trailor', 1, 'TRAILOR');
 
-INSERT INTO `llx_c_volvo_motif_perte_lead` (`rowid`, `motif`) VALUES
+INSERT INTO `llx_c_affaires_motif_perte_lead` (`rowid`, `motif`) VALUES
 (1, 'Prix'),
 (2, 'Fidelité'),
 (3, 'Achat VO'),
@@ -116,7 +117,7 @@ INSERT INTO `llx_c_volvo_motif_perte_lead` (`rowid`, `motif`) VALUES
 (17, 'Autres motifs divers'),
 (18, 'Valeur reprise VO');
 
-INSERT INTO `llx_c_volvo_silouhette` (`rowid`, `silouhette`, `cv`, `rep`) VALUES
+INSERT INTO `llx_c_affaires_silouhette` (`rowid`, `silouhette`, `cv`, `rep`) VALUES
 (1, '4x2', 4, 1),
 (2, '4x4', 4, 1),
 (3, '6x2', 4, 1),
