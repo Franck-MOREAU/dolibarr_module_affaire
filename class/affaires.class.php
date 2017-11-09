@@ -1313,10 +1313,10 @@ class Affaires_det extends CommonObject
 			$color2= '#b2b2b2';
 		}
  		$return = '<div align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')) ';
- 		$return.= ';border-radius:6px; margin-bottom: 3px; width:100%; height:38px; padding-left:10px">';
+ 		$return.= ';border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
  		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
  		if($this->fk_status==6){
- 			$return.= ' - ' . $this->spec;
+ 			$return.= ' - Spécification' . $this->spec;
  			if($this->fk_commande > 0){
  				dol_include_once('/affaires/class/commandevolvo.class.php');
  				$cmd = new CommandeVolvo($this->db);
@@ -1324,8 +1324,6 @@ class Affaires_det extends CommonObject
  				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
  			}
  		}
- 		
- 		$return.= '</br> test ligne 2';
  		$return.= '</div>';
 		
 //		$return = var_dump($this);
