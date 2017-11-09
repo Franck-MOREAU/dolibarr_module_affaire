@@ -1070,12 +1070,12 @@ class Affaires_det extends CommonObject
 				$line->fk_user_mod = $obj->fk_user_mod;
 				$line->tms = $this->db->jdate($obj->tms);
 				
-				$line->gamme_label = $this->gamme[$this->fk_gamme];
-				$line->silhouette_label = $this->silhouette[$this->fk_silhouette];
-				$line->genre_label = $this->genre[$this->fk_genre];
-				$line->carrosserie_label = $this->carrosserie[$this->fk_carrosserie];
-				$line->status_label = $this->status[$this->fk_c_status];
-				$line->marque_trt_label = $this->marque_trt[$this->fk_marque_trt];
+				$line->gamme_label = $line->gamme[$line->fk_gamme]->gamme;
+				$line->silhouette_label = $line->silhouette[$line->fk_silhouette]->silouhette;
+				$line->genre_label = $line->genre[$line->fk_genre]->genre;
+				$line->carrosserie_label = $line->carrosserie[$line->fk_carrosserie]->carrosserie;
+				$line->status_label = $line->status[$line->fk_c_status];
+				$line->marque_trt_label = $line->marque_trt[$line->fk_marque_trt]->marque;
 									
 				$this->lines[] = $line;
 			}
