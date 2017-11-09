@@ -1293,19 +1293,19 @@ class Affaires_det extends CommonObject
 		}elseif($this->fk_genre==2){
 			$img = img_picto('porteur', 'tracteur.png@affaires');
 		}
-		if($this->fk_status == 1){
+		if($this->fk_status == 5){
 			$color = '#56ff56';
 			$color2= '#00ff00';
-		}elseif($this->fk_status== 4){
+		}elseif($this->fk_status== 7){
 			$color = '#ff5656';
 			$color2= '#ff0000';
-		}elseif($this->fk_status== 3){
+		}elseif($this->fk_status== 11){
 			$color = '#ffaa56';
 			$color2= '#ff7f00';
-		}elseif($this->fk_status== 2 && $this->fk_commande>0){
+		}elseif($this->fk_status== 6 && $this->fk_commande>0){
 			$color = '#aad4ff';
 			$color2= '#56aaff';
-		}elseif($this->fk_status== 2 && $this->fk_commande<1){
+		}elseif($this->fk_status== 6 && $this->fk_commande<1){
 			$color = '#aa56ff';
 			$color2= '#7f00ff';
 		}else{
