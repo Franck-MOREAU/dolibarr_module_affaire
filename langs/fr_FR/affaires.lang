@@ -85,8 +85,10 @@ LeadStatus_NEGO=Négociation
 LeadStatus_RECOND=Reconduction
 LeadStatus_WIN=Gagné
 LeadStatus_LOST=Perdu
-StatusOrderPayed=Payée
-
+tobill=A Facturer
+Billed=Facturée
+Payed=Payée
+StatusOrderDelivred = Livrée
 #
 # Type
 #
