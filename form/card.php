@@ -130,6 +130,22 @@ elseif ($action == 'edit') {
 	print '</tr>';
 	
 	print '</table>';
+	
+	dol_fiche_end();
+	
+	dol_fiche_head();
+	print_fiche_titre("liste des véhicule de l'affaire - " . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	print '<table class="border" width="100%">';
+	foreach ($object->affaires_det as $vehicule){
+		print '<tr>';
+		print '<td width="100%">';
+		print 'véhicule: ' . $vehicule->id;
+		print '</td>';
+		print '</tr>';
+	}
+	print '</table>';
+	
+	dol_fiche_end();
 
 	/*
 	 * Barre d'actions
