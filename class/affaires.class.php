@@ -1318,10 +1318,10 @@ class Affaires_det extends CommonObject
  		if($this->fk_status==6){
  			$return.= ' - ' . $this->spec;
  			if($this->fk_commande > 0){
- 				include_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
- 				$cmd = new Commande($this->db);
+ 				dol_include_once('/affaire/class/commandevolvo.class.php');
+ 				$cmd = new CommandeVolvo($this->db);
  				$cmd->fetch($this->fk_commande);
- 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' ' . $cmd->getLibStatut(2);
+ 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
  			}
  		}
  		
