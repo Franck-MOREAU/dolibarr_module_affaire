@@ -21,10 +21,10 @@ if (! $res)
 if (! $res)
 	die("Include of main fails");
 
-dol_include_once('../class/lead.class.php');
-require_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
+dol_include_once('affaires/class/affaires.class.php');
+dol_include_once('/core/class/doleditor.class.php');
 if (! empty($conf->commande->enabled))
-	require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+	dol_include_once('/commande/class/commande.class.php');
 
 	// Security check
 if (! $user->rights->affaires->read)
@@ -39,7 +39,6 @@ $id = GETPOST('id', 'int');
 $confirm = GETPOST('confirm', 'alpha');
 
 $object = new Affaires($db);
-
 
 // Load object
 if ($id > 0) {
