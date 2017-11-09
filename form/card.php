@@ -114,7 +114,9 @@ elseif ($action == 'edit') {
 	print "Client: " . $object->thirdparty->getNomUrl(1);
 	print '</td>';
 	print '<td width="50%">';
-	print 'Contremarque: '.$object->contremarque->getNomUrl(1);
+	if($object->fk_ctm>0){
+		print 'Contremarque: '.$object->contremarque->getNomUrl(1);
+	}
 	print '</td>';
 	print '</tr>';
 	
