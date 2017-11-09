@@ -81,7 +81,7 @@ elseif ($action == 'edit') {
 	 * Show object in view mode
 	 */
 	dol_fiche_head();
-	print_fiche_titre('Affaire - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	print_fiche_titre($langs->trans("affaire") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	
 	// Confirm form
 	$formconfirm = '';
@@ -134,7 +134,7 @@ elseif ($action == 'edit') {
 	dol_fiche_end();
 	
 	dol_fiche_head();
-	print_fiche_titre("liste des véhicule de l'affaire - " . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	print '<table class="border" width="100%">';
 	//var_dump($object);
 	
