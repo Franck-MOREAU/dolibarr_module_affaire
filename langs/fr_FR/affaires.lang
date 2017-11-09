@@ -97,7 +97,12 @@ LeadType_ADVI=Conseil
 #
 # Card
 #
-LeadCommercial=Responsable
+Commercial=Commerical
+Numéro d'affaire=Numéro d'affaire
+Client=Client
+Contremarque=Contremarque
+Canal de vente=Canal de vente
+Année=Année
 LeadAmountGuess=Montant annoncÃ© HT
 LeadDeadLine=Date de clÃ´ture
 LeadDelete=Supprimer l'affaire
