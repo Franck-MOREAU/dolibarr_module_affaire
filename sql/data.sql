@@ -14,14 +14,14 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-INSERT INTO llx_c_lead_status(rowid,code,label,position,percent,active) VALUES (3,'S'   ,'Sans Suite', 40, 60,1);
-INSERT INTO llx_c_lead_status(rowid,code,label,position,percent,active) VALUES (1,'PENDING','En cours', 50, 50,0);
-INSERT INTO llx_c_lead_status(rowid,code,label,position,percent,active) VALUES (2,'WON'    ,'Traitée', 60, 100,1);
-INSERT INTO llx_c_lead_status(rowid,code,label,position,percent,active) VALUES (4,'LOST'   ,'Manquée', 70, 0,1);
+INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (11,'S'   ,'Sans Suite', 40, 60,1);
+INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (5,'PENDING','En cours', 50, 50,0);
+INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (6,'WON'    ,'Traitée', 60, 100,1);
+INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (7,'LOST'   ,'Manquée', 70, 0,1);
 
-INSERT INTO llx_c_lead_type(rowid,code,label,active) VALUES (1,'SUPP','Volvo',1);
-INSERT INTO llx_c_lead_type(rowid,code,label,active) VALUES (2,'TRAIN','Nissan',1);
-INSERT INTO llx_c_lead_type(rowid,code,label,active) VALUES (3,'ADVI','Schmitz',1);
+INSERT INTO llx_c_affaires_type(rowid,code,label,active) VALUES (4,'SUPP','Volvo',1);
+INSERT INTO llx_c_affaires_type(rowid,code,label,active) VALUES (5,'TRAIN','Nissan',1);
+INSERT INTO llx_c_affaires_type(rowid,code,label,active) VALUES (6,'ADVI','Schmitz',1);
 
 INSERT INTO `llx_c_affaires_carrosserie` (`rowid`, `carrosserie`,active,labelexcel) VALUES
 (1, 'Fourgon', 1, 'FOURGON'),
