@@ -81,7 +81,7 @@ elseif ($action == 'edit') {
 	 * Show object in view mode
 	 */
 	dol_fiche_head();
-	print_fiche_titre('Informations GÃ©nÃ©rales - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	print_fiche_titre('Affaire - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	
 	// Confirm form
 	$formconfirm = '';
@@ -99,10 +99,10 @@ elseif ($action == 'edit') {
 	print '<table class="border" width="100%">';
 	
 	print '<tr>';
-	print '<td>';
-	print "N° d'affaire: " . $object->ref;
+	print '<td width="50%">';
+	print "Numéro d'affaire: " . $object->ref;
 	print '</td>';
-	print '<td>';
+	print '<td width="50%">';
 	$user = new User($db);
 	$user->fetch($object->fk_user_resp);
 	print 'Commercial: '.$user->getNomUrl(1);
