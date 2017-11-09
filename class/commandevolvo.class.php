@@ -646,63 +646,61 @@ class CommandeVolvo extends Commande
 		global $langs, $conf;
 
 		$billedtext = '';
-		if (empty($donotshowbilled)) $billedtext .= ($billed?' - '.$langs->trans("Billed"):'');
+		if (empty($billed)){
+			$billedtext .= ' - ';
+			if($mode == 2 || $mode == 4) $billedtext .= img_picto($langs->trans('tobill'),'statut6') . ' ' ;
+			$billedtext .= ' - '.$langs->trans("tobill");
+		}elseif(!empty($billed) && $statut<4){
+			$billedtext .= ' - ';
+			if($mode == 2 || $mode == 4) $billedtext .= img_picto($langs->trans('Billed'),'statut1') . ' ' ;
+			$billedtext .= ' - '.$langs->trans("Billed");
+		}elseif($statut == 4){
+			$billedtext .= ' - ';
+			if($mode == 2 || $mode == 4) $billedtext .= img_picto($langs->trans('Payed'),'statut4') . ' ' ;
+			$billedtext .= ' - '.$langs->trans("Payed");
+		}
 
-		//print 'x'.$statut.'-'.$billed;
 		if ($mode == 0)
 		{
-			if ($statut==self::STATUS_CANCELED) return $langs->trans('StatusOrderCanceled');
-			if ($statut==self::STATUS_DRAFT) return $langs->trans('StatusOrderDraft');
-			if ($statut==self::STATUS_VALIDATED) return $langs->trans('StatusOrderValidated').$billedtext;
-			if ($statut==self::STATUS_ACCEPTED) return $langs->trans('StatusOrderSentShort').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return $langs->trans('StatusOrderToBill');
-			if ($statut==self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return $langs->trans('StatusOrderProcessed').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return $langs->trans('StatusOrderDelivered');
-			if ($statut==self::STATUS_PAYED) return $langs->trans('StatusOrderPayed');
+			if ($statut==self::STATUS_CANCELED) return $langs->trans('StatusOrderCanceled') . $billedtext;
+			if ($statut==self::STATUS_DRAFT) return $langs->trans('StatusOrderDraft') . $billedtext;
+			if ($statut==self::STATUS_VALIDATED) return $langs->trans('StatusOrderValidated') . $billedtext;
+			if ($statut==self::STATUS_ACCEPTED) return $langs->trans('StatusOrderSentShort') . $billedtext;
+			if ($statut>=self::STATUS_CLOSED) return $langs->trans('StatusOrderDelivered') . $billedtext;
 		}
 		elseif ($mode == 1)
 		{
-			if ($statut==self::STATUS_CANCELED) return $langs->trans('StatusOrderCanceledShort');
-			if ($statut==self::STATUS_DRAFT) return $langs->trans('StatusOrderDraftShort');
-			if ($statut==self::STATUS_VALIDATED) return $langs->trans('StatusOrderValidatedShort').$billedtext;
-			if ($statut==self::STATUS_ACCEPTED) return $langs->trans('StatusOrderSentShort').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return $langs->trans('StatusOrderToBillShort');
-			if ($statut==self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return $langs->trans('StatusOrderProcessed').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return $langs->trans('StatusOrderDelivered');
-			if ($statut==self::STATUS_PAYED) return $langs->trans('StatusOrderPayed');
+			if ($statut==self::STATUS_CANCELED) return $langs->trans('StatusOrderCanceledShort') . $billedtext;
+			if ($statut==self::STATUS_DRAFT) return $langs->trans('StatusOrderDraftShort') . $billedtext;
+			if ($statut==self::STATUS_VALIDATED) return $langs->trans('StatusOrderValidatedShort') . $billedtext;
+			if ($statut==self::STATUS_ACCEPTED) return $langs->trans('StatusOrderSentShort') . $billedtext;
+			if ($statut>=self::STATUS_CLOSED) return $langs->trans('StatusOrderDelivered') . $billedtext;
+			
 		}
 		elseif ($mode == 2)
 		{
-			if ($statut==self::STATUS_CANCELED) return img_picto($langs->trans('StatusOrderCanceled'),'statut5').' '.$langs->trans('StatusOrderCanceledShort');
-			if ($statut==self::STATUS_DRAFT) return img_picto($langs->trans('StatusOrderDraft'),'statut0').' '.$langs->trans('StatusOrderDraftShort');
-			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated'),'statut1').' '.$langs->trans('StatusOrderValidatedShort').$billedtext;
-			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSent'),'statut3').' '.$langs->trans('StatusOrderSentShort').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderToBill'),'statut7').' '.$langs->trans('StatusOrderToBillShort');
-			if ($statut==self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderProcessed').$billedtext,'statut6').' '.$langs->trans('StatusOrderProcessed').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderDelivered'),'statut6').' '.$langs->trans('StatusOrderDeliveredShort');
-			if ($statut==self::STATUS_PAYED) return img_picto($langs->trans('StatusOrderPayed'),'statut6').' '.$langs->trans('StatusOrderPayed');
+			if ($statut==self::STATUS_CANCELED) return img_picto($langs->trans('StatusOrderCanceled'),'statut5') . $langs->trans('StatusOrderCanceled'). $billedtext;
+			if ($statut==self::STATUS_DRAFT) return img_picto($langs->trans('StatusOrderDraft'),'statut0') . $langs->trans('StatusOrderDraft'). $billedtext;
+			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated'),'statut1') . $langs->trans('StatusOrderValidated'). $billedtext;
+			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSent'),'statut3') . $langs->trans('StatusOrderSent') . $billedtext;
+			if ($statut>=self::STATUS_CLOSED) return img_picto($langs->trans('StatusOrderDelivred'),'statut4') .$langs->trans('StatusOrderDelivred') . $billedtext;
 		}
 		elseif ($mode == 3)
 		{
-			if ($statut==self::STATUS_CANCELED) return img_picto($langs->trans('StatusOrderCanceled'),'statut5');
-			if ($statut==self::STATUS_DRAFT) return img_picto($langs->trans('StatusOrderDraft'),'statut0');
-			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated').$billedtext,'statut1');
-			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSentShort').$billedtext,'statut3');
-			if ($statut==self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderToBill'),'statut7');
-			if ($statut==self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderProcessed').$billedtext,'statut6');
-			if ($statut==self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderDelivered'),'statut6');
-			if ($statut==self::STATUS_PAYED) return img_picto($langs->trans('StatusOrderPayed'),'statut6');
+			if ($statut==self::STATUS_CANCELED) return img_picto($langs->trans('StatusOrderCanceled'. $billedtext),'statut5');
+			if ($statut==self::STATUS_DRAFT) return img_picto($langs->trans('StatusOrderDraft'. $billedtext),'statut0');
+			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated'. $billedtext),'statut1');
+			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSentShort'. $billedtext),'statut3');
+			if ($statut>=self::STATUS_CLOSED) return img_picto($langs->trans('StatusOrderDelivred'. $billedtext),'statut7');
+			
 		}
 		elseif ($mode == 4)
 		{
-			if ($statut==self::STATUS_CANCELED) return img_picto($langs->trans('StatusOrderCanceled'),'statut5').' '.$langs->trans('StatusOrderCanceled');
-			if ($statut==self::STATUS_DRAFT) return img_picto($langs->trans('StatusOrderDraft'),'statut0').' '.$langs->trans('StatusOrderDraft');
-			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated').$billedtext,'statut1').' '.$langs->trans('StatusOrderValidated').$billedtext;
-			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSentShort').$billedtext,'statut3').' '.$langs->trans('StatusOrderSent').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderToBill'),'statut7').' '.$langs->trans('StatusOrderToBill');
-			if ($statut==self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderProcessedShort').$billedtext,'statut6').' '.$langs->trans('StatusOrderProcessed').$billedtext;
-			if ($statut==self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return img_picto($langs->trans('StatusOrderDelivered'),'statut6').' '.$langs->trans('StatusOrderDelivered');
-			if ($statut==self::STATUS_PAYED) return img_picto($langs->trans('StatusOrderPayed'),'statut6').' '.$langs->trans('StatusOrderPayed');
+			if ($statut==self::STATUS_CANCELED) return img_picto($langs->trans('StatusOrderCanceled'),'statut5').$langs->trans('StatusOrderCanceled').$billedtext;
+			if ($statut==self::STATUS_DRAFT) return img_picto($langs->trans('StatusOrderDraft'),'statut0').$langs->trans('StatusOrderDraft').$billedtext;
+			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated'),'statut1').$langs->trans('StatusOrderValidated').$billedtext;
+			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSentShort'),'statut3').$langs->trans('StatusOrderSentShort').$billedtext;
+			if ($statut>=self::STATUS_CLOSED) return img_picto($langs->trans('StatusOrderDelivred'),'statut7').$langs->trans('StatusOrderDelivred') .$billedtext;
 		}
 		elseif ($mode == 5)
 		{
@@ -710,10 +708,7 @@ class CommandeVolvo extends Commande
 			if ($statut==self::STATUS_DRAFT) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderDraftShort').' </span>'.img_picto($langs->trans('StatusOrderDraft'),'statut0');
 			if ($statut==self::STATUS_VALIDATED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderValidatedShort').$billedtext.' </span>'.img_picto($langs->trans('StatusOrderValidated').$billedtext,'statut1');
 			if ($statut==self::STATUS_ACCEPTED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderSentShort').$billedtext.' </span>'.img_picto($langs->trans('StatusOrderSent').$billedtext,'statut3');
-			if ($statut==self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderToBillShort').' </span>'.img_picto($langs->trans('StatusOrderToBill'),'statut7');
-			if ($statut==self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderProcessedShort').$billedtext.' </span>'.img_picto($langs->trans('StatusOrderProcessed').$billedtext,'statut6');
-			if ($statut==self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT))) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderDeliveredShort').' </span>'.img_picto($langs->trans('StatusOrderDelivered'),'statut6');
-			if ($statut==self::STATUS_PAYED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderPayed').' </span>'.img_picto($langs->trans('StatusOrderPayed'),'statut6');
+			if ($statut>=self::STATUS_CLOSED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderToBillShort').' </span>'.img_picto($langs->trans('StatusOrderToBill'),'statut7');		
 		}
 	}
 

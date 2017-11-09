@@ -1321,7 +1321,7 @@ class Affaires_det extends CommonObject
  				dol_include_once('/affaires/class/commandevolvo.class.php');
  				$cmd = new CommandeVolvo($this->db);
  				$cmd->fetch($this->fk_commande);
- 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
+ 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
  			}
  		}
  		
