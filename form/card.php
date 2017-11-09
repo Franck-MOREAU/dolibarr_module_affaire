@@ -141,7 +141,7 @@ elseif ($action == 'edit') {
 	foreach ($object->affaires_det as $vehicule){
 		print '<tr>';
 		print '<td width="100%">';
-		print 'véhicule: ' . $vehicule->id;
+		print $vehicule->vh_tile(0);
 		print '</td>';
 		print '</tr>';
 	}

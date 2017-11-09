@@ -1285,4 +1285,38 @@ class Affaires_det extends CommonObject
 			return 1;
 		}
 	}
+	
+	function vh_tile($whithcustomerdetails=0){
+		
+		if($this->fk_genre==1){
+			$img = img_picto('porteur', 'porteur.png.png@affaires');
+		}elseif($this->fk_genre==2){
+			$img = img_picto('porteur', 'tracteur.png@affaires');
+		}
+		if($this->fk_gamme == 1){
+			$color = '#56ff56';
+			$color2= '#00ff00';
+		}elseif($this->fk_gamme== 2){
+			$color = '#ff5656';
+			$color2= '#ff0000';
+		}elseif($this->fk_gamme== 18){
+			$color = '#ffaa56';
+			$color2= '#ff7f00';
+		}elseif($this->fk_gamme== 3){
+			$color = '#aad4ff';
+			$color2= '#56aaff';
+		}elseif($this->fk_gamme== 4){
+			$color = '#aa56ff';
+			$color2= '#7f00ff';
+		}else{
+			$color = '#cccccc';
+			$color2= '#b2b2b2';
+		}
+		$return = '<div class="cal_event cal_event_busy" align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.'))';
+		$return.= 'border-radius:6px; margin-bottom: 3px; width:200px;">';
+		$return.= $img . ' ';
+		$return.= '</div>';
+		
+		return $return;
+	}
 }
