@@ -1312,10 +1312,12 @@ class Affaires_det extends CommonObject
 			$color = '#cccccc';
 			$color2= '#b2b2b2';
 		}
-		$return = '<div class="cal_event cal_event_busy" align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.'))';
-		$return.= 'border-radius:6px; margin-bottom: 3px; width:200px;">';
-		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . '-' . $this->carrosserie_label;
-		$return.= '</div>';
+		//$return = '<div class="cal_event cal_event_busy" align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.'))';
+		//$return.= 'border-radius:6px; margin-bottom: 3px; width:200px;">';
+		//$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . '-' . $this->carrosserie_label;
+		//$return.= '</div>';
+		
+		$return = var_dump($this);
 		
 		return $return;
 	}
