@@ -134,7 +134,7 @@ elseif ($action == 'edit') {
 		print '<div class="inline-block divButAction"><a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("anoughPermissions")) . '">' . $langs->trans("Delete") . "</a></div>";
 	}
 	print '</div>';
-
+}
 dol_fiche_end();
 llxFooter();
 $db->close();
