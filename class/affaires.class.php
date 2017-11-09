@@ -1293,19 +1293,19 @@ class Affaires_det extends CommonObject
 		}elseif($this->fk_genre==2){
 			$img = img_picto('porteur', 'tracteur.png@affaires');
 		}
-		if($this->fk_gamme == 1){
+		if($this->fk_status == 1){
 			$color = '#56ff56';
 			$color2= '#00ff00';
-		}elseif($this->fk_gamme== 2){
+		}elseif($this->fk_status== 4){
 			$color = '#ff5656';
 			$color2= '#ff0000';
-		}elseif($this->fk_gamme== 18){
+		}elseif($this->fk_status== 3){
 			$color = '#ffaa56';
 			$color2= '#ff7f00';
-		}elseif($this->fk_gamme== 3){
+		}elseif($this->fk_status== 2 && empty($this->fk_commande)){
 			$color = '#aad4ff';
 			$color2= '#56aaff';
-		}elseif($this->fk_gamme== 4){
+		}elseif($this->fk_status== 4 && !empty($this->fk_commande)){
 			$color = '#aa56ff';
 			$color2= '#7f00ff';
 		}else{
@@ -1314,7 +1314,7 @@ class Affaires_det extends CommonObject
 		}
 		$return = '<div class="cal_event cal_event_busy" align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.'))';
 		$return.= 'border-radius:6px; margin-bottom: 3px; width:200px;">';
-		$return.= $img . ' ' . $this->gamme[$this->fk_gamme] . ' - ' . $this->silhouette_label . '-' . $this->carrosserie_label;
+		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . '-' . $this->carrosserie_label;
 		$return.= '</div>';
 		
 		return $return;
