@@ -98,11 +98,11 @@ LeadType_ADVI=Conseil
 # Card
 #
 userresp=Commerical
-affnum=Num�ro d'affaire
+affnum=Numéro d'affaire
 client=Client
 ctm=Contremarque
 cv=Canal de vente
-year=Ann�e
+year=Année
 LeadAmountGuess=Montant annoncé HT
 LeadDeadLine=Date de clôture
 LeadDelete=Supprimer l'affaire
