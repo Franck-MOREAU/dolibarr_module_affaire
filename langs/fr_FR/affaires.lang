@@ -85,6 +85,7 @@ LeadStatus_NEGO=Négociation
 LeadStatus_RECOND=Reconduction
 LeadStatus_WIN=Gagné
 LeadStatus_LOST=Perdu
+StatusOrderPayed=Payée
 
 #
 # Type
