@@ -837,16 +837,6 @@ class Affaires_det extends CommonObject
 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
 		}
 		
-// 		if (empty($this->fk_user_author)) {
-// 			$error ++;
-// 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-// 		}
-		
-// 		if (empty($this->datec)) {
-// 			$error ++;
-// 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-// 		}
-					
 		if (! $error) {
 			// Insert request
 			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "lead(";
@@ -925,378 +915,369 @@ class Affaires_det extends CommonObject
 				return $this->id;
 			}
 		}
+	}
 		
+	/**
+	 * Load object in memory from the database
+	 *
+	 * @param int $id object
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch($id) {
+		global $langs;
+		$sql = "SELECT";
+		$sql .= " t.rowid,";
+		$sql .= " t.fk_affaires,";
+		$sql .= " t.fk_gamme,";
+		$sql .= " t.fk_silhouette,";
+		$sql .= " t.fk_genre,";
+		$sql .= " t.fk_carrosserie,";
+		$sql .= " t.fk_status,";
+		$sql .= " t.fk_marque_trt,";
+		$sql .= " t.fk_motif,";
+		$sql .= " t.spec,";
+		$sql .= " t.fk_commande,";
+		$sql .= " t.fk_user_author,";
+		$sql .= " t.datec,";
+		$sql .= " t.fk_user_mod,";
+		$sql .= " t.tms";
 		
-		/**
-		 * Load object in memory from the database
-		 *
-		 * @param int $id object
-		 * @return int <0 if KO, >0 if OK
-		 */
-		function fetch($id) {
-			global $langs;
-			$sql = "SELECT";
-			$sql .= " t.rowid,";
-			$sql .= " t.fk_affaires,";
-			$sql .= " t.fk_gamme,";
-			$sql .= " t.fk_silhouette,";
-			$sql .= " t.fk_genre,";
-			$sql .= " t.fk_carrosserie,";
-			$sql .= " t.fk_status,";
-			$sql .= " t.fk_marque_trt,";
-			$sql .= " t.fk_motif,";
-			$sql .= " t.spec,";
-			$sql .= " t.fk_commande,";
-			$sql .= " t.fk_user_author,";
-			$sql .= " t.datec,";
-			$sql .= " t.fk_user_mod,";
-			$sql .= " t.tms";
+		$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as t";
+		$sql .= " WHERE t.rowid = " . $id;
 			
-			$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as t";
-			$sql .= " WHERE t.rowid = " . $id;
-			
-			dol_syslog(get_class($this) . "::fetch sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if ($resql) {
-				if ($this->db->num_rows($resql)) {
-					$obj = $this->db->fetch_object($resql);
-					
-					$this->id = $obj->rowid;
-					$this->fk_affaires = $obj->fk_affaires;
-					$this->fk_gamme = $obj->fk_gamme;
-					$this->fk_silhouette = $obj->fk_silhouette;
-					$this->fk_genre = $obj->fk_genre;
-					$this->fk_carrosserie = $obj->fk_carrosserie;
-					$this->fk_status = $obj->fk_status;
-					$this->fk_marque_trt = $obj->fk_marque_trt;
-					$this->fk_motifs = $obj->fk_motifs;
-					$this->spec = $obj->spec;
-					$this->fk_commande = $obj->fk_commande;
-					$this->fk_user_author = $obj->fk_user_author;
-					$this->datec = $this->db->jdate($obj->datec);
-					$this->fk_user_mod = $obj->fk_user_mod;
-					$this->tms = $this->db->jdate($obj->tms);
-					
-					$this->gamme_label = $this->gamme[$this->fk_gamme];
-					$this->silhouette_label = $this->silhouette[$this->fk_silhouette];
-					$this->genre_label = $this->genre[$this->fk_genre];
-					$this->carrosserie_label = $this->carrosserie[$this->fk_carrosserie];
-					$this->status_label = $this->status[$this->fk_c_status];
-					$this->marque_trt_label = $this->marque_trt[$this->fk_marque_trt];
-				}
-				$this->db->free($resql);
+		dol_syslog(get_class($this) . "::fetch sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			if ($this->db->num_rows($resql)) {
+				$obj = $this->db->fetch_object($resql);
 				
-				return 1;
-			} else {
-				$this->error = "Error " . $this->db->lasterror();
-				dol_syslog(get_class($this) . "::fetch " . $this->error, LOG_ERR);
-				return - 1;
+				$this->id = $obj->rowid;
+				$this->fk_affaires = $obj->fk_affaires;
+				$this->fk_gamme = $obj->fk_gamme;
+				$this->fk_silhouette = $obj->fk_silhouette;
+				$this->fk_genre = $obj->fk_genre;
+				$this->fk_carrosserie = $obj->fk_carrosserie;
+				$this->fk_status = $obj->fk_status;
+				$this->fk_marque_trt = $obj->fk_marque_trt;
+				$this->fk_motifs = $obj->fk_motifs;
+				$this->spec = $obj->spec;
+				$this->fk_commande = $obj->fk_commande;
+				$this->fk_user_author = $obj->fk_user_author;
+				$this->datec = $this->db->jdate($obj->datec);
+				$this->fk_user_mod = $obj->fk_user_mod;
+				$this->tms = $this->db->jdate($obj->tms);
+				
+				$this->gamme_label = $this->gamme[$this->fk_gamme];
+				$this->silhouette_label = $this->silhouette[$this->fk_silhouette];
+				$this->genre_label = $this->genre[$this->fk_genre];
+				$this->carrosserie_label = $this->carrosserie[$this->fk_carrosserie];
+				$this->status_label = $this->status[$this->fk_c_status];
+				$this->marque_trt_label = $this->marque_trt[$this->fk_marque_trt];
+			}
+			$this->db->free($resql);
+			
+			return 1;
+		} else {
+			$this->error = "Error " . $this->db->lasterror();
+			dol_syslog(get_class($this) . "::fetch " . $this->error, LOG_ERR);
+			return - 1;
+		}
+	}
+		
+		
+	/**
+	 * Load object in memory from the database
+	 *
+	 * @param string $sortorder order
+	 * @param string $sortfield field
+	 * @param int $limit page
+	 * @param int $offset Offset results
+	 * @param array $filter output
+	 *
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array()) {
+		global $langs;
+		$sql = "SELECT";
+		$sql .= " t.rowid,";
+		$sql .= " t.fk_affaires,";
+		$sql .= " t.fk_gamme,";
+		$sql .= " t.fk_silhouette,";
+		$sql .= " t.fk_genre,";
+		$sql .= " t.fk_carrosserie,";
+		$sql .= " t.fk_status,";
+		$sql .= " t.fk_marque_trt,";
+		$sql .= " t.fk_motif,";
+		$sql .= " t.spec,";
+		$sql .= " t.fk_commande,";
+		$sql .= " t.fk_user_author,";
+		$sql .= " t.datec,";
+		$sql .= " t.fk_user_mod,";
+		$sql .= " t.tms";
+		
+		$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as t";
+		$sql .= " WHERE 1";
+		
+		if (is_array($filter)) {
+			foreach ( $filter as $key => $value ) {
+				if (($key == 't.fk_affaires') || ($key == 't.rowid') || ($key == 't.fk_gamme') || ($key == 't.fk_silhouette') || ($key == 't.fk_genre')
+				|| ($key == 't.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 't.fk_marque_trt') || ($key == 't.fk_commande')) {
+					$sql .= ' AND ' . $key . ' = ' . $value;
+				} elseif ($key == 't.fk_status !IN') {
+					$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
+				} elseif ($key == 't.rowid !IN') {
+					$sql .= ' AND t.rowid NOT IN (' . $value . ')';
+				}else {
+					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
+				}
 			}
 		}
-		
-		
-		/**
-		 * Load object in memory from the database
-		 *
-		 * @param string $sortorder order
-		 * @param string $sortfield field
-		 * @param int $limit page
-		 * @param int $offset Offset results
-		 * @param array $filter output
-		 *
-		 * @return int <0 if KO, >0 if OK
-		 */
-		function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array()) {
-			global $langs;
-			$sql = "SELECT";
-			$sql .= " t.rowid,";
-			$sql .= " t.fk_affaires,";
-			$sql .= " t.fk_gamme,";
-			$sql .= " t.fk_silhouette,";
-			$sql .= " t.fk_genre,";
-			$sql .= " t.fk_carrosserie,";
-			$sql .= " t.fk_status,";
-			$sql .= " t.fk_marque_trt,";
-			$sql .= " t.fk_motif,";
-			$sql .= " t.spec,";
-			$sql .= " t.fk_commande,";
-			$sql .= " t.fk_user_author,";
-			$sql .= " t.datec,";
-			$sql .= " t.fk_user_mod,";
-			$sql .= " t.tms";
 			
-			$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as t";
-			$sql .= " WHERE 1";
-			
-			if (is_array($filter)) {
-				foreach ( $filter as $key => $value ) {
-					if (($key == 't.fk_affaires') || ($key == 't.rowid') || ($key == 't.fk_gamme') || ($key == 't.fk_silhouette') || ($key == 't.fk_genre')
-							|| ($key == 't.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 't.fk_marque_trt') || ($key == 't.fk_commande')) {
-						$sql .= ' AND ' . $key . ' = ' . $value;
-					} elseif ($key == 't.fk_status !IN') {
-						$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
-					} elseif ($key == 't.rowid !IN') {
-						$sql .= ' AND t.rowid NOT IN (' . $value . ')';
-					}else {
-						$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
-					}
-				}
-			}
-			
-			if (! empty($sortfield)) {
-				$sql .= " ORDER BY " . $sortfield . ' ' . $sortorder;
-			}
-			
-			if (! empty($limit)) {
-				$sql .= ' ' . $this->db->plimit($limit + 1, $offset);
-			}
-			
-			dol_syslog(get_class($this) . "::fetch_all sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			
-			if ($resql) {
-				$this->lines = array ();
-				$num = $this->db->num_rows($resql);
-				while ( $obj = $this->db->fetch_object($resql) ) {
-					$line = new Affaires_det($this->db);
-					
-					$line->id = $obj->rowid;
-					$line->fk_affaires = $obj->fk_affaires;
-					$line->fk_gamme = $obj->fk_gamme;
-					$line->fk_silhouette = $obj->fk_silhouette;
-					$line->fk_genre = $obj->fk_genre;
-					$line->fk_carrosserie = $obj->fk_carrosserie;
-					$line->fk_status = $obj->fk_status;
-					$line->fk_marque_trt = $obj->fk_marque_trt;
-					$line->fk_motifs = $obj->fk_motifs;
-					$line->fk_commande = $obj->fk_commande;
-					$line->spec = $obj->spec;
-					$line->fk_user_author = $obj->fk_user_author;
-					$line->datec = $this->db->jdate($obj->datec);
-					$line->fk_user_mod = $obj->fk_user_mod;
-					$line->tms = $this->db->jdate($obj->tms);
-					
-					$line->gamme_label = $this->gamme[$this->fk_gamme];
-					$line->silhouette_label = $this->silhouette[$this->fk_silhouette];
-					$line->genre_label = $this->genre[$this->fk_genre];
-					$line->carrosserie_label = $this->carrosserie[$this->fk_carrosserie];
-					$line->status_label = $this->status[$this->fk_c_status];
-					$line->marque_trt_label = $this->marque_trt[$this->fk_marque_trt];
-										
-					$this->lines[] = $line;
-				}
-				$this->db->free($resql);
-				
-				return $num;
-			} else {
-				$this->error = "Error " . $this->db->lasterror();
-				dol_syslog(get_class($this) . "::fetch_all " . $this->error, LOG_ERR);
-				return - 1;
-			}
+		if (! empty($sortfield)) {
+			$sql .= " ORDER BY " . $sortfield . ' ' . $sortorder;
 		}
 		
-		/**
-		 * Update object into database
-		 *
-		 * @param User $user that modifies
-		 * @param int $notrigger triggers after, 1=disable triggers
-		 * @return int <0 if KO, >0 if OK
-		 */
-		function update($user = null, $notrigger = 0) {
-			global $conf, $langs;
-			$error = 0;
+		if (! empty($limit)) {
+			$sql .= ' ' . $this->db->plimit($limit + 1, $offset);
+		}
 			
-			if (isset($this->fk_affaires))
-				$this->fk_affaires = trim($this->fk_affaires);
-			if (isset($this->fk_game))
-				$this->fk_gamme = trim($this->fk_gamme);
-			if (isset($this->fk_silhouette))
-				$this->fk_silhouette = trim($this->fk_silhouette);
-			if (isset($this->fk_genre))
-				$this->fk_genre = trim($this->fk_genre);
-			if (isset($this->fk_carrosserie))
-				$this->fk_carrosserie = trim($this->fk_carrosserie);
-			if (isset($this->fk_status))
-				$this->fk_status = trim($this->fk_status);
-			if (isset($this->fk_marque_trt))
-				$this->fk_marque_trt = trim($this->fk_marque_trt);
-			if (isset($this->fk_motifs))
-				$this->fk_motifs = trim($this->fk_motifs);
-			if (isset($this->fk_commande))
-				$this->fk_commande = trim($this->fk_commande);
-			if (isset($this->spec))
-				$this->spec = trim($this->spec);
+		dol_syslog(get_class($this) . "::fetch_all sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
 		
-			
-			// Check parameters
-			// Put here code to add control on parameters values
+		if ($resql) {
+			$this->lines = array ();
+			$num = $this->db->num_rows($resql);
+			while ( $obj = $this->db->fetch_object($resql) ) {
+				$line = new Affaires_det($this->db);
+				$line->id = $obj->rowid;
+				$line->fk_affaires = $obj->fk_affaires;
+				$line->fk_gamme = $obj->fk_gamme;
+				$line->fk_silhouette = $obj->fk_silhouette;
+				$line->fk_genre = $obj->fk_genre;
+				$line->fk_carrosserie = $obj->fk_carrosserie;
+				$line->fk_status = $obj->fk_status;
+				$line->fk_marque_trt = $obj->fk_marque_trt;
+				$line->fk_motifs = $obj->fk_motifs;
+				$line->fk_commande = $obj->fk_commande;
+				$line->spec = $obj->spec;
+				$line->fk_user_author = $obj->fk_user_author;
+				$line->datec = $this->db->jdate($obj->datec);
+				$line->fk_user_mod = $obj->fk_user_mod;
+				$line->tms = $this->db->jdate($obj->tms);
 				
-			if (empty($this->fk_affaires)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+				$line->gamme_label = $this->gamme[$this->fk_gamme];
+				$line->silhouette_label = $this->silhouette[$this->fk_silhouette];
+				$line->genre_label = $this->genre[$this->fk_genre];
+				$line->carrosserie_label = $this->carrosserie[$this->fk_carrosserie];
+				$line->status_label = $this->status[$this->fk_c_status];
+				$line->marque_trt_label = $this->marque_trt[$this->fk_marque_trt];
+									
+				$this->lines[] = $line;
 			}
-			
-			if (empty($this->fk_gamme)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
-			
-			if (empty($this->fk_genre)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
-			
-			if (empty($this->fk_silhouette)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
-			
-			if (empty($this->fk_carrosserie)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
-			
-			if (empty($this->fk_status)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
-			
-			if (empty($this->fk_user_author)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
+			$this->db->free($resql);
+				
+			return $num;
+		} else {
+			$this->error = "Error " . $this->db->lasterror();
+			dol_syslog(get_class($this) . "::fetch_all " . $this->error, LOG_ERR);
+			return - 1;
+		}
+	}
+		
+	/**
+	 * Update object into database
+	 *
+	 * @param User $user that modifies
+	 * @param int $notrigger triggers after, 1=disable triggers
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function update($user = null, $notrigger = 0) {
+		global $conf, $langs;
+		$error = 0;
 	
-			if (empty($this->datec)) {
-				$error ++;
-				$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
-			}
+		if (isset($this->fk_affaires))
+			$this->fk_affaires = trim($this->fk_affaires);
+		if (isset($this->fk_game))
+			$this->fk_gamme = trim($this->fk_gamme);
+		if (isset($this->fk_silhouette))
+			$this->fk_silhouette = trim($this->fk_silhouette);
+		if (isset($this->fk_genre))
+			$this->fk_genre = trim($this->fk_genre);
+		if (isset($this->fk_carrosserie))
+			$this->fk_carrosserie = trim($this->fk_carrosserie);
+		if (isset($this->fk_status))
+			$this->fk_status = trim($this->fk_status);
+		if (isset($this->fk_marque_trt))
+			$this->fk_marque_trt = trim($this->fk_marque_trt);
+		if (isset($this->fk_motifs))
+			$this->fk_motifs = trim($this->fk_motifs);
+		if (isset($this->fk_commande))
+			$this->fk_commande = trim($this->fk_commande);
+		if (isset($this->spec))
+			$this->spec = trim($this->spec);
+		
 			
-			if (!empty($this->fk_commande)) {
-				$error ++;
-				$this->errors[] = "un chassis commandé ne peut etre modifié";
-			}
+		// Check parameters
+		// Put here code to add control on parameters values
 			
-			
-			if (! $error) {
-				// Update request
-				$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element . " SET";
-				
-				$sql .= " fk_affaires=" . (isset($this->fk_affaires) ? "'" . $this->db->escape($this->fk_affaires) . "'" : "null") . ",";
-				$sql .= " fk_gamme=" . (isset($this->fk_gamme) ? "'" . $this->db->escape($this->fk_gamme) . "'" : "null") . ",";
-				$sql .= " fk_silhouette=" . (isset($this->fk_silhouette) ? "'" . $this->db->escape($this->fk_silhouette) . "'" : "null") . ",";
-				$sql .= " fk_genre=" . (isset($this->fk_genre) ? "'" . $this->db->escape($this->fk_genre) . "'" : "null") . ",";
-				$sql .= " fk_carrosserie=" . (isset($this->fk_carrosserie) ? "'" . $this->db->escape($this->fk_carrosserie) . "'" : "null") . ",";
-				$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
-				$sql .= " fk_marque_trt=" . (isset($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
-				$sql .= " fk_motifs=" . (isset($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
-				$sql .= " fk_commmande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
-				$sql .= " spec=" . (isset($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
-				$sql .= " fk_user_mod=" . $user->id . ",";
-				$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
-				
-				$sql .= " WHERE rowid=" . $this->id;
-				
-				$this->db->begin();
-				
-				dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
-				$resql = $this->db->query($sql);
-				if (! $resql) {
-					$error ++;
-					$this->errors[] = "Error " . $this->db->lasterror();
-				}
-			}
-			
-			if (! $error) {
-				if (! $notrigger) {
-					// Uncomment this and change MYOBJECT to your own tag if you
-					// want this action calls a trigger.
-					
-					// // Call triggers
-					include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-					$interface = new Interfaces($this->db);
-					$result = $interface->run_triggers('AFFAIRES_DET_MODIFY', $this, $user, $langs, $conf);
-					if ($result < 0) {
-						$error ++;
-						$this->errors = $interface->errors;
-					}
-					// // End call triggers
-				}
-			}
-			
-			// Commit or rollback
-			if ($error) {
-				foreach ( $this->errors as $errmsg ) {
-					dol_syslog(get_class($this) . "::update " . $errmsg, LOG_ERR);
-					$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
-				}
-				$this->db->rollback();
-				return - 1 * $error;
-			} else {
-				$this->db->commit();
-				return 1;
-			}
-			
+		if (empty($this->fk_affaires)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
 		}
 		
-		/**
-		 * Delete object in database
-		 *
-		 * @param User $user that deletes
-		 * @param int $notrigger triggers after, 1=disable triggers
-		 * @return int <0 if KO, >0 if OK
-		 */
-		function delete($user, $notrigger = 0) {
-			global $conf, $langs;
-			$error = 0;
+		if (empty($this->fk_gamme)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
 			
+		if (empty($this->fk_genre)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
+			
+		if (empty($this->fk_silhouette)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
+		
+		if (empty($this->fk_carrosserie)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
+			
+		if (empty($this->fk_status)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
+			
+		if (empty($this->fk_user_author)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
+	
+		if (empty($this->datec)) {
+			$error ++;
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+		}
+			
+		if (!empty($this->fk_commande)) {
+			$error ++;
+			$this->errors[] = "un chassis commandé ne peut etre modifié";
+		}
+		
+		if (! $error) {
+			// Update request
+			$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element . " SET";
+			
+			$sql .= " fk_affaires=" . (isset($this->fk_affaires) ? "'" . $this->db->escape($this->fk_affaires) . "'" : "null") . ",";
+			$sql .= " fk_gamme=" . (isset($this->fk_gamme) ? "'" . $this->db->escape($this->fk_gamme) . "'" : "null") . ",";
+			$sql .= " fk_silhouette=" . (isset($this->fk_silhouette) ? "'" . $this->db->escape($this->fk_silhouette) . "'" : "null") . ",";
+			$sql .= " fk_genre=" . (isset($this->fk_genre) ? "'" . $this->db->escape($this->fk_genre) . "'" : "null") . ",";
+			$sql .= " fk_carrosserie=" . (isset($this->fk_carrosserie) ? "'" . $this->db->escape($this->fk_carrosserie) . "'" : "null") . ",";
+			$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
+			$sql .= " fk_marque_trt=" . (isset($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
+			$sql .= " fk_motifs=" . (isset($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
+			$sql .= " fk_commmande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
+			$sql .= " spec=" . (isset($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
+			$sql .= " fk_user_mod=" . $user->id . ",";
+			$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
+				
+			$sql .= " WHERE rowid=" . $this->id;
+		
 			$this->db->begin();
 			
-			if (!empty($this->fk_commande)) {
+			dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
+			$resql = $this->db->query($sql);
+			if (! $resql) {
 				$error ++;
-				$this->errors[] = "un chassis commandé ne peut etre supprimé";
+				$this->errors[] = "Error " . $this->db->lasterror();
 			}
+		}
 			
-			if (! $error) {
-				if (! $notrigger) {
-					// Uncomment this and change MYOBJECT to your own tag if you
-					// want this action calls a trigger.
-					
-					// // Call triggers
-					include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-					$interface = new Interfaces($this->db);
-					$result = $interface->run_triggers('AFFAIRES_DET_DELETE', $this, $user, $langs, $conf);
-					if ($result < 0) {
-						$error ++;
-						$this->errors = $interface->errors;
-					}
-					// // End call triggers
-				}
-			}
-			
-			if (! $error) {
-				$sql = "DELETE FROM " . MAIN_DB_PREFIX . $this->table_element;
-				$sql .= " WHERE rowid=" . $this->id;
-				
-				dol_syslog(get_class($this) . "::delete sql=" . $sql);
-				$resql = $this->db->query($sql);
-				if (! $resql) {
+		if (! $error) {
+			if (! $notrigger) {
+				// // Call triggers
+				include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
+				$interface = new Interfaces($this->db);
+				$result = $interface->run_triggers('AFFAIRES_DET_MODIFY', $this, $user, $langs, $conf);
+				if ($result < 0) {
 					$error ++;
-					$this->errors[] = "Error " . $this->db->lasterror();
+					$this->errors = $interface->errors;
 				}
+				// // End call triggers
 			}
+		}
 			
-			// Commit or rollback
-			if ($error) {
-				foreach ( $this->errors as $errmsg ) {
-					dol_syslog(get_class($this) . "::delete " . $errmsg, LOG_ERR);
-					$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
-				}
-				$this->db->rollback();
-				return - 1 * $error;
-			} else {
-				$this->db->commit();
-				return 1;
+		// Commit or rollback
+		if ($error) {
+			foreach ( $this->errors as $errmsg ) {
+				dol_syslog(get_class($this) . "::update " . $errmsg, LOG_ERR);
+				$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
 			}
+			$this->db->rollback();
+			return - 1 * $error;
+		} else {
+			$this->db->commit();
+			return 1;
+		}
+			
+	}
+		
+	/**
+	 * Delete object in database
+	 *
+	 * @param User $user that deletes
+	 * @param int $notrigger triggers after, 1=disable triggers
+	 * @return int <0 if KO, >0 if OK
+	 */
+	function delete($user, $notrigger = 0) {
+		global $conf, $langs;
+		$error = 0;
+		
+		$this->db->begin();
+			
+		if (!empty($this->fk_commande)) {
+			$error ++;
+			$this->errors[] = "un chassis commandé ne peut etre supprimé";
+		}
+			
+		if (! $error) {
+			if (! $notrigger) {
+				// // Call triggers
+				include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
+				$interface = new Interfaces($this->db);
+				$result = $interface->run_triggers('AFFAIRES_DET_DELETE', $this, $user, $langs, $conf);
+				if ($result < 0) {
+					$error ++;
+					$this->errors = $interface->errors;
+				}
+				// // End call triggers
+			}
+		}
+			
+		if (! $error) {
+			$sql = "DELETE FROM " . MAIN_DB_PREFIX . $this->table_element;
+			$sql .= " WHERE rowid=" . $this->id;
+			
+			dol_syslog(get_class($this) . "::delete sql=" . $sql);
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$error ++;
+				$this->errors[] = "Error " . $this->db->lasterror();
+			}
+		}
+			
+		// Commit or rollback
+		if ($error) {
+			foreach ( $this->errors as $errmsg ) {
+				dol_syslog(get_class($this) . "::delete " . $errmsg, LOG_ERR);
+				$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
+			}
+			$this->db->rollback();
+			return - 1 * $error;
+		} else {
+			$this->db->commit();
+			return 1;
 		}
 	}
 }
