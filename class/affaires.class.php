@@ -235,7 +235,7 @@ class Affaires extends CommonObject
 				
 				// loading affaires lines into affaires_det array of object
 				$det = New Affaires_det($this->db);
-				$det->fetchall('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
+				$det->fetch_all('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
 				foreach ($det->lines as $line){
 					$this->affaires_det[$line->id]=$line;
 				}
