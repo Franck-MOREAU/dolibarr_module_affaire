@@ -1317,6 +1317,12 @@ class Affaires_det extends CommonObject
  		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
  		if($this->fk_status==6){
  			$return.= ' - ' . $this->spec;
+ 			if($this->fk_commande > 0){
+ 				include_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+ 				$cmd = new Commande($this->db);
+ 				$cmd->fetch($this->fk_commande);
+ 				$return.= ' - Commande: ' . $cmd->ref . ' du ' . $cmd->date;
+ 			}
  		}
  		
  		$return.= '</br> test ligne 2';
