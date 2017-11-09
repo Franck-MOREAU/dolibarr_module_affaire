@@ -23,6 +23,7 @@ if (! $res)
 
 dol_include_once('affaires/class/affaires.class.php');
 dol_include_once('/core/class/doleditor.class.php');
+dol_include_once('/user/class/user.class.php');
 if (! empty($conf->commande->enabled))
 	dol_include_once('/commande/class/commande.class.php');
 
@@ -102,7 +103,9 @@ elseif ($action == 'edit') {
 	print "N° d'affaire: " . $object->ref;
 	print '</td>';
 	print '<td>';
-	print 'Commercial: ';
+	$user = new User($db);
+	$user->fetch($object->fk_user_resp);
+	print 'Commercial: '.$user->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
 	print '</table>';
