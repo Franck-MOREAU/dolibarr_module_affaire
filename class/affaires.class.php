@@ -231,7 +231,12 @@ class Affaires extends CommonObject
 				$this->tms = $this->db->jdate($obj->tms);
 				$this->type_label = $this->type[$this->fk_c_type];
 				$this->fetch_thirdparty($this->fk_soc);
-				if($this->fk_ctm >0) $this->contremarque = $this->fetchObjectFrom('société', 'rowid', $this->ctm);
+				if($this->fk_ctm >0){
+					require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
+					$soc = new Societe($this->db);
+					$soc->fetch($this->fk_ctm);
+					$this->contremarque = $soc;
+				}
 				
 				// loading affaires lines into affaires_det array of object
 				$det = New Affaires_det($this->db);
