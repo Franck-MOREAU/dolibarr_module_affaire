@@ -1012,7 +1012,7 @@ class Affaires_det extends CommonObject
 		$sql .= " t.fk_carrosserie,";
 		$sql .= " t.fk_status,";
 		$sql .= " t.fk_marque_trt,";
-		$sql .= " t.fk_motif,";
+		$sql .= " t.fk_motifs,";
 		$sql .= " t.spec,";
 		$sql .= " t.fk_commande,";
 		$sql .= " t.fk_user_author,";
