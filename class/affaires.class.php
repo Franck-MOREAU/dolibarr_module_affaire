@@ -1316,7 +1316,7 @@ class Affaires_det extends CommonObject
  		$return.= ';border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
  		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
  		if($this->fk_status==6){
- 			$return.= ' - Spécification' . $this->spec;
+ 			$return.= ' - Spécification: ' . $this->spec;
  			if($this->fk_commande > 0){
  				dol_include_once('/affaires/class/commandevolvo.class.php');
  				$cmd = new CommandeVolvo($this->db);
