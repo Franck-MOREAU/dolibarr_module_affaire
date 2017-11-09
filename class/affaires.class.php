@@ -1315,6 +1315,10 @@ class Affaires_det extends CommonObject
  		$return = '<div class="cal_event cal_event_busy" align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')) ';
  		$return.= ';border-radius:6px; margin-bottom: 3px; width:100%; height:38px; padding-left:10px">';
  		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
+ 		if($this->fk_status==6){
+ 			$return.= ' - ' . $this->spec;
+ 		}
+ 		
  		$return.= '</br> test ligne 2';
  		$return.= '</div>';
 		
