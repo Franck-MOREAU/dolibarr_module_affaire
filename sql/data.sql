@@ -117,7 +117,7 @@ INSERT INTO `llx_c_affaires_motif_perte_lead` (`rowid`, `motif`) VALUES
 (17, 'Autres motifs divers'),
 (18, 'Valeur reprise VO');
 
-INSERT INTO `llx_c_affaires_silouhette` (`rowid`, `silouhette`, `cv`, `rep`) VALUES
+INSERT INTO `llx_c_affaires_silhouette` (`rowid`, `silhouette`, `cv`, `rep`) VALUES
 (1, '4x2', 4, 1),
 (2, '4x4', 4, 1),
 (3, '6x2', 4, 1),
