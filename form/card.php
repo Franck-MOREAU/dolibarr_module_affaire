@@ -120,6 +120,15 @@ elseif ($action == 'edit') {
 	print '</td>';
 	print '</tr>';
 	
+	print '<tr>';
+	print '<td width="50%">';
+	print "Canal de vente: " . $object->type_label;
+	print '</td>';
+	print '<td width="50%">';
+	print 'Année: '.$object->year;
+	print '</td>';
+	print '</tr>';
+	
 	print '</table>';
 
 	/*
