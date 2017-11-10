@@ -104,7 +104,7 @@ elseif ($action == 'edit') {
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', '', 0);
+	print $langs->trans("client").': ' . $form->select_thirdparty_list('', 'fk_soc', '', 0);
 	print '</td>';
 	print '<td width="50%">';
 	print $langs->trans("ctm").': '. $form->select_company($object->fk_ctm,'fk_ctm','',1);
