@@ -131,6 +131,30 @@ elseif ($action == 'edit') {
 	
 	print '</table>';
 	
+	print '<div class="tabsAction">';
+	
+	// Delete
+	if ($user->rights->lead->write) {
+		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
+		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=clone">' . $langs->trans("Clone") . "</a></div>\n";
+		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=create_relance">' . $langs->trans("CreateRelance") . "</a></div>\n";
+		if ($object->status[7] == $langs->trans('LeadStatus_LOST') && $object->fk_c_status != 7) {
+			print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=close">' . $langs->trans("LeadLost") . "</a></div>\n";
+		}
+	} else {
+		print '<div class="inline-block divButAction"><a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("anoughPermissions")) . '">' . $langs->trans("Edit") . "</a></div>";
+		print '<div class="inline-block divButAction"><a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("anoughPermissions")) . '">' . $langs->trans("Clone") . "</a></div>";
+		// print '<div class="inline-block divButAction"><font class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotEnoughPermissions")) . '">' . $langs->trans("LeadLost") . "</font></div>";
+	}
+	
+	// Delete
+	if ($user->rights->lead->delete) {
+		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans("Delete") . "</a></div>\n";
+	} else {
+		print '<div class="inline-block divButAction"><a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("anoughPermissions")) . '">' . $langs->trans("Delete") . "</a></div>";
+	}
+	print '</div>';
+	
 	dol_fiche_end();
 	
 	dol_fiche_head();
