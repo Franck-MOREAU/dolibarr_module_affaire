@@ -25,6 +25,8 @@ dol_include_once('affaires/class/affaires.class.php');
 dol_include_once('/core/class/doleditor.class.php');
 dol_include_once('/user/class/user.class.php');
 dol_include_once('/user/class/usergroup.class.php');
+
+
 if (! empty($conf->commande->enabled))
 	dol_include_once('/commande/class/commande.class.php');
 
@@ -84,6 +86,7 @@ if ($action == 'create' && $user->rights->lead->write) {
 }
 
 elseif ($action == 'edit') {
+	dol_include_once('/core/class/html.formother.class.php');
 	$formother = new FormOther($db);
 	
 	dol_fiche_head('', '', 'Affaire ' . $object->ref , 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
