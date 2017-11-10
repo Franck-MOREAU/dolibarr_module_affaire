@@ -102,13 +102,13 @@ elseif ($action == 'edit') {
 	print $langs->trans("affnum").': ' . $object->ref;
 	print '</td>';
 	print '<td width="50%">';
-	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1); 
+	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
+	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
 	print '</td>';
 	print '<td width="50%">';
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
@@ -154,13 +154,13 @@ elseif ($action == 'edit') {
 	print '<td width="50%">';
 	$user_resp = new User($db);
 	$user_resp->fetch($object->fk_user_resp);
-	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
+	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
+	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
 	print '</td>';
 	print '<td width="50%">';
 	if($object->fk_ctm>0){
