@@ -195,7 +195,7 @@ elseif ($action == 'edit') {
 	}
 	print '</div>';
 	print '</td>';
-	print '<td>';
+	print '<td valign="top">';
 	print $langs->trans("description") . '</br>';
 	print $object->description;
 	print '</td>';
