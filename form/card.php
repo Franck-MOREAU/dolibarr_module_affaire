@@ -104,12 +104,10 @@ elseif ($action == 'edit') {
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
+	print $langs->trans("client").': ' . $form->select_company($object->fk_soc,'fk_soc','',0);
 	print '</td>';
 	print '<td width="50%">';
-	if($object->fk_ctm>0){
-		print $langs->trans("ctm").': '.$object->contremarque->getNomUrl(1);
-	}
+	print $langs->trans("ctm").': '. $form->select_company($object->fk_ctm,'fk_ctm','',1);
 	print '</td>';
 	print '</tr>';
 	
