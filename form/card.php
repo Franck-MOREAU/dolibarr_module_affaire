@@ -135,10 +135,8 @@ elseif ($action == 'edit') {
 	 * Barre d'actions
 	 */
 	
-	var_dump($user->rights);
-	
 	print '<div class="tabsAction">';
-	// Delete
+	// Edit
 	if ($user->rights->affaires->write) {
 		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
 	}
