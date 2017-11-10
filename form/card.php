@@ -120,7 +120,8 @@ elseif ($action == 'edit') {
 	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
 	print '</td>';
 	print '<td width="50%">';
-	print $langs->trans("year").': '. $formother->select_year($object->year,'year',0);
+	print $langs->trans("year").': ';
+	$formother->select_year($object->year,'year',0);
 	print '</td>';
 	print '</tr>';
 	
