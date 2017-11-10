@@ -84,7 +84,8 @@ if ($action == 'create' && $user->rights->lead->write) {
 }
 
 elseif ($action == 'edit') {
-
+	$formother = new FormOther($db);
+	
 	dol_fiche_head('', '', 'Affaire ' . $object->ref , 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	print_fiche_titre($langs->trans("affaire") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 
@@ -113,10 +114,10 @@ elseif ($action == 'edit') {
 	
 	print '<tr>';
 	print '<td width="50%">';
-	print $langs->trans("cv").': ' . $object->type_label;
+	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
 	print '</td>';
 	print '<td width="50%">';
-	print $langs->trans("year").': '.$object->year;
+	print $langs->trans("year").': '. $formother->select_year($object->year,'year',0);
 	print '</td>';
 	print '</tr>';
 	
