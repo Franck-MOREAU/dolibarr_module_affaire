@@ -98,28 +98,28 @@ elseif ($action == 'edit') {
 	
 	print '<table class="border" width="100%">';
 	print '<tr>';
-	print '<td width="50%">';
+	print '<td width="35%">';
 	print $langs->trans("affnum").': ' . $object->ref;
 	print '</td>';
-	print '<td width="50%">';
+	print '<td width="65%">';
 	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
 	print '</td>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
 	print '</td>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("year").': ';
 	$formother->select_year($object->year,'year',0);
 	print '</td>';
@@ -159,10 +159,10 @@ elseif ($action == 'edit') {
 	print '</tr>';
 	
 	print '<tr>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
 	print '</td>';
-	print '<td width="50%">';
+	print '<td>';
 	if($object->fk_ctm>0){
 		print $langs->trans("ctm").': '.$object->contremarque->getNomUrl(1);
 	}
@@ -170,10 +170,10 @@ elseif ($action == 'edit') {
 	print '</tr>';
 	
 	print '<tr>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("cv").': ' . $object->type_label;
 	print '</td>';
-	print '<td width="50%">';
+	print '<td>';
 	print $langs->trans("year").': '.$object->year;
 	print '</td>';
 	print '</tr>';
