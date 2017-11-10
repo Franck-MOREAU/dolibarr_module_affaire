@@ -196,7 +196,8 @@ elseif ($action == 'edit') {
 	print '</div>';
 	print '</td>';
 	print '<td>';
-	print '';
+	print $langs->trans("description") / '</br>';
+	print $object->description;
 	print '</td>';
 	print '</tr>';
 	
