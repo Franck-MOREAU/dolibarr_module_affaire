@@ -135,7 +135,7 @@ elseif ($action == 'edit') {
 	 * Barre d'actions
 	 */
 	
-	var_dump($user->rights->affaires);
+	var_dump($user->rights);
 	
 	print '<div class="tabsAction">';
 	// Delete
