@@ -47,6 +47,21 @@ if ($id > 0) {
 	if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
 }
 
+$includeuserlist = array();
+$usergroup = new UserGroup($db);
+$result = $usergroup->fetch('','Commerciaux');
+
+if ($result < 0)
+	setEventMessages(null, $usergroup->errors, 'errors');
+
+$includeuserlisttmp = $usergroup->listUsersForGroup();
+
+if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
+	foreach ( $includeuserlisttmp as $usertmp ) {
+		$includeuserlist[] = $usertmp->id;
+	}
+}
+
 /*
  * Actions
  */
@@ -70,34 +85,64 @@ if ($action == 'create' && $user->rights->lead->write) {
 elseif ($action == 'edit') {
 
 	dol_fiche_head('', '', 'Affaire ' . $object->ref , 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	print_fiche_titre($langs->trans("affaire") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 
 	print '<form name="editlead" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="update">';
-
+	
+	print '<table class="border" width="100%">';
+	print '<tr>';
+	print '<td width="50%">';
+	print $langs->trans("affnum").': ' . $object->ref;
+	print '</td>';
+	print '<td width="50%">';
+	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1); 
+	print '</td>';
+	print '</tr>';
+	
+	print '<tr>';
+	print '<td width="50%">';
+	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
+	print '</td>';
+	print '<td width="50%">';
+	if($object->fk_ctm>0){
+		print $langs->trans("ctm").': '.$object->contremarque->getNomUrl(1);
+	}
+	print '</td>';
+	print '</tr>';
+	
+	print '<tr>';
+	print '<td width="50%">';
+	print $langs->trans("cv").': ' . $object->type_label;
+	print '</td>';
+	print '<td width="50%">';
+	print $langs->trans("year").': '.$object->year;
+	print '</td>';
+	print '</tr>';
+	
+	print '</table>';
+	
+	
 	print '</form>';
 } else {
+	// Confirm form
+	$formconfirm = '';
+	if ($action == 'delete') {
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LeadDelete'), $langs->trans('LeadConfirmDelete'), 'confirm_delete', '', 0, 1);
+	}
+	
+	if ($formconfirm) {
+		print $formconfirm;
+	}
+
 	/*
 	 * Show object in view mode
 	 */
 	dol_fiche_head();
 	print_fiche_titre($langs->trans("affaire") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	
-	// Confirm form
-	$formconfirm = '';
-	if ($action == 'delete') {
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LeadDelete'), $langs->trans('LeadConfirmDelete'), 'confirm_delete', '', 0, 1);
-	}
-		
-
-	$linkback = '<a href="' . dol_buildpath('/affaires/form/list.php', 1) . '">' . $langs->trans("BackToList") . '</a>';
-
-	if ($formconfirm) {
-		print $formconfirm;
-	}
-
 	print '<table class="border" width="100%">';
-	
 	print '<tr>';
 	print '<td width="50%">';
 	print $langs->trans("affnum").': ' . $object->ref;
@@ -146,22 +191,24 @@ elseif ($action == 'edit') {
 	}
 	print '</div>';
 		
-	dol_fiche_head();
-	print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
-	print '<table class="border" width="100%">';
-	//var_dump($object);
-	
-	foreach ($object->affaires_det as $vehicule){
-		print '<tr>';
-		print '<td width="100%">';
-		print $vehicule->vh_tile(0);
-		print '</td>';
-		print '</tr>';
-	}
-	print '</table>';
-	
-	dol_fiche_end();
 }
+dol_fiche_head();
+print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+print '<table class="border" width="100%">';
+//var_dump($object);
+
+foreach ($object->affaires_det as $vehicule){
+	print '<tr>';
+	print '<td width="100%">';
+	print $vehicule->vh_tile(0);
+	print '</td>';
+	print '</tr>';
+}
+print '</table>';
+
+dol_fiche_end();
+
+
 dol_fiche_end();
 llxFooter();
 $db->close();
