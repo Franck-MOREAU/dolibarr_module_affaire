@@ -178,6 +178,24 @@ elseif ($action == 'edit') {
 	print '</td>';
 	print '</tr>';
 	
+	print '<tr>';
+	print '<td>';
+	print '<div class="tabsAction">';
+	// Edit
+	if ($user->rights->affaires->write) {
+		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
+	}
+	// Delete
+	if ($user->rights->affaires->delete) {
+		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans("Delete") . "</a></div>\n";
+	}
+	print '</div>';
+	print '</td>';
+	print '<td>';
+	print '';
+	print '</td>';
+	print '</tr>';
+	
 	print '</table>';
 	
 	/*
