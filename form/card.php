@@ -103,9 +103,9 @@ elseif ($action == 'edit') {
 	print $langs->trans("affnum").': ' . $object->ref;
 	print '</td>';
 	print '<td width="50%">';
-	$user = new User($db);
-	$user->fetch($object->fk_user_resp);
-	print $langs->trans("userresp").': '.$user->getNomUrl(1);
+	$user_resp = new User($db);
+	$user_resp->fetch($object->fk_user_resp);
+	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
 	
