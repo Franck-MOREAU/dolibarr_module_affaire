@@ -181,6 +181,10 @@ elseif ($action == 'edit') {
 	print '<tr>';
 	print '<td>';
 	print '<div class="tabsAction">';
+	/*
+	 * Barre d'actions
+	 */
+	
 	// Edit
 	if ($user->rights->affaires->write) {
 		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
@@ -197,22 +201,7 @@ elseif ($action == 'edit') {
 	print '</tr>';
 	
 	print '</table>';
-	
-	/*
-	 * Barre d'actions
-	 */
-	
-	print '<div class="tabsAction">';
-	// Edit
-	if ($user->rights->affaires->write) {
-		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
-	}
-	// Delete
-	if ($user->rights->affaires->delete) {
-		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans("Delete") . "</a></div>\n";
-	}
-	print '</div>';
-		
+			
 }
 dol_fiche_head();
 print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
