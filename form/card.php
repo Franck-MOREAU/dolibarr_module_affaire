@@ -148,10 +148,10 @@ elseif ($action == 'edit') {
 	
 	print '<table class="border" width="100%">';
 	print '<tr>';
-	print '<td width="50%">';
+	print '<td width="35%">';
 	print $langs->trans("affnum").': ' . $object->ref;
 	print '</td>';
-	print '<td width="50%">';
+	print '<td width="65%">';
 	$user_resp = new User($db);
 	$user_resp->fetch($object->fk_user_resp);
 	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
