@@ -462,17 +462,17 @@ class Affaires extends CommonObject
 				// // End call triggers
 			}
 		}
-		if (! $error) {
-			foreach ($this->affaires_det as $affaires_det){
-				$res = $affaires_det->update($user);
-				if($res <1){
-					foreach ($affaires_det->errors as $det_error){
-						$this->errors[] = $det_error;
-						$error ++;
-					}
-				}
-			}
-		}
+// 		if (! $error) {
+// 			foreach ($this->affaires_det as $affaires_det){
+// 				$res = $affaires_det->update($user);
+// 				if($res <1){
+// 					foreach ($affaires_det->errors as $det_error){
+// 						$this->errors[] = $det_error;
+// 						$error ++;
+// 					}
+// 				}
+// 			}
+// 		}
 
 		// Commit or rollback
 		if ($error) {
