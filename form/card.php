@@ -101,7 +101,7 @@ if($action=="add"){
 
 if($action=="update"){
 
-	$object = new Affaires($db);
+	//$object = new Affaires($db);
 	$object->fk_ctm = $fk_ctm;
 	$object->year = $year;
 	$object->description = $description;
