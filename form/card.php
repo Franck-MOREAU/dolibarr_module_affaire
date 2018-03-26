@@ -49,14 +49,21 @@ $fk_ctm = GETPOST('fk_ctm','int');
 $fk_cv = GETPOST('fk_type','int');
 $year = GETPOST('year','int');
 $description= GETPOST('description','none');
+$vehid=GETPOST('vehid','int');
 
 $object = new Affaires($db);
+$objectdet = new Affaires_det($db);
 $formAffaires = new FormAffaires($db);
 
 // Load object
 if ($id > 0) {
 	$ret = $object->fetch($id);
 	if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+}
+
+if ($vehid > 0) {
+	$ret = $objectdet->fetch($vehid);
+	if ($ret < 0) setEventMessages(null, $objectdet->errors, 'errors');
 }
 
 $includeuserlist = array();
@@ -80,7 +87,6 @@ if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
 
 if($action=="add"){
 
-	$object = new Affaires($db);
 	$object->fk_soc = $fk_soc;
 	$object->fk_user_resp = $fk_user_resp;
 	$object->fk_ctm = $fk_ctm;
@@ -120,12 +126,47 @@ if($action=="update"){
 
 if($action=="confirm_deletevehid" && $confirm=='yes' && $user->admin){
 
-	$objectdet = new Affaires_det($db);
-	$objectdet->id = GETPOST('vehid','int');
 	$res = $objectdet->delete($user);
 	if($res <0){
 		setEventMessages(null, $objectdet->errors, 'errors');
 		$action = 'edit';
+	}else{
+		$ret = $object->fetch($id);
+		$action ='';
+		if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+	}
+}
+
+if($action=="confirm_changestatus" && $user->rights->affaires->write){
+
+	$objectdet->fk_status = GETPOST('status','int');
+	$res = $objectdet->update($user);
+	if($res <0){
+		setEventMessages(null, $objectdet->errors, 'errors');
+		$action = '';
+	}else{
+		$ret = $object->fetch($id);
+		$action ='';
+		if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+		if ($objectdet->fk_status==7) {
+			$action = 'update_motif';
+		}
+	}
+}
+
+if($action=="confirm_changemotif" && $user->rights->affaires->write){
+
+	$objectdet->fk_motifs_array=array();
+	foreach($objectdet->motifs_dict as $keymotif=>$valmotif) {
+		$ismotif=GETPOST('motif_'.$keymotif);
+		if (!empty($ismotif)) {
+			$objectdet->fk_motifs_array[]=$keymotif;
+		}
+	}
+	$res = $objectdet->update($user);
+	if($res <0){
+		setEventMessages(null, $objectdet->errors, 'errors');
+		$action = '';
 	}else{
 		$ret = $object->fetch($id);
 		$action ='';
@@ -270,7 +311,7 @@ elseif ($action == 'edit') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LeadDelete'), $langs->trans('LeadConfirmDelete'), 'confirm_delete', '', 0, 1);
 	}
 	if ($action == 'deleteveh') {
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.GETPOST('vehid'), $langs->trans('ConfrimDeleteVeh'), $langs->trans('ConfrimDeleteVeh'), 'confirm_deletevehid', '', 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.$objectdet->id, $langs->trans('ConfrimDeleteVeh'), $langs->trans('ConfrimDeleteVeh'), 'confirm_deletevehid', '', 0, 1);
 	}
 	if ($action == 'classveh') {
 		$formquestion=array();
@@ -278,9 +319,19 @@ elseif ($action == 'edit') {
 				'type' => 'other',
 				'name' => 'status',
 				'label' => 'Statut',
-				'value' => $formAffaires->select_affairesdet_fromdict($status,'status',0)
+				'value' => $formAffaires->select_affairesdet_fromdict($objectdet->fk_status,'status',0)
 		);
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.GETPOST('vehid'), $langs->trans('ConfrimDeleteVeh'), '', 'confirm_cahngestatus', $formquestion, 0, 1);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.$objectdet->id, $langs->trans('ChangeStatus'), '', 'confirm_changestatus', $formquestion, 0, 1);
+	}
+	if ($action == 'update_motif') {
+		$formquestion=array(
+				'text' => $langs->trans("ConfirmClone"),
+		);
+		foreach($objectdet->motifs_dict as $keymotif=>$valmotif) {
+			$formquestion[]=array('type' => 'checkbox', 'name' => 'motif_'.$keymotif,   'label' => $valmotif,   'value' => (in_array($keymotif,$objectdet->fk_motifs_array)));
+		}
+
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.$objectdet->id, $langs->trans('ChangeMotif'), '', 'confirm_changemotif', $formquestion, 0, 1, 500);
 	}
 	if ($formconfirm) {
 		print $formconfirm;
