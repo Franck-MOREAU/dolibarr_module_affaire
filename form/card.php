@@ -41,6 +41,7 @@ if (! empty($conf->commande->enabled))
 $action = GETPOST('action', 'alpha');
 $id = GETPOST('id', 'int');
 $confirm = GETPOST('confirm', 'alpha');
+$fk_soc= GETPOST('fk_soc,int');
 
 $object = new Affaires($db);
 
@@ -69,7 +70,50 @@ if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
  * Actions
  */
 
+if($action=="add"){
+	$fk_soc = GETPOST('fk_soc');
+	$fk_user_resp = GETPOST('fk_user_resp');
+	$fk_ctm = GETPOST('fk_ctm');
+	$fk_cv = GETPOST('fk_type');
+	$year = GETPOST('year');
+	
+	
+	$object = new Affaires($db);
+	$object->fk_soc = $fk_soc;
+	$object->fk_user_resp = $fk_user_resp;
+	$object->fk_ctm = $fk_ctm;
+	$object->fk_c_type = $fk_cv;
+	$object->year = $year;
+	$object->ref = $object->getNextNumRef();
+	$res = $object->create($user);
+	if($res <0){
+		setEventMessages(null, $object->errors, 'errors');
+	}else{
+		$id = $res;
+		$ret = $object->fetch($id);
+		$action ='';
+		if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+	}
+}
 
+if($action=="update"){
+	$fk_soc = GETPOST('fk_soc');
+	$fk_user_resp = GETPOST('fk_user_resp');
+	$fk_ctm = GETPOST('fk_ctm');
+	$fk_cv = GETPOST('fk_type');
+	$year = GETPOST('year');
+	
+	
+	$object = new Affaires($db);
+	$object->fk_ctm = $fk_ctm;
+	$object->year = $year;
+	$res = $object->update($user);
+	if($res <0){
+		setEventMessages(null, $object->errors, 'errors');
+	}else{
+		$action='';
+	}
+}
 
 
 /*
@@ -82,7 +126,54 @@ $form = new Form($db);
 $now = dol_now();
 
 if ($action == 'create' && $user->rights->lead->write) {
-
+	dol_include_once('/core/class/html.formother.class.php');
+	$formother = new FormOther($db);
+	
+	dol_fiche_head('', '', 'Nouvelle Affaire ' , 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	print_fiche_titre($langs->trans("affaire") , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+	
+	print '<form name="createlead" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
+	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
+	print '<input type="hidden" name="action" value="add">';
+	
+	print '<table class="border" width="100%">';
+	print '<tr>';
+	print '<td width="35%">';
+	print $langs->trans("affnum").': Nouvelle Affaire';
+	print '</td>';
+	print '<td width="65%">';
+	print $langs->trans("client").': ' . $form->select_thirdparty_list($fk_soc, 'fk_soc', 's.client>0', 0);
+	print '</td>';
+	print '</tr>';
+	
+	print '<tr>';
+	print '<td>';
+	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+	print '</td>';
+	print '<td>';
+	print $langs->trans("ctm").': '. $form->select_thirdparty_list('', 'fk_ctm', 's.client>0', 0);;
+	print '</td>';
+	print '</tr>';
+	
+	print '<tr>';
+	print '<td>';
+	print $langs->trans("cv").': ' . $form->selectarray('fk_type', '',$object->fk_c_type);
+	print '</td>';
+	print '<td>';
+	print $langs->trans("year").': ';
+	$formother->select_year(dol_print_date(dol_now(),'%Y'),'year',0);
+	print '</td>';
+	print '</tr>';
+	
+	print '</table>';
+	
+	print '<div class="center">';
+	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('CreateDraft') . '">';
+	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
+	print '</div>';
+	
+	print '</form>';
 }
 
 elseif ($action == 'edit') {
@@ -127,8 +218,14 @@ elseif ($action == 'edit') {
 	
 	print '</table>';
 	
+	print '<div class="center">';
+	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('CreateDraft') . '">';
+	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
+	print '</div>';
 	
 	print '</form>';
+	
 } else {
 	// Confirm form
 	$formconfirm = '';
@@ -196,12 +293,14 @@ elseif ($action == 'edit') {
 	print '</div>';
 	print '</td>';
 	print '<td valign="top">';
-	print $langs->trans("description") . '</br>';
+	print $langs->trans("Description") . '</br>';
 	print $object->description;
 	print '</td>';
 	print '</tr>';
 	
 	print '</table>';
+	
+	
 			
 }
 dol_fiche_head();
