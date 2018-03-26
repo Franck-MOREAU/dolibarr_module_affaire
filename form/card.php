@@ -116,13 +116,13 @@ if($action=="update"){
 	}
 }
 
-if($action=="confirm_deletevehid"){
+if($action=="confirm_deletevehid" && $confirm=='yes' && $user->admin){
 
-	$object = new Affaires_det($db);
-	$object->id = GETPOST('vehid','int');
-	$res = $object->delete($user);
+	$objectdet = new Affaires_det($db);
+	$objectdet->id = GETPOST('vehid','int');
+	$res = $objectdet->delete($user);
 	if($res <0){
-		setEventMessages(null, $object->errors, 'errors');
+		setEventMessages(null, $objectdet->errors, 'errors');
 		$action = 'edit';
 	}else{
 		$ret = $object->fetch($id);

@@ -256,6 +256,7 @@ class Affaires extends CommonObject
 				// loading affaires lines into affaires_det array of object
 				$det = New Affaires_det($this->db);
 				$det->fetch_all('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
+				$this->affaires_det=array();
 				foreach ($det->lines as $line){
 					$this->affaires_det[$line->id]=$line;
 				}
@@ -1442,7 +1443,7 @@ class Affaires_det extends CommonObject
  			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
  		}
  		if ($user->admin) {
- 			$return.= '<a href="javascript:popDelAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
+ 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
  		}
  		if ($user->rights->affaires->write) {
  			//TODO only if affaire traiter et pas de commande dessus
