@@ -17,16 +17,16 @@
  */
 
 /**
- * \defgroup	lead	Lead module
- * \brief		Lead module descriptor.
- * \file		core/modules/modLead.class.php
- * \ingroup	lead
- * \brief		Description and activation file for module Lead
+ * \defgroup	affaires	Affaires module
+ * \brief		Affaires module descriptor.
+ * \file		core/modules/modAffaires.class.php
+ * \ingroup	affaires
+ * \brief		Description and activation file for module Affaires
  */
 include_once DOL_DOCUMENT_ROOT . "/core/modules/DolibarrModules.class.php";
 
 /**
- * Description and activation class for module Lead
+ * Description and activation class for module Affaires
  */
 class modAffaires extends DolibarrModules
 {
@@ -74,11 +74,11 @@ class modAffaires extends DolibarrModules
 		// use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png
 		// use this->picto='pictovalue@module'
-		$this->picto = 'affaires@affaires'; // mypicto@lead
+		$this->picto = 'affaires@affaires'; // mypicto@affaires
 		                            // Defined all module parts (triggers, login, substitutions, menus, css, etc...)
-		                            // for default path (eg: /lead/core/xxxxx) (0=disable, 1=enable)
-		                            // for specific path of parts (eg: /lead/core/modules/barcode)
-		                            // for specific css file (eg: /lead/css/lead.css.php)
+		                            // for default path (eg: /affaires/core/xxxxx) (0=disable, 1=enable)
+		                            // for specific path of parts (eg: /affaires/core/modules/barcode)
+		                            // for specific css file (eg: /affaires/css/affaires.css.php)
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory
 			// 'triggers' => 1,
@@ -93,7 +93,7 @@ class modAffaires extends DolibarrModules
 			// Set this to 1 if module has its own models directory
 			'models' => 1,
 		// Set this to relative path of css if module has its own css file
-		// 'css' => '/lead/css/mycss.css.php',
+		// 'css' => '/affaires/css/mycss.css.php',
 		// Set here all hooks context managed by module
 			'hooks' => array('commonobject','searchform'),
 		// Set here all workflow context managed by module
@@ -101,14 +101,14 @@ class modAffaires extends DolibarrModules
 				);
 
 		// Data directories to create when module is enabled.
-		// Example: this->dirs = array("/lead/temp");
+		// Example: this->dirs = array("/affaires/temp");
 		$this->dirs = array(
 			'/affaires',
 			'/affaires/stats'
 		);
 
 		// Config pages. Put here list of php pages
-		// stored into lead/admin directory, used to setup module.
+		// stored into affaires/admin directory, used to setup module.
 		$this->config_page_url = array(
 			"admin_affaires.php@affaires"
 		);
@@ -137,7 +137,7 @@ class modAffaires extends DolibarrModules
 				'AFFAIRES_ADDON',
 				'chaine',
 				'mod_affaires_simple',
-				'Numbering lead rule',
+				'Numbering affaires rule',
 				0,
 				'current',
 				1
@@ -148,13 +148,13 @@ class modAffaires extends DolibarrModules
 		// Array to add new pages in new tabs
 		// Example:
 		//$this->tabs = array(
-			//'thirdparty:+tabLead:Module103111Name:lead@lead:$user->rights->lead->read && ($object->client > 0 || $soc->client > 0):/lead/lead/list.php?socid=__ID__',
-			//'invoice:+tabAgefodd:AgfMenuSess:agefodd@agefodd:/lead/lead/list.php?search_invoiceid=__ID__',
-			//'propal:+tabAgefodd:AgfMenuSess:agefodd@agefodd:/lead/lead/list.php?search_propalid=__ID__',
+			//'thirdparty:+tabAffaires:Module103111Name:affaires@affaires:$user->rights->affaires->read && ($object->client > 0 || $soc->client > 0):/affaires/affaires/list.php?socid=__ID__',
+			//'invoice:+tabAgefodd:AgfMenuSess:agefodd@agefodd:/affaires/affaires/list.php?search_invoiceid=__ID__',
+			//'propal:+tabAgefodd:AgfMenuSess:agefodd@agefodd:/affaires/affaires/list.php?search_propalid=__ID__',
 		// // To add a new tab identified by code tabname1
-		// 'objecttype:+tabname1:Title1:langfile@lead:$user->rights->lead->read:/lead/mynewtab1.php?id=__ID__',
+		// 'objecttype:+tabname1:Title1:langfile@affaires:$user->rights->affaires->read:/affaires/mynewtab1.php?id=__ID__',
 		// // To add another new tab identified by code tabname2
-		// 'objecttype:+tabname2:Title2:langfile@lead:$user->rights->othermodule->read:/lead/mynewtab2.php?id=__ID__',
+		// 'objecttype:+tabname2:Title2:langfile@affaires:$user->rights->othermodule->read:/affaires/mynewtab2.php?id=__ID__',
 		// // To remove an existing tab identified by code tabname
 		// 'objecttype:-tabname'
 		//		);
@@ -182,7 +182,7 @@ class modAffaires extends DolibarrModules
 		}
 
 		$this->dictionnaries = array(
-			'langs' => 'lead@lead',
+			'langs' => 'affaires@affaires',
 			'tabname' => array(
 				MAIN_DB_PREFIX . "c_affaires_status",
 				MAIN_DB_PREFIX . "c_affaires_type",
@@ -191,7 +191,7 @@ class modAffaires extends DolibarrModules
 				MAIN_DB_PREFIX . "c_affaires_genre",
 				MAIN_DB_PREFIX . "c_affaires_carrosserie",
 				MAIN_DB_PREFIX . "c_affaires_marques",
-				MAIN_DB_PREFIX . "c_affaires_motif_perte_lead"
+				MAIN_DB_PREFIX . "c_affaires_motif_perte_affaires"
 			),
 			'tablib' => array(
 				"Affaires -- status",
@@ -211,7 +211,7 @@ class modAffaires extends DolibarrModules
 				'SELECT f.rowid as rowid, f.genre as nom, f.rep as reprise, f.cv as canal, f.del_rg as delais, f.labelexcel, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_genre as f',
 				'SELECT f.rowid as rowid, f.carrosserie as nom, f.labelexcel, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_carrosserie as f',
 				'SELECT f.rowid as rowid, f.marque as nom, f.labelexcel, f.active  FROM ' . MAIN_DB_PREFIX . 'c_affaires_marques as f',
-				'SELECT f.rowid as rowid, f.motif as nom, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_motif_perte_lead as f'
+				'SELECT f.rowid as rowid, f.motif as nom, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_motif_perte_affaires as f'
 			),
 			'tabsqlsort' => array(
 				'rowid ASC',
@@ -281,9 +281,9 @@ class modAffaires extends DolibarrModules
 		$r = 0;
 		// Example:
 
-		//$this->boxes[$r][1] = "box_lead_current@lead";
+		//$this->boxes[$r][1] = "box_affaires_current@affaires";
 		//$r ++;
-		//$this->boxes[$r][1] = "box_lead_late@lead";
+		//$this->boxes[$r][1] = "box_affaires_late@affaires";
 		/*
 		 * $this->boxes[$r][1] = "myboxb.php"; $r++;
 		 */
@@ -426,7 +426,7 @@ class modAffaires extends DolibarrModules
 				'type' => 'left',
 				'titre' => 'Portefeuille',
 				'leftmenu' => 'my',
-				'url' => '/affaires/form/lead_portfolio.php',
+				'url' => '/affaires/form/affaires_portfolio.php',
 				'langs' => 'affaires@affaires',
 				'position' => 100+$r,
 				'enabled' => '$user->rights->affaires->read',
@@ -454,7 +454,7 @@ class modAffaires extends DolibarrModules
 			'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=my',
 			'type' => 'left',
 			'titre' => 'Mes affaires',
-			'leftmenu' => 'mylead',
+			'leftmenu' => 'myaffaires',
 			'url' => '/affaires/form/list.php?viewtype=my',
 			'langs' => 'affaires@affaires',
 			'position' => 100+$r,
@@ -466,7 +466,7 @@ class modAffaires extends DolibarrModules
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
 				'type' => 'left',
 				'titre' => 'mes affaires en cours',
 				'url' => '/affaires/form/list.php?viewtype=mycurrent',
@@ -480,7 +480,7 @@ class modAffaires extends DolibarrModules
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
 				'type' => 'left',
 				'titre' => 'mes affaires Chaudes',
 				'url' => '/affaires/form/list.php?viewtype=myhot',
@@ -494,7 +494,7 @@ class modAffaires extends DolibarrModules
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
 				'type' => 'left',
 				'titre' => 'mes affaires traitées',
 				'url' => '/affaires/form/list.php?viewtype=mywon',
@@ -508,7 +508,7 @@ class modAffaires extends DolibarrModules
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
 				'type' => 'left',
 				'titre' => 'mes affaires sans suite',
 				'url' => '/affaires/form/list.php?viewtype=mycancel',
@@ -522,7 +522,7 @@ class modAffaires extends DolibarrModules
 		$r ++;
 
 		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=mylead',
+				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
 				'type' => 'left',
 				'titre' => 'mes affaires perdues',
 				'url' => '/affaires/form/list.php?viewtype=mylost',
@@ -573,7 +573,7 @@ class modAffaires extends DolibarrModules
 	/**
 	 * Create tables, keys and data required by module
 	 * Files llx_table1.sql, llx_table1.key.sql llx_data.sql with create table, create keys
-	 * and create data commands must be stored in directory /lead/sql/
+	 * and create data commands must be stored in directory /affaires/sql/
 	 * This function is called by this->init
 	 *
 	 * @return int if KO, >0 if OK

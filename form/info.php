@@ -17,9 +17,9 @@
  */
 
 /**
- * \file lead/lead/info.php
- * \ingroup lead
- * \brief info of lead
+ * \file affaires/affaires/info.php
+ * \ingroup affaires
+ * \brief info of affaires
  */
 $res = @include '../../main.inc.php'; // For root directory
 if (! $res)
@@ -27,12 +27,12 @@ if (! $res)
 if (! $res)
 	die("Include of main fails");
 
-require_once '../class/lead.class.php';
-require_once '../lib/lead.lib.php';
+require_once '../class/affaires.class.php';
+require_once '../lib/affaires.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
 
 // Security check
-if (! $user->rights->lead->read)
+if (! $user->rights->affaires->read)
 	accessforbidden();
 
 $id = GETPOST('id', 'int');
@@ -41,14 +41,14 @@ $id = GETPOST('id', 'int');
  * View
  */
 
-llxHeader('', $langs->trans("LeadInfo"));
+llxHeader('', $langs->trans("AffairesInfo"));
 
-$object = new Lead($db);
+$object = new Affaires($db);
 $object->info($id);
 
-$head = lead_prepare_head($object);
+$head = affaires_prepare_head($object);
 
-dol_fiche_head($head, 'info', $langs->trans("LeadLead"), 0, 'bill');
+dol_fiche_head($head, 'info', $langs->trans("AffairesAffaires"), 0, 'bill');
 
 print '<table width="100%"><tr><td>';
 dol_print_object_info($object);

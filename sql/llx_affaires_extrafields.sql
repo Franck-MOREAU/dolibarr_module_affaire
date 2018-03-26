@@ -1,5 +1,5 @@
 -- ========================================================================
--- Copyright (C) 2012 	   Florian Henry  <florian.henry@atm-consulting.fr>
+-- Copyright (C) 2014 Florian HENRY	<florian.henry@atm-consulting.fr>
 --
 -- This program is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -16,4 +16,11 @@
 --
 -- ========================================================================
 
-ALTER TABLE llx_c_affaires_status ADD UNIQUE INDEX uk_c_affaires_status_code(code);
+CREATE TABLE IF NOT EXISTS llx_affaires_extrafields
+(
+  rowid                     integer AUTO_INCREMENT PRIMARY KEY,
+  tms                       timestamp,
+  fk_object                 integer NOT NULL,
+  import_key                varchar(14)                          		-- import key
+) ENGINE=innodb;
+

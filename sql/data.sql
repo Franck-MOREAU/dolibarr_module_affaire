@@ -1,4 +1,4 @@
--- Manage Lead
+-- Manage Affaires
 -- Copyright (C) 2014  Florian HENRY <florian.henry@atm-consulting.fr>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
 
 INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (11,'S'   ,'Sans Suite', 40, 60,1);
 INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (5,'PENDING','En cours', 50, 50,0);
-INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (6,'WON'    ,'Traitée', 60, 100,1);
-INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (7,'LOST'   ,'Manquée', 70, 0,1);
+INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (6,'WON'    ,'Traitï¿½e', 60, 100,1);
+INSERT INTO llx_c_affaires_status(rowid,code,label,position,percent,active) VALUES (7,'LOST'   ,'Manquï¿½e', 70, 0,1);
 
 INSERT INTO llx_c_affaires_type(rowid,code,label,active) VALUES (4,'SUPP','Volvo',1);
 INSERT INTO llx_c_affaires_type(rowid,code,label,active) VALUES (5,'TRAIN','Nissan',1);
@@ -37,15 +37,15 @@ INSERT INTO `llx_c_affaires_carrosserie` (`rowid`, `carrosserie`,active,labelexc
 (12, 'Porte Container', 1, 'PTE CONT'),
 (13, 'Citerne', 1, 'CIT VID,CARB LEG,CIT GAZ,CIT ALIM,CIT ALTD,CIT EAU'),
 (14, 'Benne', 1, 'BEN AMO,BENNE,BEN CERE'),
-(15, 'Dépaneuse', 1, 'DEPANNAG,ATELIER'),
+(15, 'Dï¿½paneuse', 1, 'DEPANNAG,ATELIER'),
 (16, 'Tracteur Routier', 1, 'PR SREM,PR REM'),
 (17, 'Porte Engins', 1, 'PTE ENG'),
 (18, 'Porte voiture', 1, 'PTE VOIT'),
-(19, 'Benne a Ordure Ménagère', 1, 'BOM'),
+(19, 'Benne a Ordure Mï¿½nagï¿½re', 1, 'BOM'),
 (20, 'Savoyarde', 1, 'SAVOYARD'),
-(21, 'Toupie a Béton', 1, 'BETON'),
-(22, 'Pulvé', 1, 'CIT PULV,CIT BETA'),
-(23, 'Bétaillere', 1, 'BETAIL'),
+(21, 'Toupie a Bï¿½ton', 1, 'BETON'),
+(22, 'Pulvï¿½', 1, 'CIT PULV,CIT BETA'),
+(23, 'Bï¿½taillere', 1, 'BETAIL'),
 (24, 'Forestier', 1, 'FOREST'),
 (25, 'Porte ferraille', 1, 'PTE FER'),
 (26, 'Autres types de carrosserie', 1, 'NON SPEC,MAGASIN'),
@@ -97,7 +97,7 @@ INSERT INTO `llx_c_affaires_marques` (`rowid`, `marque`, `active`, `labelexcel`)
 (14, 'Schmitz', 1, 'SCHMITZ'),
 (15, 'Trailor', 1, 'TRAILOR');
 
-INSERT INTO `llx_c_affaires_motif_perte_lead` (`rowid`, `motif`) VALUES
+INSERT INTO `llx_c_affaires_motif_perte_affaires` (`rowid`, `motif`) VALUES
 (1, 'Prix'),
 (2, 'FidelitÃ©'),
 (3, 'Achat VO'),

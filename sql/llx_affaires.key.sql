@@ -1,4 +1,4 @@
--- Manage Lead
+-- Manage Affaires
 -- Copyright (C) 2014  Florian HENRY <florian.henry@atm-consulting.fr>
 --
 -- This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_fk_c_type (fk_c_type);
-ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_2 FOREIGN KEY (fk_c_type) REFERENCES llx_c_lead_type (rowid);
+ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_2 FOREIGN KEY (fk_c_type) REFERENCES llx_c_affaires_type (rowid);
 
 ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_fk_soc (fk_soc);
 ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_3 FOREIGN KEY (fk_soc) REFERENCES llx_societe (rowid);

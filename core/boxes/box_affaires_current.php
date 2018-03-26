@@ -18,26 +18,26 @@
  */
 
 /**
- * \file	core/boxes/box_lead_current.php
- * \ingroup	lead
- * \brief	Current leads box
+ * \file	core/boxes/box_affaires_current.php
+ * \ingroup	affaires
+ * \brief	Current affairess box
  */
 include_once DOL_DOCUMENT_ROOT . "/core/boxes/modules_boxes.php";
 
 /**
  * Class to manage the box
  */
-class box_lead_current extends ModeleBoxes
+class box_affaires_current extends ModeleBoxes
 {
 
-	public $boxcode = "lead";
+	public $boxcode = "affaires";
 
-	public $boximg = "lead@lead";
+	public $boximg = "affaires@affaires";
 
 	public $boxlabel;
 
 	public $depends = array(
-		"lead"
+		"affaires"
 	);
 
 	public $db;
@@ -55,7 +55,7 @@ class box_lead_current extends ModeleBoxes
 	{
 		global $langs;
 		$langs->load("boxes");
-		$langs->load("lead@lead");
+		$langs->load("affaires@affaires");
 
 		$this->boxlabel = 'liste des affaires en cours';
 	}
@@ -72,15 +72,15 @@ class box_lead_current extends ModeleBoxes
 
 		$this->max = $max;
 
-		dol_include_once('/lead/class/lead.class.php');
+		dol_include_once('/affaires/class/affaires.class.php');
 
-		$lead = new Lead($db);
+		$affaires = new Affaires($db);
 
-		$lead->fetch_all('DESC', 't.date_closure', $max, 0, array(
+		$affaires->fetch_all('DESC', 't.date_closure', $max, 0, array(
 			't.fk_c_status' => 6,'t.fk_user_resp'=>$user->id
 		));
 
-		$text = $langs->trans("LeadList");
+		$text = $langs->trans("AffairesList");
 		$text .= " (" . $langs->trans("LastN", $max) . ")";
 		$this->info_box_head = array(
 			'text' => $text,
@@ -88,20 +88,20 @@ class box_lead_current extends ModeleBoxes
 		);
 
 		$i = 0;
-		foreach ($lead->lines as $line) {
+		foreach ($affaires->lines as $line) {
 			// FIXME: line is an array, not an object
 			$line->fetch_thirdparty();
 			// Ref
 			$this->info_box_contents[$i][0] = array(
 				'td' => 'align="left" width="16"',
 				'logo' => $this->boximg,
-				'url' => dol_buildpath('/lead/lead/card.php', 1) . '?id=' . $line->id
+				'url' => dol_buildpath('/affaires/affaires/card.php', 1) . '?id=' . $line->id
 			);
 
 			$this->info_box_contents[$i][1] = array(
 				'td' => 'align="left"',
 				'text' => $line->ref,
-				'url' => dol_buildpath('/lead/lead/card.php', 1) . '?id=' . $line->id
+				'url' => dol_buildpath('/affaires/affaires/card.php', 1) . '?id=' . $line->id
 			);
 
 			$this->info_box_contents[$i][2] = array(

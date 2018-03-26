@@ -18,7 +18,7 @@
 
 /**
  * \file		admin/about.php
- * \ingroup	lead
+ * \ingroup	affaires
  * \brief		This file is an example about page
  * Put some comments here
  */
@@ -30,13 +30,13 @@ if (! $res) {
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT . '/core/lib/admin.lib.php';
-require_once '../lib/lead.lib.php';
+require_once '../lib/affaires.lib.php';
 
-dol_include_once('/lead/lib/php-markdown/markdown.php');
+dol_include_once('/affaires/lib/php-markdown/markdown.php');
 
 // require_once "../class/myclass.class.php";
 // Translations
-$langs->load("lead@lead");
+$langs->load("affaires@affaires");
 
 // Access control
 if (! $user->admin) {
@@ -53,7 +53,7 @@ $action = GETPOST('action', 'alpha');
 /*
  * View
  */
-$page_name = "LeadAbout";
+$page_name = "AffairesAbout";
 llxHeader('', $langs->trans($page_name));
 
 // Subheader
@@ -61,18 +61,18 @@ $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">' . $langs->trans(
 print_fiche_titre($langs->trans($page_name), $linkback);
 
 // Configuration header
-$head = leadAdminPrepareHead();
-dol_fiche_head($head, 'about', $langs->trans("Module103111Name"), 0, 'lead@lead');
+$head = affairesAdminPrepareHead();
+dol_fiche_head($head, 'about', $langs->trans("Module103111Name"), 0, 'affaires@affaires');
 
 // About page goes here
-echo $langs->trans("LeadAboutPage");
+echo $langs->trans("AffairesAboutPage");
 
 echo '<br>';
 
-$buffer = file_get_contents(dol_buildpath('/lead/README.md', 0));
+$buffer = file_get_contents(dol_buildpath('/affaires/README.md', 0));
 echo Markdown($buffer);
 
-echo '<br>', '<a href="' . dol_buildpath('/lead/COPYING', 1) . '">', '<img src="' . dol_buildpath('/lead/img/gplv3.png', 1) . '"/>', '</a>';
+echo '<br>', '<a href="' . dol_buildpath('/affaires/COPYING', 1) . '">', '<img src="' . dol_buildpath('/affaires/img/gplv3.png', 1) . '"/>', '</a>';
 
 dol_fiche_end();
 

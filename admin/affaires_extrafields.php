@@ -17,9 +17,9 @@
  */
 
 /**
- * \file lead/admin/lead_extrafields.php
+ * \file affaires/admin/affaires_extrafields.php
  * \ingroup agenda
- * \brief Page to setup extra fields of lead
+ * \brief Page to setup extra fields of affaires
  */
 
 // Dolibarr environment
@@ -28,7 +28,7 @@ if (! $res) {
 	$res = @include '../../../main.inc.php'; // From "custom" directory
 }
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-require_once '../lib/lead.lib.php';
+require_once '../lib/affaires.lib.php';
 
 if (! $user->admin)
 	accessforbidden();
@@ -36,7 +36,7 @@ if (! $user->admin)
 $langs->load("admin");
 $langs->load("other");
 $langs->load("agenda");
-$langs->load("lead@lead");
+$langs->load("affaires@affaires");
 
 $extrafields = new ExtraFields($db);
 $form = new Form($db);
@@ -51,7 +51,7 @@ foreach ($tmptype2label as $key => $val)
 
 $action = GETPOST('action', 'alpha');
 $attrname = GETPOST('attrname', 'alpha');
-$elementtype = 'lead'; // Must be the $table_element of the class that manage extrafield
+$elementtype = 'affaires'; // Must be the $table_element of the class that manage extrafield
 
 if (! $user->admin)
 	accessforbidden();
@@ -71,15 +71,15 @@ if (file_exists(DOL_DOCUMENT_ROOT . '/core/actions_extrafields.inc.php'))
 
 $textobject = $langs->transnoentitiesnoconv("Module103111Name");
 
-llxHeader('', $langs->trans("LeadSetup"));
+llxHeader('', $langs->trans("AffairesSetup"));
 
 $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">' . $langs->trans("BackToModuleList") . '</a>';
-print_fiche_titre($langs->trans("LeadSetup"), $linkback, 'setup');
+print_fiche_titre($langs->trans("AffairesSetup"), $linkback, 'setup');
 print "<br>\n";
 
 // Configuration header
-$head = leadAdminPrepareHead();
-dol_fiche_head($head, 'attributes', $langs->trans("Module103111Name"), 0, "lead@lead");
+$head = affairesAdminPrepareHead();
+dol_fiche_head($head, 'attributes', $langs->trans("Module103111Name"), 0, "affaires@affaires");
 
 print $langs->trans("DefineHereComplementaryAttributes", $langs->transnoentitiesnoconv("Module103111Name")) . '<br>' . "\n";
 print '<br>';

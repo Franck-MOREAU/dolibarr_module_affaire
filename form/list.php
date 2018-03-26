@@ -17,9 +17,9 @@
  */
 
 /**
- * \file lead/lead/list.php
- * \ingroup lead
- * \brief list of lead
+ * \file affaires/affaires/list.php
+ * \ingroup affaires
+ * \brief list of affaires
  */
 $res = @include '../../main.inc.php'; // For root directory
 if (! $res)
@@ -28,22 +28,22 @@ if (! $res)
 	die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
-require_once '../class/lead.class.php';
-require_once '../lib/lead.lib.php';
-require_once '../class/html.formlead.class.php';
+require_once '../class/affaires.class.php';
+require_once '../lib/affaires.lib.php';
+require_once '../class/html.formaffaires.class.php';
+require_once '../class/reprise.class.php';
+require_once '../class/affaires.extend.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT . '/comm/propal/class/propal.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
-require_once DOL_DOCUMENT_ROOT . '/volvo/class/reprise.class.php';
-require_once DOL_DOCUMENT_ROOT . '/volvo/class/lead.extend.class.php';
 
 global $user;
 
 $reprise = new Reprise($db);
 
 // Security check
-if (! $user->rights->lead->read)
+if (! $user->rights->affaires->read)
 	accessforbidden();
 
 $sortorder = GETPOST('sortorder', 'alpha');
@@ -103,48 +103,48 @@ if($do_action > 0){
 	$act_type = GETPOST('action_'.$do_action,'int');
 	if(isset($act_type)){
 		if($act_type==1){
-			header('Location: ' . DOL_URL_ROOT . '/custom/lead/lead/card.php?id=' . $do_action . '&action=edit');
+			header('Location: ' . DOL_URL_ROOT . '/custom/affaires/affaires/card.php?id=' . $do_action . '&action=edit');
 			exit;
 		}elseif($act_type == 2){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->fk_c_status = 6;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->fk_c_status = 6;
+			$affaires->update($user);
 		}elseif($act_type == 3){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->fk_c_status = 7;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->fk_c_status = 7;
+			$affaires->update($user);
 		}elseif($act_type == 4){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->fk_c_status = 11;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->fk_c_status = 11;
+			$affaires->update($user);
 		}elseif($act_type == 5){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->fk_c_status = 5;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->fk_c_status = 5;
+			$affaires->update($user);
 		}elseif($act_type == 6){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->array_options["options_chaude"] = 1;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->array_options["options_chaude"] = 1;
+			$affaires->update($user);
 		}elseif($act_type == 7){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->array_options["options_chaude"] = 0;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->array_options["options_chaude"] = 0;
+			$affaires->update($user);
 		}elseif($act_type == 8){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->array_options["options_new"] = 1;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->array_options["options_new"] = 1;
+			$affaires->update($user);
 		}elseif($act_type == 9){
-			$lead = new Leadext($db);
-			$lead->fetch($do_action);
-			$lead->array_options["options_new"] = 0;
-			$lead->update($user);
+			$affaires = new Affairesext($db);
+			$affaires->fetch($do_action);
+			$affaires->array_options["options_new"] = 0;
+			$affaires->update($user);
 		}
 	}
 }
@@ -186,11 +186,11 @@ if (! empty($search_type)) {
 	$option .= '&search_type=' . $search_type;
 }
 if (! empty($search_eftype)) {
-	$filter['leadextra.gamme'] = $search_eftype;
+	$filter['affairesextra.gamme'] = $search_eftype;
 	$option .= '&search_eftype=' . $search_eftype;
 }
 if (! empty($search_carrosserie)) {
-	$filter['leadextra.carroserie'] = $search_carrosserie;
+	$filter['affairesextra.carroserie'] = $search_carrosserie;
 	$option .= '&search_carrosserie=' . $search_carrosserie;
 }
 if (! empty($search_month)) {
@@ -216,7 +216,7 @@ if (!empty($viewtype)) {
 		$filter['t.fk_c_status !IN'] = '5,7,11';
 	}
 	if ($viewtype=='hot') {
-		$filter['leadextra.chaude'] = '1';
+		$filter['affairesextra.chaude'] = '1';
 		$filter['t.fk_c_status !IN'] = '6,7,11';
 	}
 
@@ -245,7 +245,7 @@ if (!empty($viewtype)) {
 	}
 	if ($viewtype=='myhot') {
 		$filter['t.fk_user_resp'] = $user->id;
-		$filter['leadextra.chaude'] = '1';
+		$filter['affairesextra.chaude'] = '1';
 		$filter['t.fk_c_status !IN'] = '6,7,11';
 	}
 	$option .= '&viewtype=' . $viewtype;
@@ -261,8 +261,8 @@ $pageprev = $page - 1;
 $pagenext = $page + 1;
 
 $form = new Form($db);
-$formlead = new FormLead($db);
-$object = new Leadext($db);
+$formaffaires = new FormAffaires($db);
+$object = new Affairesext($db);
 $formother = new FormOther($db);
 
 if (empty($sortorder))
@@ -270,7 +270,7 @@ if (empty($sortorder))
 if (empty($sortfield))
 	$sortfield = "t.datec";
 
-$title = $langs->trans('LeadList');
+$title = $langs->trans('AffairesList');
 
 llxHeader('', $title);
 
@@ -281,7 +281,7 @@ if (!empty($socid)) {
 	$soc->fetch($socid);
 	$head = societe_prepare_head($soc);
 
-	dol_fiche_head($head, 'tabLead', $langs->trans("Module103111Name"),0,dol_buildpath('/lead/img/object_lead.png', 1),1);
+	dol_fiche_head($head, 'tabAffaires', $langs->trans("Module103111Name"),0,dol_buildpath('/affaires/img/object_affaires.png', 1),1);
 }
 
 // Count total nb of records
@@ -312,7 +312,7 @@ if ($resql != - 1) {
 	if (! empty($socid))
 		print '<input type="hidden" name="socid" value="' . $socid . '"/>';
 
-	$moreforfilter = $langs->trans('Period') . '(' . $langs->trans("LeadDateDebut") . ')' . ': ';
+	$moreforfilter = $langs->trans('Period') . '(' . $langs->trans("AffairesDateDebut") . ')' . ': ';
 	$moreforfilter .= $langs->trans('Month') . ':<input class="flat" type="text" size="4" name="search_month" value="' . $search_month . '">';
 	$moreforfilter .= $langs->trans('Year') . ':' . $formother->selectyear($search_year ? $search_year : - 1, 'search_year', 1, 20, 5);
 
@@ -327,13 +327,13 @@ if ($resql != - 1) {
 	print '<tr class="liste_titre">';
 	print '<td class="liste_titre" align="center">Action</td>';
 	print_liste_field_titre($langs->trans("Ref"), $_SERVEUR['PHP_SELF'], "t.ref", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("LeadCommercial"), $_SERVEUR['PHP_SELF'], "usr.lastname", "", $option, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("AffairesCommercial"), $_SERVEUR['PHP_SELF'], "usr.lastname", "", $option, '', $sortfield, $sortorder);
 	print_liste_field_titre($langs->trans("Customer"), $_SERVEUR['PHP_SELF'], "so.nom", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("LeadStatus"), $_SERVEUR['PHP_SELF'], "leadsta.label", "", $option, '', $sortfield, $sortorder);
+	print_liste_field_titre($langs->trans("AffairesStatus"), $_SERVEUR['PHP_SELF'], "affairessta.label", "", $option, '', $sortfield, $sortorder);
 	print '<th>Nb Annoncé</th>';
-	print_liste_field_titre('Canal de vente', $_SERVEUR['PHP_SELF'], "leadtype.label", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre('Type', $_SERVEUR['PHP_SELF'], "leadextra.gamme", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre('Carrosserie', $_SERVEUR['PHP_SELF'], "leadextra.carroserie", "", $option, '', $sortfield, $sortorder);
+	print_liste_field_titre('Canal de vente', $_SERVEUR['PHP_SELF'], "affairestype.label", "", $option, '', $sortfield, $sortorder);
+	print_liste_field_titre('Type', $_SERVEUR['PHP_SELF'], "affairesextra.gamme", "", $option, '', $sortfield, $sortorder);
+	print_liste_field_titre('Carrosserie', $_SERVEUR['PHP_SELF'], "affairesextra.carroserie", "", $option, '', $sortfield, $sortorder);
 	print '<th>Nb commandé</th>';
 	print '<th>Montant annoncé</th>';
 	print '<th>Montant des commandes</th>';
@@ -361,14 +361,14 @@ if ($resql != - 1) {
 	print '</td>';
 
 	print '<td class="liste_titre">';
-	print $formlead->select_lead_status($search_status, 'search_status', 1);
+	print $formaffaires->select_affaires_status($search_status, 'search_status', 1);
 	print '</td>';
 
 	// Nb commandé
 	print '<td id="totalcmd" align="right"></td>';
 
 	print '<td class="liste_titre">';
-	print $formlead->select_lead_type($search_type, 'search_type', 1);
+	print $formaffaires->select_affaires_type($search_type, 'search_type', 1);
 	print '</td>';
 
 
@@ -400,14 +400,14 @@ if ($resql != - 1) {
 	$totalamountreal = 0;
 
 	foreach ($object->lines as $line) {
-		$lead = New Leadext($db);
-		$lead->fetch($line->id);
-		if ($lead->array_options["options_chaude"] && $lead->fk_c_status == 5) {
+		$affaires = New Affairesext($db);
+		$affaires->fetch($line->id);
+		if ($affaires->array_options["options_chaude"] && $affaires->fk_c_status == 5) {
 			$chaude = '<img src="' . DOL_URL_ROOT . '/theme/eldy/img/recent.png">';
 		}else{
 			$chaude ='';
 		}
-		if ($lead->array_options["options_new"]) {
+		if ($affaires->array_options["options_new"]) {
 			$new = '<img src="' . DOL_URL_ROOT . '/theme/eldy/img/high.png">';
 		}else{
 			$new = '<img src="' . DOL_URL_ROOT . '/theme/eldy/img/object_company.png">';
@@ -415,23 +415,23 @@ if ($resql != - 1) {
 
 		$list = '<select class="flat" id="action_' . $line->id . '" name="action_' . $line->id . '" style="width: 75px;">';
     	$list.= '<option value="1" selected>Editer</option>';
-    	if($lead->status_label !='Traitée') $list.= '<option value="2">traitée</option>';
-    	if($lead->status_label !='Perdu' && $lead->getnbchassisreal() ==0) $list.= '<option value="3">perdue</option>';
-    	if($lead->status_label !='Sans suite' && $lead->getnbchassisreal() ==0)	$list.= '<option value="4">s. suite</option>';
-    	if($lead->status_label !='En cours' && $lead->getnbchassisreal() == 0) $list.= '<option value="5">En cours</option>';
-    	if(empty($lead->array_options["options_chaude"]) && $lead->status_label =='En cours') $list.= '<option value="6">Chaude</option>';
-    	if(!empty($lead->array_options["options_chaude"]) && $lead->status_label =='En cours') 	$list.= '<option value="7">Froide</option>';
-    	if(empty($lead->array_options["options_new"])) $list.= '<option value="8">Nouveau C</option>';
-    	if(!empty($lead->array_options["options_new"])) 	$list.= '<option value="9">Déja C</option>';
+    	if($affaires->status_label !='Traitée') $list.= '<option value="2">traitée</option>';
+    	if($affaires->status_label !='Perdu' && $affaires->getnbchassisreal() ==0) $list.= '<option value="3">perdue</option>';
+    	if($affaires->status_label !='Sans suite' && $affaires->getnbchassisreal() ==0)	$list.= '<option value="4">s. suite</option>';
+    	if($affaires->status_label !='En cours' && $affaires->getnbchassisreal() == 0) $list.= '<option value="5">En cours</option>';
+    	if(empty($affaires->array_options["options_chaude"]) && $affaires->status_label =='En cours') $list.= '<option value="6">Chaude</option>';
+    	if(!empty($affaires->array_options["options_chaude"]) && $affaires->status_label =='En cours') 	$list.= '<option value="7">Froide</option>';
+    	if(empty($affaires->array_options["options_new"])) $list.= '<option value="8">Nouveau C</option>';
+    	if(!empty($affaires->array_options["options_new"])) 	$list.= '<option value="9">Déja C</option>';
     	$list.= '</select>';
         $list.= '<button type="submit" name="do_action" value="' . $line->id . '"><img src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/tick.png">';
 
 
 		/**
-		 * @var Lead $line
+		 * @var Affaires $line
 		 */
 
-		// Affichage tableau des lead
+		// Affichage tableau des affaires
 		$var = ! $var;
 		print '<tr ' . $bc[$var] . '>';
 
@@ -444,7 +444,7 @@ if ($resql != - 1) {
 			if ($result<0) {
 				setEventMessages($line->error, null, 'errors');
 			}elseif ($result>0) {
-				print img_warning($langs->trans('LeadObjectWindExists'));
+				print img_warning($langs->trans('AffairesObjectWindExists'));
 			}
 		}
 		print '</td>';
@@ -482,30 +482,30 @@ if ($resql != - 1) {
 		print '<td>' . $line->type_label . '</td>';
 
 		// gamme
-		print '<td>' . $reprise->gamme[$lead->array_options['options_gamme']] . '</td>';
+		print '<td>' . $reprise->gamme[$affaires->array_options['options_gamme']] . '</td>';
 
 		// carrosserie
-		print '<td>' . $reprise->carrosserie_dict[$lead->array_options['options_carroserie']] . '</td>';
+		print '<td>' . $reprise->carrosserie_dict[$affaires->array_options['options_carroserie']] . '</td>';
 
 		//nb chassis reel
-		print '<td>' . $lead->getnbchassisreal() . '</td>';
+		print '<td>' . $affaires->getnbchassisreal() . '</td>';
 
 		// Amount prosp
 		print '<td align="right">' . price($line->amount_prosp) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalamountguess += $line->amount_prosp;
 
 		// Amount real
-		$amount = $lead->getRealAmount2();
+		$amount = $affaires->getRealAmount2();
 		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalamountreal += $amount;
 
 		// MArgin
-		$amount = $lead->getmargin('theo');
+		$amount = $affaires->getmargin('theo');
 		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalmargin += $amount;
 
 		// Margin real
-		$amount = $lead->getmargin('real');
+		$amount = $affaires->getmargin('real');
 		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalmarginreal += $amount;
 

@@ -17,16 +17,16 @@
  */
 
 /**
- * \file lead/core/modules/lead/mod_lead_universal.php
+ * \file affaires/core/modules/affaires/mod_affaires_universal.php
  * \ingroup businesscase
- * \brief Fichier contenant la classe du modele de numerotation de reference de Lead Universal
+ * \brief Fichier contenant la classe du modele de numerotation de reference de Affaires Universal
  */
-dol_include_once('/lead/core/modules/lead/modules_lead.php');
+dol_include_once('/affaires/core/modules/affaires/modules_affaires.php');
 
 /**
  * Classe du modele de numerotation de reference de projet Universal
  */
-class mod_lead_universal extends ModeleNumRefLead
+class mod_affaires_universal extends ModeleNumRefAffaires
 {
 
 	var $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
@@ -43,7 +43,7 @@ class mod_lead_universal extends ModeleNumRefLead
 	{
 		global $conf, $db, $langs;
 		
-		$langs->load("lead@lead");
+		$langs->load("affaires@affaires");
 		$langs->load("admin");
 		
 		$form = new Form($db);
@@ -52,18 +52,18 @@ class mod_lead_universal extends ModeleNumRefLead
 		$texte .= '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		$texte .= '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		$texte .= '<input type="hidden" name="action" value="updateMask">';
-		$texte .= '<input type="hidden" name="maskconstlead" value="LEAD_UNIVERSAL_MASK">';
+		$texte .= '<input type="hidden" name="maskconstaffaires" value="LEAD_UNIVERSAL_MASK">';
 		$texte .= '<table class="nobordernopadding" width="100%">';
 		
-		$tooltip = $langs->trans("GenericMaskCodes", $langs->transnoentities("LeadLead"), $langs->transnoentities("LeadLead"));
+		$tooltip = $langs->trans("GenericMaskCodes", $langs->transnoentities("AffairesAffaires"), $langs->transnoentities("AffairesAffaires"));
 		$tooltip .= $langs->trans("GenericMaskCodes2");
 		$tooltip .= $langs->trans("GenericMaskCodes3");
-		$tooltip .= $langs->trans("GenericMaskCodes4a", $langs->transnoentities("LeadLead"), $langs->transnoentities("LeadLead"));
+		$tooltip .= $langs->trans("GenericMaskCodes4a", $langs->transnoentities("AffairesAffaires"), $langs->transnoentities("AffairesAffaires"));
 		$tooltip .= $langs->trans("GenericMaskCodes5");
 		
 		// Parametrage du prefix
 		$texte .= '<tr><td>' . $langs->trans("Mask") . ':</td>';
-		$texte .= '<td align="right">' . $form->textwithpicto('<input type="text" class="flat" size="24" name="masklead" value="' . $conf->global->LEAD_UNIVERSAL_MASK . '">', $tooltip, 1, 1) . '</td>';
+		$texte .= '<td align="right">' . $form->textwithpicto('<input type="text" class="flat" size="24" name="maskaffaires" value="' . $conf->global->LEAD_UNIVERSAL_MASK . '">', $tooltip, 1, 1) . '</td>';
 		
 		$texte .= '<td align="left" rowspan="2">&nbsp; <input type="submit" class="button" value="' . $langs->trans("Modify") . '" name="Button"></td>';
 		
@@ -100,10 +100,10 @@ class mod_lead_universal extends ModeleNumRefLead
 	 *
 	 * @param int $fk_user User creating
 	 * @param Societe $objsoc Party
-	 * @param Lead $lead Lead
+	 * @param Affaires $affaires Affaires
 	 * @return string Valeur
 	 */
-	function getNextValue($fk_user, $objsoc, $lead)
+	function getNextValue($fk_user, $objsoc, $affaires)
 	{
 		global $db, $conf;
 		
@@ -117,7 +117,7 @@ class mod_lead_universal extends ModeleNumRefLead
 			return 0;
 		}
 		
-		$numFinal = get_next_value($db, $mask, 'lead', 'ref', '', $objsoc->code_client, dol_now());
+		$numFinal = get_next_value($db, $mask, 'affaires', 'ref', '', $objsoc->code_client, dol_now());
 		
 		return $numFinal;
 	}

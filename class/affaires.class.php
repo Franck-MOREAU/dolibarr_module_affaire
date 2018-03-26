@@ -42,13 +42,13 @@ class Affaires extends CommonObject
 	private function loadType() {
 		global $langs;
 		
-		$sql = "SELECT rowid, code, label FROM " . MAIN_DB_PREFIX . "c_lead_type  WHERE active=1";
+		$sql = "SELECT rowid, code, label FROM " . MAIN_DB_PREFIX . "c_affaires_type  WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_type sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
-				$label = $langs->trans('LeadType_' . $obj->code);
-				if ($label == 'LeadType_' . $obj->code) {
+				$label = $langs->trans('AffairesType_' . $obj->code);
+				if ($label == 'AffairesType_' . $obj->code) {
 					$label = $obj->label;
 				}
 				
@@ -97,11 +97,11 @@ class Affaires extends CommonObject
 // Put here code to add control on parameters values
 		if (empty($this->ref)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRef'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
 		}
 		if (empty($this->fk_user_resp)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadCommercial'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesCommercial'));
 		}
 		if (empty($this->fk_soc)) {
 			$error ++;
@@ -109,11 +109,11 @@ class Affaires extends CommonObject
 		}
 		if (empty($this->fk_c_type)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadType'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesType'));
 		}
 		if (empty($this->year)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Leadyear'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Affairesyear'));
 		}
 			
 		if (! $error) {
@@ -158,7 +158,7 @@ class Affaires extends CommonObject
 		}
 		
 		if (! $error) {
-			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "lead");
+			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "affaires");
 			
 			if (! $notrigger) {
 				// // Call triggers
@@ -334,7 +334,7 @@ class Affaires extends CommonObject
 				$line->tms = $this->db->jdate($obj->tms);
 				$line->type_label = $this->type[$line->fk_c_type];
 				$line->fetch_thirdparty($this->fk_soc);
-				if($line->fk_ctm >0) $line->contremarque = $line->fetchObjectFrom('société', 'rowid', $line->ctm);
+				if($line->fk_ctm >0) $line->contremarque = $line->fetchObjectFrom('sociï¿½tï¿½', 'rowid', $line->ctm);
 				
 				// loading affaires lines into affaires_det array of object
 				$det = New Affaires_det($this->db);
@@ -388,11 +388,11 @@ class Affaires extends CommonObject
 		// Put here code to add control on parameters values
 		if (empty($this->ref)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRef'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
 		}
 		if (empty($this->fk_user_resp)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadCommercial'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesCommercial'));
 		}
 		if (empty($this->fk_soc)) {
 			$error ++;
@@ -400,11 +400,11 @@ class Affaires extends CommonObject
 		}
 		if (empty($this->fk_c_type)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadType'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesType'));
 		}
 		if (empty($this->year)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Leadyear'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Affairesyear'));
 		}
 		
 		if (! $error) {
@@ -628,8 +628,8 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				
-				$label = $langs->trans('LeadStatus_' . $obj->code);
-				if ($label == 'LeadStatus_' . $obj->code) {
+				$label = $langs->trans('AffairesStatus_' . $obj->code);
+				if ($label == 'AffairesStatus_' . $obj->code) {
 					$label = $obj->label;
 				}
 				
@@ -760,7 +760,7 @@ class Affaires_det extends CommonObject
 	 */
 	private function loadMotifs() {
 		
-		$sql = "SELECT rowid, motif, active FROM " . MAIN_DB_PREFIX . "c_affaires_motif_perte_lead WHERE active=1";
+		$sql = "SELECT rowid, motif, active FROM " . MAIN_DB_PREFIX . "c_affaires_motif_perte_affaires WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_marques sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if ($resql) {
@@ -814,37 +814,37 @@ class Affaires_det extends CommonObject
 			
 		if (empty($this->fk_affaires)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_gamme)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_genre)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_silhouette)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_carrosserie)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_status)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (! $error) {
 			// Insert request
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "lead(";
+			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "affaires(";
 			
 			$sql .= "fk_affaires,";
 			$sql .= "fk_gamme,";
@@ -889,7 +889,7 @@ class Affaires_det extends CommonObject
 			}
 			
 			if (! $error) {
-				$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "lead");
+				$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "affaires");
 				
 				if (! $notrigger) {
 					// Uncomment this and change MYOBJECT to your own tag if you
@@ -1127,47 +1127,47 @@ class Affaires_det extends CommonObject
 			
 		if (empty($this->fk_affaires)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_gamme)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 			
 		if (empty($this->fk_genre)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 			
 		if (empty($this->fk_silhouette)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 		
 		if (empty($this->fk_carrosserie)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 			
 		if (empty($this->fk_status)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 			
 		if (empty($this->fk_user_author)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 	
 		if (empty($this->datec)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('LeadRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
 		}
 			
 		if (!empty($this->fk_commande)) {
 			$error ++;
-			$this->errors[] = "un chassis commandé ne peut etre modifié";
+			$this->errors[] = "un chassis commandï¿½ ne peut etre modifiï¿½";
 		}
 		
 		if (! $error) {
@@ -1243,7 +1243,7 @@ class Affaires_det extends CommonObject
 			
 		if (!empty($this->fk_commande)) {
 			$error ++;
-			$this->errors[] = "un chassis commandé ne peut etre supprimé";
+			$this->errors[] = "un chassis commandï¿½ ne peut etre supprimï¿½";
 		}
 			
 		if (! $error) {

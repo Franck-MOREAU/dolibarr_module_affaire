@@ -17,15 +17,15 @@
  */
 
 /**
- * \file lead/core/modules/lead/modules_lead.php
+ * \file affaires/core/modules/affaires/modules_affaires.php
  * \ingroup businesscase
  * \brief businesscase for numbering businesscase
  */
 
 /**
- * Classe mere des modeles de numerotation des references de lead
+ * Classe mere des modeles de numerotation des references de affaires
  */
-abstract class ModeleNumRefLead
+abstract class ModeleNumRefAffaires
 {
 
 	public $error = '';
@@ -49,7 +49,7 @@ abstract class ModeleNumRefLead
 	function info()
 	{
 		global $langs;
-		$langs->load("lead@lead");
+		$langs->load("affaires@affaires");
 		return $langs->trans("NoDescription");
 	}
 
@@ -61,7 +61,7 @@ abstract class ModeleNumRefLead
 	function getExample()
 	{
 		global $langs;
-		$langs->load("lead");
+		$langs->load("affaires");
 		return $langs->trans("NoExample");
 	}
 
@@ -81,10 +81,10 @@ abstract class ModeleNumRefLead
 	 *
 	 * @param int $fk_user User creating
 	 * @param Societe $objsoc party
-	 * @param Lead $lead Lead
+	 * @param Affaires $affaires Affaires
 	 * @return string Valeur
 	 */
-	function getNextValue($fk_user, $objsoc, $lead)
+	function getNextValue($fk_user, $objsoc, $affaires)
 	{
 		global $langs;
 		return $langs->trans("NotAvailable");

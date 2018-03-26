@@ -1,5 +1,5 @@
 <?php
-/* Lead
+/* Affaires
  * Copyright (C) 2014-2015 Florian HENRY <florian.henry@atm-consulting.fr>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,16 +19,16 @@ include_once DOL_DOCUMENT_ROOT . '/core/class/stats.class.php';
 include_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 
 /**
- * Class LeadStats
+ * Class AffairesStats
  *
- * Lead statistics
+ * Affaires statistics
  */
-class LeadStats extends Stats
+class AffairesStats extends Stats
 {
 	/** @var DoliDB Database handler */
 	protected $db;
-	/** @var Lead Current lead */
-	private $lead;
+	/** @var Affaires Current affaires */
+	private $affaires;
 	/** @var int User ID */
 	public $userid;
 	/** @var int Company ID */
@@ -43,7 +43,7 @@ class LeadStats extends Stats
 	public $error;
 
 	/**
-	 * Instanciate a new lead stat
+	 * Instanciate a new affaires stat
 	 *
 	 * @param DoliDB $db Database handler
 	 */
@@ -52,27 +52,27 @@ class LeadStats extends Stats
 		
 		$this->db = $db;
 		
-		require_once 'lead.class.php';
+		require_once 'affaires.class.php';
 		
-		$this->lead = new Lead($this->db);
+		$this->affaires = new Affaires($this->db);
 	}
 
 	/**
-	 * Returns all leads grouped by type
+	 * Returns all affairess grouped by type
 	 *
 	 * @param int $limit Limit results
 	 *
 	 * @return array|int
 	 * @throws Exception
 	 */
-	function getAllLeadByType($limit = 5) {
+	function getAllAffairesByType($limit = 5) {
 		global $conf, $user, $langs;
 		
 		$datay = array ();
 		
 		$sql = "SELECT";
 		$sql .= " count(DISTINCT t.rowid), t.fk_c_type";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		$sql .= $this->buildWhere();
 		$sql .= " GROUP BY t.fk_c_type";
 
@@ -89,7 +89,7 @@ class LeadStats extends Stats
 				$row = $this->db->fetch_row($resql);
 				if ($i < $limit || $num == $limit)
 					$result[$i] = array (
-							$this->lead->type[$row[1]] . '(' . $row[0] . ')',
+							$this->affaires->type[$row[1]] . '(' . $row[0] . ')',
 							$row[0] 
 					);
 				else
@@ -112,21 +112,21 @@ class LeadStats extends Stats
 	}
 
 	/**
-	 * Return all leads grouped by status
+	 * Return all affairess grouped by status
 	 *
 	 * @param int $limit Limit results
 	 *
 	 * @return array|int
 	 * @throws Exception
 	 */
-	function getAllLeadByStatus($limit = 5) {
+	function getAllAffairesByStatus($limit = 5) {
 		global $conf, $user, $langs;
 
 		$datay = array ();
 
 		$sql = "SELECT";
 		$sql .= " count(DISTINCT t.rowid), t.fk_c_status";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		$sql .= $this->buildWhere();
 		$sql .= " GROUP BY t.fk_c_status";
 
@@ -143,7 +143,7 @@ class LeadStats extends Stats
 				$row = $this->db->fetch_row($resql);
 				if ($i < $limit || $num == $limit)
 					$result[$i] = array (
-							$this->lead->status[$row[1]] . '(' . $row[0] . ')',
+							$this->affaires->status[$row[1]] . '(' . $row[0] . ')',
 							$row[0] 
 					);
 				else
@@ -174,7 +174,7 @@ class LeadStats extends Stats
 		global $conf, $user, $langs;
 		
 		$sql = "SELECT date_format(t.datec,'%Y') as year, COUNT(t.rowid) as nb, SUM(t.amount_prosp) as total, AVG(t.amount_prosp) as avg";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
@@ -193,7 +193,7 @@ class LeadStats extends Stats
 		$sqlwhere_str = '';
 		$sqlwhere = array ();
 		
-		$sqlwhere[] = ' t.entity IN (' . getEntity('lead') . ')';
+		$sqlwhere[] = ' t.entity IN (' . getEntity('affaires') . ')';
 		
 		if (! empty($this->userid))
 			$sqlwhere[] = ' t.fk_user_resp=' . $this->userid;
@@ -215,7 +215,7 @@ class LeadStats extends Stats
 	}
 
 	/**
-	 * Return Lead number by month for a year
+	 * Return Affaires number by month for a year
 	 *
 	 * @param int $year scan
 	 * @return array of values
@@ -226,7 +226,7 @@ class LeadStats extends Stats
 		$this->yearmonth = $year;
 		
 		$sql = "SELECT date_format(t.datec,'%m') as dm, COUNT(*) as nb";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
@@ -241,7 +241,7 @@ class LeadStats extends Stats
 	}
 
 	/**
-	 * Return the Lead amount by month for a year
+	 * Return the Affaires amount by month for a year
 	 *
 	 * @param int $year scan
 	 * @return array with amount by month
@@ -252,7 +252,7 @@ class LeadStats extends Stats
 		$this->yearmonth = $year;
 		
 		$sql = "SELECT date_format(t.datec,'%m') as dm, SUM(t.amount_prosp)";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
@@ -347,7 +347,7 @@ class LeadStats extends Stats
 	}
 
 	/**
-	 * Return the Lead transformation rate by month for a year
+	 * Return the Affaires transformation rate by month for a year
 	 *
 	 * @param int $year scan
 	 * @return array with amount by month
@@ -358,7 +358,7 @@ class LeadStats extends Stats
 		$this->yearmonth = $year;
 
 		$sql = "SELECT date_format(t.datec,'%m') as dm, count(t.amount_prosp)";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
@@ -370,7 +370,7 @@ class LeadStats extends Stats
 		$this->status=6;
 		
 		$sql = "SELECT date_format(t.datec,'%m') as dm, count(t.amount_prosp)";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
 			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();

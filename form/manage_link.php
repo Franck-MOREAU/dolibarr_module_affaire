@@ -16,9 +16,9 @@
  */
 
 /**
- * \file lead/lead/manage_link.php
- * \ingroup lead
- * \brief lead manage link
+ * \file affaires/affaires/manage_link.php
+ * \ingroup affaires
+ * \brief affaires manage link
  */
 $res = @include '../../main.inc.php'; // For root directory
 if (! $res)
@@ -26,27 +26,27 @@ if (! $res)
 if (! $res)
 	die("Include of main fails");
 
-dol_include_once('/lead/class/lead.class.php');
+dol_include_once('/affaires/class/affaires.class.php');
 
-$object = new Lead($db);
+$object = new Affaires($db);
 
 /*
  * Actions
  */
 
 $tablename = GETPOST("tablename");
-$leadid = GETPOST("leadid");
+$affairesid = GETPOST("affairesid");
 $elementselectid = GETPOST("elementselect");
 $redirect = GETPOST('redirect', 'alpha');
 $action=GETPOST('action');
 
-if (empty($leadid) || $leadid==-1) {
-	setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentities("Lead")), null, 'errors');
+if (empty($affairesid) || $affairesid==-1) {
+	setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentities("Affaires")), null, 'errors');
 	$error ++;
 }
 
 if (! $error) {
-	$result = $object->fetch($leadid);
+	$result = $object->fetch($affairesid);
 	if ($result < 0) {
 		setEventMessages(null, $object->errors, 'errors');
 		$error ++;

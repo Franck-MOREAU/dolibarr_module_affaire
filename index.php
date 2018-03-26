@@ -1,5 +1,5 @@
 <?php
-/* Lead
+/* Affaires
  * Copyright (C) 2014-2015 Florian HENRY <florian.henry@atm-consulting.fr>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,12 +23,12 @@ if (! $res)
 	die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/dolgraph.class.php';
-require_once 'lib/lead.lib.php';
+require_once 'lib/affaires.lib.php';
 
-require_once './class/leadstats.class.php';
+require_once './class/affairesstats.class.php';
 
 // Security check
-if (! $user->rights->lead->read)
+if (! $user->rights->affaires->read)
 	accessforbidden();
 
 
@@ -65,18 +65,18 @@ if (!empty($conf->global->LEAD_GRP_USER_AFFECT)) {
 	}
 }
 
-$langs->load('lead@lead');
+$langs->load('affaires@affaires');
 
 llxHeader('', $langs->trans('Module103111Name'));
 
-$stats_lead= new LeadStats($db);
-if (!empty($userid) && $userid!=-1) $stats_lead->userid=$userid;
-if (!empty($socid)  && $socid!=-1) $stats_lead->socid=$socid;
-if (!empty($year)) $stats_lead->year=$year;
+$stats_affaires= new AffairesStats($db);
+if (!empty($userid) && $userid!=-1) $stats_affaires->userid=$userid;
+if (!empty($socid)  && $socid!=-1) $stats_affaires->socid=$socid;
+if (!empty($year)) $stats_affaires->year=$year;
 
-$stats_lead->year=0;
-$data_all_year = $stats_lead->getAllByYear();
-if (!empty($year)) $stats_lead->year=$year;
+$stats_affaires->year=0;
+$data_all_year = $stats_affaires->getAllByYear();
+if (!empty($year)) $stats_affaires->year=$year;
 $arrayyears=array();
 foreach($data_all_year as $val) {
 	$arrayyears[$val['year']]=$val['year'];
@@ -84,9 +84,9 @@ foreach($data_all_year as $val) {
 if (! count($arrayyears)) $arrayyears[$nowyear]=$nowyear;
 
 
-$data1 = $stats_lead->getAllLeadByType();
+$data1 = $stats_affaires->getAllAffairesByType();
 if (!is_array($data1) && $data1<0) {
-	setEventMessages($stats_lead->error, null, 'errors');
+	setEventMessages($stats_affaires->error, null, 'errors');
 }
 if (empty($data1))
 {
@@ -95,8 +95,8 @@ if (empty($data1))
 	$data1=array(array(0=>$langs->trans("None"),1=>1));
 }
 
-$filenamenb = $conf->lead->dir_output . "/stats/leadbytype.png";
-$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=leadstats&amp;file=leadbytype.png';
+$filenamenb = $conf->affaires->dir_output . "/stats/affairesbytype.png";
+$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=affairesstats&amp;file=affairesbytype.png';
 $px = new DolGraph();
 $mesg = $px->isGraphKo();
 if (empty($mesg)) {
@@ -132,7 +132,7 @@ if (empty($mesg)) {
 		$px->SetType(array (
 				'pie'
 		));
-		$px->SetTitle($langs->trans('LeadNbLeadByType'));
+		$px->SetTitle($langs->trans('AffairesNbAffairesByType'));
 		$result=$px->draw($filenamenb, $fileurlnb);
 		if ($result<0) {
 			setEventMessages($px->error, null, 'errors');
@@ -148,9 +148,9 @@ $stringtoshow .= $px->show();
 $stringtoshow .= '</div>';
 
 
-$data1 = $stats_lead->getAllLeadByStatus();
+$data1 = $stats_affaires->getAllAffairesByStatus();
 if (!is_array($data1) && $data1<0) {
-	setEventMessages($stats_lead->error, null, 'errors');
+	setEventMessages($stats_affaires->error, null, 'errors');
 }
 if (empty($data1))
 {
@@ -159,8 +159,8 @@ if (empty($data1))
 	$data1=array(array(0=>$langs->trans("None"),1=>1));
 }
 
-$filenamenb = $conf->lead->dir_output . "/stats/leadbystatus.png";
-$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=leadstats&amp;file=leadbystatus.png';
+$filenamenb = $conf->affaires->dir_output . "/stats/affairesbystatus.png";
+$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=affairesstats&amp;file=affairesbystatus.png';
 $px = new DolGraph();
 $mesg = $px->isGraphKo();
 if (empty($mesg)) {
@@ -196,7 +196,7 @@ if (empty($mesg)) {
 		$px->SetType(array (
 				'pie'
 		));
-		$px->SetTitle($langs->trans('LeadNbLeadByStatus'));
+		$px->SetTitle($langs->trans('AffairesNbAffairesByStatus'));
 		$result=$px->draw($filenamenb, $fileurlnb);
 		if ($result<0) {
 			setEventMessages($px->error, null, 'errors');
@@ -212,11 +212,11 @@ $stringtoshow .= '</div></div></div>';
 
 // Build graphic number of object
 // $data = array(array('Lib',val1,val2,val3),...)
-$data = $stats_lead->getNbByMonthWithPrevYear($endyear,$startyear);
+$data = $stats_affaires->getNbByMonthWithPrevYear($endyear,$startyear);
 //var_dump($data);
 
-$filenamenb = $conf->lead->dir_output . "/stats/leadnbprevyear-".$year.".png";
-$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=leadstats&amp;file=leadnbprevyear-'.$year.'.png';
+$filenamenb = $conf->affaires->dir_output . "/stats/affairesnbprevyear-".$year.".png";
+$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=affairesstats&amp;file=affairesnbprevyear-'.$year.'.png';
 
 $px1 = new DolGraph();
 $mesg = $px1->isGraphKo();
@@ -234,23 +234,23 @@ if (! $mesg)
 	$px1->SetMaxValue($px1->GetCeilMaxValue());
 	$px1->SetWidth($WIDTH);
 	$px1->SetHeight($HEIGHT);
-	$px1->SetYLabel($langs->trans("LeadNbLead"));
+	$px1->SetYLabel($langs->trans("AffairesNbAffaires"));
 	$px1->SetShading(3);
 	$px1->SetHorizTickIncrement(1);
 	$px1->SetPrecisionY(0);
 	$px1->mode='depth';
-	$px1->SetTitle($langs->trans("LeadNbLeadByMonth"));
+	$px1->SetTitle($langs->trans("AffairesNbAffairesByMonth"));
 
 	$px1->draw($filenamenb,$fileurlnb);
 }
 
 // Build graphic amount of object
-$data = $stats_lead->getAmountByMonthWithPrevYear($endyear,$startyear);
+$data = $stats_affaires->getAmountByMonthWithPrevYear($endyear,$startyear);
 //var_dump($data);
 // $data = array(array('Lib',val1,val2,val3),...)
 
-$filenamenb = $conf->lead->dir_output . "/stats/leadamountprevyear-".$year.".png";
-$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=leadstats&amp;file=leadamountprevyear-'.$year.'.png';
+$filenamenb = $conf->affaires->dir_output . "/stats/affairesamountprevyear-".$year.".png";
+$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=affairesstats&amp;file=affairesamountprevyear-'.$year.'.png';
 
 $px2 = new DolGraph();
 $mesg = $px2->isGraphKo();
@@ -268,23 +268,23 @@ if (! $mesg)
 	$px2->SetMinValue(min(0,$px2->GetFloorMinValue()));
 	$px2->SetWidth($WIDTH);
 	$px2->SetHeight($HEIGHT);
-	$px2->SetYLabel($langs->trans("LeadAmountOfLead"));
+	$px2->SetYLabel($langs->trans("AffairesAmountOfAffaires"));
 	$px2->SetShading(3);
 	$px2->SetHorizTickIncrement(1);
 	$px2->SetPrecisionY(0);
 	$px2->mode='depth';
-	$px2->SetTitle($langs->trans("LeadAmountOfLeadsByMonth"));
+	$px2->SetTitle($langs->trans("AffairesAmountOfAffairessByMonth"));
 
 	$px2->draw($filenamenb,$fileurlnb);
 }
 
 // Build graphic with transformation rate
-$data = $stats_lead->getTransformRateByMonthWithPrevYear($endyear,$startyear);
+$data = $stats_affaires->getTransformRateByMonthWithPrevYear($endyear,$startyear);
 //var_dump($data);
 // $data = array(array('Lib',val1,val2,val3),...)
 
-$filenamenb = $conf->lead->dir_output . "/stats/leadtransrateprevyear-".$year.".png";
-$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=leadstats&amp;file=leadtransrateprevyear-'.$year.'.png';
+$filenamenb = $conf->affaires->dir_output . "/stats/affairestransrateprevyear-".$year.".png";
+$fileurlnb = DOL_URL_ROOT . '/viewimage.php?modulepart=affairesstats&amp;file=affairestransrateprevyear-'.$year.'.png';
 
 $px3 = new DolGraph();
 $mesg = $px3->isGraphKo();
@@ -302,12 +302,12 @@ if (! $mesg)
 	$px3->SetMinValue(min(0,$px3->GetFloorMinValue()));
 	$px3->SetWidth($WIDTH);
 	$px3->SetHeight($HEIGHT);
-	$px3->SetYLabel($langs->trans("LeadTransRateOfLead"));
+	$px3->SetYLabel($langs->trans("AffairesTransRateOfAffaires"));
 	$px3->SetShading(3);
 	$px3->SetHorizTickIncrement(1);
 	$px3->SetPrecisionY(0);
 	$px3->mode='depth';
-	$px3->SetTitle($langs->trans("LeadTransRateOfLeadsByMonth"));
+	$px3->SetTitle($langs->trans("AffairesTransRateOfAffairessByMonth"));
 
 	$px3->draw($filenamenb,$fileurlnb);
 }
@@ -323,9 +323,9 @@ else {
 }
 $stringtoshow.= '</td></tr></table>';
 
-$head = lead_stats_prepare_head();
+$head = affaires_stats_prepare_head();
 
-dol_fiche_head($head,'stat',$langs->trans("Statistics"), 0, dol_buildpath('/lead/img/object_lead.png', 1), 1);
+dol_fiche_head($head,'stat',$langs->trans("Statistics"), 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 
 $form=new Form($db);
 
@@ -341,7 +341,7 @@ if ($mode == 'supplier') $filter='s.fournisseur = 1';
 print $form->select_thirdparty_list($socid,'socid',$filter,1);
 print '</td></tr>';
 // User
-print '<tr><td>'.$langs->trans("LeadCommercial").'</td><td>';
+print '<tr><td>'.$langs->trans("AffairesCommercial").'</td><td>';
 print $form->select_dolusers($userid, 'userid', 1, array(),0,$includeuserlist);
 print '</td></tr>';
 // Year
@@ -359,7 +359,7 @@ print '<br><br>';
 print '<table class="border" width="100%">';
 print '<tr style="height:24px">';
 print '<td align="center">'.$langs->trans("Year").'</td>';
-print '<td align="center">'.$langs->trans("LeadNbLead").'</td>';
+print '<td align="center">'.$langs->trans("AffairesNbAffaires").'</td>';
 print '<td align="center">'.$langs->trans("AmountTotal").'</td>';
 print '<td align="center">'.$langs->trans("AmountAverage").'</td>';
 print '</tr>';

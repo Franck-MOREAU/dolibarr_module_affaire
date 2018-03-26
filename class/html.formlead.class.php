@@ -17,11 +17,11 @@
  */
 
 /**
- * \file lead/class/html.fromlead.class.php
- * \ingroup lead
+ * \file affaires/class/html.fromaffaires.class.php
+ * \ingroup affaires
  * \brief File of class with all html predefined components
  */
-class FormLead extends Form
+class FormAffaires extends Form
 {
 
 	var $db;
@@ -34,12 +34,12 @@ class FormLead extends Form
 	 * Build Select List of element associable to a businesscase
 	 *
 	 * @param string $tablename To parse
-	 * @param Lead $lead The lead
+	 * @param Affaires $affaires The affaires
 	 * @param string $htmlname Name of the component
 	 *
 	 * @return string HTML select list of element
 	 */
-	function select_element($tablename, $lead, $htmlname = 'elementselect')
+	function select_element($tablename, $affaires, $htmlname = 'elementselect')
 	{
 		global $langs, $conf;
 
@@ -62,13 +62,13 @@ class FormLead extends Form
 		//TODO Fix sourcetype can be different from tablename (exemple project/projet)
 		$sqlwhere=array();
 		//if ($tablename!='contrat' || empty($conf->global->LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT)) {
-			$sql_inner='  rowid NOT IN (SELECT fk_source FROM ' . MAIN_DB_PREFIX . 'element_element WHERE targettype=\'' . $this->db->escape($lead->element) . '\'';
+			$sql_inner='  rowid NOT IN (SELECT fk_source FROM ' . MAIN_DB_PREFIX . 'element_element WHERE targettype=\'' . $this->db->escape($affaires->element) . '\'';
 			$sql_inner.=' AND sourcetype=\''.$this->db->escape($tablename).'\')';
 			$sqlwhere[]= $sql_inner;
 		//}
 
 		// Manage filter
-		$sqlwhere[]= ' fk_soc=' . $this->db->escape($lead->fk_soc);
+		$sqlwhere[]= ' fk_soc=' . $this->db->escape($affaires->fk_soc);
 		$sqlwhere[]= ' entity IN ('.getEntity($tablename,1).')';
 
 		if (count($sqlwhere)>0) {
@@ -161,12 +161,12 @@ class FormLead extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_lead_status($selected = '', $htmlname = 'leadstatus', $showempty = 1)
+	function select_affaires_status($selected = '', $htmlname = 'affairesstatus', $showempty = 1)
 	{
-		require_once 'lead.class.php';
-		$lead = new Lead($this->db);
+		require_once 'affaires.class.php';
+		$affaires = new Affaires($this->db);
 
-		return $this->selectarray($htmlname, $lead->status, $selected, $showempty);
+		return $this->selectarray($htmlname, $affaires->status, $selected, $showempty);
 	}
 
 	/**
@@ -178,12 +178,12 @@ class FormLead extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_lead_type($selected = '', $htmlname = 'leadtype', $showempty = 1)
+	function select_affaires_type($selected = '', $htmlname = 'affairestype', $showempty = 1)
 	{
-		require_once 'lead.class.php';
-		$lead = new Lead($this->db);
+		require_once 'affaires.class.php';
+		$affaires = new Affaires($this->db);
 
-		return $this->selectarray($htmlname, $lead->type, $selected, $showempty);
+		return $this->selectarray($htmlname, $affaires->type, $selected, $showempty);
 	}
 
 	/**
@@ -196,22 +196,22 @@ class FormLead extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_lead($selected = '', $htmlname = 'leadid', $showempty = 1, $filter=array())
+	function select_affaires($selected = '', $htmlname = 'affairesid', $showempty = 1, $filter=array())
 	{
-		$lead_array=array();
-		require_once 'lead.class.php';
+		$affaires_array=array();
+		require_once 'affaires.class.php';
 
-		$lead = new Lead($this->db);
+		$affaires = new Affaires($this->db);
 
-		$result = $lead->fetch_all('DESC', 't.ref', 0, 0, $filter);
+		$result = $affaires->fetch_all('DESC', 't.ref', 0, 0, $filter);
 		if ($result<0) {
-			setEventMessages(null, $lead->errors, 'errors');
+			setEventMessages(null, $affaires->errors, 'errors');
 		}
-		foreach($lead->lines as $line) {
-			$lead_array[$line->id] = $line->ref . '-'.$line->ref_int.' ('.$line->status_label.'-'.$line->type_label.')';
+		foreach($affaires->lines as $line) {
+			$affaires_array[$line->id] = $line->ref . '-'.$line->ref_int.' ('.$line->status_label.'-'.$line->type_label.')';
 		}
-		if (count($lead_array)>0) {
-			return $this->selectarray($htmlname, $lead_array, $selected, $showempty);
+		if (count($affaires_array)>0) {
+			return $this->selectarray($htmlname, $affaires_array, $selected, $showempty);
 		}
 		return null;
 	}

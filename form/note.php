@@ -24,21 +24,21 @@ if (! $res)
 if (! $res)
 	die("Include of main fails");
 
-require_once '../class/lead.class.php';
-require_once '../class/html.formlead.class.php';
-require_once '../lib/lead.lib.php';
+require_once '../class/affaires.class.php';
+require_once '../class/html.formaffaires.class.php';
+require_once '../lib/affaires.lib.php';
 
-$langs->load('lead@lead');
+$langs->load('affaires@affaires');
 
 $id=GETPOST('id','int');
 $ref=GETPOST('ref','alpha');
 $action=GETPOST('action','alpha');
 
 // Security check
-if (! $user->rights->lead->read)
+if (! $user->rights->affaires->read)
 	accessforbidden();
 
-$object = new Lead($db);
+$object = new Affaires($db);
 if ($id > 0) {
 	$ret = $object->fetch($id);
 	if ($ret < 0)
@@ -49,8 +49,8 @@ if ($id > 0) {
 		setEventMessage($object->error, 'errors');
 }
 
-$permissionnote=$user->rights->lead->write;	// Used by the include of actions_setnotes.inc.php
-$permission=$user->rights->lead->write;
+$permissionnote=$user->rights->affaires->write;	// Used by the include of actions_setnotes.inc.php
+$permission=$user->rights->affaires->write;
 
 /*
  * Actions
@@ -67,31 +67,31 @@ include DOL_DOCUMENT_ROOT.'/core/actions_setnotes.inc.php';	// Must be include, 
 llxHeader();
 
 $form = new Form($db);
-$formlead = new FormLead($db);
+$formaffaires = new FormAffaires($db);
 
 if ($id > 0)
 {
 
-    $head = lead_prepare_head($object);
-	dol_fiche_head($head, 'note', $langs->trans('Module103111Name'), 0, dol_buildpath('/lead/img/object_lead.png', 1), 1);
+    $head = affaires_prepare_head($object);
+	dol_fiche_head($head, 'note', $langs->trans('Module103111Name'), 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 
 
 	print '<table class="border" width="100%">';
 
-	$linkback = '<a href="'.dol_buildpath("/lead/lead/list.php", 1).'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.dol_buildpath("/affaires/affaires/list.php", 1).'">'.$langs->trans("BackToList").'</a>';
 
 	print '<tr>';
 	print '<td width="20%">';
 	print $langs->trans('Ref');
 	print '</td>';
 	print '<td>';
-	print $formlead->showrefnav($object, 'id', $linkback, 1, 'rowid', 'ref', '');
+	print $formaffaires->showrefnav($object, 'id', $linkback, 1, 'rowid', 'ref', '');
 	print '</td>';
 	print '</tr>';
 	
 	print '<tr>';
 	print '<td width="20%">';
-	print $langs->trans('LeadRefInt');
+	print $langs->trans('AffairesRefInt');
 	print '</td>';
 	print '<td>';
 	print $object->ref_int;

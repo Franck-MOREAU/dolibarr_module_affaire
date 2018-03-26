@@ -1,4 +1,4 @@
-# Manage Lead
+# Manage Affaires
 # Copyright (C) 2014  Florian HENRY <florian.henry@open-concept.pro>
 # Copyright (C) 2015 Raphaël Doursenaud <rdoursenaud@gpcsolutions.fr>
 #
@@ -22,30 +22,30 @@
 # Module label 'ModuleXXXName'
 # (where XXX is value of numeric property 'numero' of module)
 Module103111Name = Affaires
-LeadLead = Affaires
+AffairesAffaires = Affaires
 # Module description 'ModuleXXXDesc'
 # (where XXX is value of numeric property 'numero' of module)
 Module103111Desc = Gestion d'affaires
-LeadSimpleNumRefModelDesc = Retourne un numéro sous la forme LEA-yymm-nnnn où yy est l'année, mm le mois et nnnn un compteur séquentiel sans rupture et sans remise à 0
+AffairesSimpleNumRefModelDesc = Retourne un numéro sous la forme LEA-yymm-nnnn où yy est l'année, mm le mois et nnnn un compteur séquentiel sans rupture et sans remise à 0
 
 #
 # Page d'administration
 #
-LeadSetup = Configuration du module Affaires
-SettingsLead = Réglages
-LeadSetupPage = Page de réglages des Affaires
-LeadNbDayDefaultClosure = Nombre de jours à ajouter à la date du jour pour obtenir la date de clôture par défaut
-LeadAdmVar=Administration
-LeadUserGroupAffect = Limiter les utilisateurs affectables à une affaire au groupe
-LeadForceUseThirdparty = Forcer l'utilisation des client sur les Affaires
-LeadAllowMultipleOnContract=Autoriser l'association plusieurs affaire sur un contrat
+AffairesSetup = Configuration du module Affaires
+SettingsAffaires = Réglages
+AffairesSetupPage = Page de réglages des Affaires
+AffairesNbDayDefaultClosure = Nombre de jours à ajouter à la date du jour pour obtenir la date de clôture par défaut
+AffairesAdmVar=Administration
+AffairesUserGroupAffect = Limiter les utilisateurs affectables à une affaire au groupe
+AffairesForceUseThirdparty = Forcer l'utilisation des client sur les Affaires
+AffairesAllowMultipleOnContract=Autoriser l'association plusieurs affaire sur un contrat
 
 #
 # Page À propos
 #
 About = À propos
-LeadAbout = À propos de Affaires
-LeadAboutPage = Page à propos de Affaires
+AffairesAbout = À propos de Affaires
+AffairesAboutPage = Page à propos de Affaires
 
 #
 # Permissions
@@ -58,33 +58,33 @@ Permission1031114=Exporter les affaires
 #
 # Dictionnaires
 #
-LeadStatusDict = Module Affaires — Étapes
-LeadTypeDict = Module Affaires — Types
+AffairesStatusDict = Module Affaires — Étapes
+AffairesTypeDict = Module Affaires — Types
 
 
 #
 # Menu
 #
-LeadList=Liste des affaires
-LeadInfo = Informations des affaires
-LeadCreate=Nouvelle affaire
-LeadContact=Contact Affaires
-LeadListCurrent=Affaires en cours
-LeadListMyLead=Mes affaires
-LeadListLate=Affaires en retard
+AffairesList=Liste des affaires
+AffairesInfo = Informations des affaires
+AffairesCreate=Nouvelle affaire
+AffairesContact=Contact Affaires
+AffairesListCurrent=Affaires en cours
+AffairesListMyAffaires=Mes affaires
+AffairesListLate=Affaires en retard
 
 
 #
 # Status
 #
-LeadStatus = Étape de vente
-LeadStatus_PROSP=Prospection
-LeadStatus_CHIFF=Chiffrage
-LeadStatus_PROPO=Proposition
-LeadStatus_NEGO=Négociation
-LeadStatus_RECOND=Reconduction
-LeadStatus_WIN=Gagné
-LeadStatus_LOST=Perdu
+AffairesStatus = Étape de vente
+AffairesStatus_PROSP=Prospection
+AffairesStatus_CHIFF=Chiffrage
+AffairesStatus_PROPO=Proposition
+AffairesStatus_NEGO=Négociation
+AffairesStatus_RECOND=Reconduction
+AffairesStatus_WIN=Gagné
+AffairesStatus_LOST=Perdu
 tobill=A Facturer
 Billed=Facturée
 Payed=Payée
@@ -92,10 +92,10 @@ StatusOrderDelivred = Livrée
 #
 # Type
 #
-LeadType=Type
-LeadType_SUPP=Support 
-LeadType_TRAIN=Formation
-LeadType_ADVI=Conseil
+AffairesType=Type
+AffairesType_SUPP=Support 
+AffairesType_TRAIN=Formation
+AffairesType_ADVI=Conseil
 
 #
 # Card
@@ -108,55 +108,55 @@ cv=Canal de vente
 year=Année
 affaire=Affaire
 vhlist=liste des véhicule de l'affaire 
-LeadAmountGuess=Montant annoncé HT
-LeadDeadLine=Date de clôture
-LeadDelete=Supprimer l'affaire
-LeadRefInt=Référence interne
-LeadRealAmount=Montant réel HT
-LeadConfirmDelete = Êtes-vous sur de vouloir supprimer l'affaire ?
-LeadDescription=Description
-LeadDocuments = Documents associés
-LeadAddElement=Associer
-LeadLate=Affaire en retard
-ConfirmCloneLead=Êtes-vous certain de vouloir cloner l'affaire ?
-LeadShowLead=Afficher l'affaire
+AffairesAmountGuess=Montant annoncé HT
+AffairesDeadLine=Date de clôture
+AffairesDelete=Supprimer l'affaire
+AffairesRefInt=Référence interne
+AffairesRealAmount=Montant réel HT
+AffairesConfirmDelete = Êtes-vous sur de vouloir supprimer l'affaire ?
+AffairesDescription=Description
+AffairesDocuments = Documents associés
+AffairesAddElement=Associer
+AffairesLate=Affaire en retard
+ConfirmCloneAffaires=Êtes-vous certain de vouloir cloner l'affaire ?
+AffairesShowAffaires=Afficher l'affaire
 SelectElement=Selectionner l'élément
-LeadLink=Affaire(s) associé(s)
-LeadLost=Affaire perdue
-LeadConfirmLost=Toute les proposition commerciales associées à cette affaire seront mises au statut « Perdu ».
-LeadPropalCloseByLead=Proposition cloturée par l'affaire %s perdue
-LeadObjectWindExists=Des propositions signées ou des factures existent (Le statut de l'affaire devrait être « Gagné »)
-LeadLastLeadUpdated=Les %s derniéres affaires modifiées
+AffairesLink=Affaire(s) associé(s)
+AffairesLost=Affaire perdue
+AffairesConfirmLost=Toute les proposition commerciales associées à cette affaire seront mises au statut « Perdu ».
+AffairesPropalCloseByAffaires=Proposition cloturée par l'affaire %s perdue
+AffairesObjectWindExists=Des propositions signées ou des factures existent (Le statut de l'affaire devrait être « Gagné »)
+AffairesLastAffairesUpdated=Les %s derniéres affaires modifiées
 
 #
 # Export
 #
-ExportDataset_lead=Affaires
-LeadRefExt=Ref. Ext
-LeadStepCode=Étape de vente Code
-LeadStepLabel=Étape de vente Libellé
-LeadTypeCode=Type code
-LeadTypeLabel=Types Libellé
-lead@lead=Affaires
-ExportDataset_leadPropal=Proposition commercial non liée à un Lead
+ExportDataset_affaires=Affaires
+AffairesRefExt=Ref. Ext
+AffairesStepCode=Étape de vente Code
+AffairesStepLabel=Étape de vente Libellé
+AffairesTypeCode=Type code
+AffairesTypeLabel=Types Libellé
+affaires@affaires=Affaires
+ExportDataset_affairesPropal=Proposition commercial non liée à un Affaires
 
 #
 # List
 #
-LeadDateDebut = Date de début
+AffairesDateDebut = Date de début
 
 #
 # Graph
 #
-LeadNbLeadByType=Nb Affaires par type
-LeadNbLeadByStatus=Nb Affaires par étape de vente
-LeadStats=Statistiques des affaires
-LeadNbLead=Nb Affaires
-LeadNbLeadByMonth=Nb Affaires par mois
-LeadAmountOfLead=Montant des affaires
-LeadAmountOfLeadsByMonth=Montant des affaires par mois
-LeadTransRateOfLead=Taux de transformation
-LeadTransRateOfLeadsByMonth=Taux de transformation par mois
+AffairesNbAffairesByType=Nb Affaires par type
+AffairesNbAffairesByStatus=Nb Affaires par étape de vente
+AffairesStats=Statistiques des affaires
+AffairesNbAffaires=Nb Affaires
+AffairesNbAffairesByMonth=Nb Affaires par mois
+AffairesAmountOfAffaires=Montant des affaires
+AffairesAmountOfAffairessByMonth=Montant des affaires par mois
+AffairesTransRateOfAffaires=Taux de transformation
+AffairesTransRateOfAffairessByMonth=Taux de transformation par mois
 
 #
 # Boxes
@@ -167,8 +167,8 @@ LastN=%s dernières
 relanceAdded=Relance ajoutée
 CreateRelance=Créer une relance
 ConfirmCreateRelance=Entrez la date de relance
-LeadTypeRelance=Type de l'évènement relance
-LeadDateRelance=Date de relance
-leadRelanceEvent=Relance sur une affaire %s
-ImpossibleToCreateEventLead=Impossible de créer l'évènement de relance
+AffairesTypeRelance=Type de l'évènement relance
+AffairesDateRelance=Date de relance
+affairesRelanceEvent=Relance sur une affaire %s
+ImpossibleToCreateEventAffaires=Impossible de créer l'évènement de relance
 

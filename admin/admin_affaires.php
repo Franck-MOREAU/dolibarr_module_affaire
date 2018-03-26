@@ -17,8 +17,8 @@
  */
 
 /**
- * \file admin/lead.php
- * \ingroup lead
+ * \file admin/affaires.php
+ * \ingroup affaires
  * \brief This file is an example module setup page
  * Put some comments here
  */
@@ -30,11 +30,11 @@ if (! $res) {
 
 // Libraries
 require_once DOL_DOCUMENT_ROOT . '/core/lib/admin.lib.php';
-require_once '../lib/lead.lib.php';
-require_once '../class/lead.class.php';
+require_once '../lib/affaires.lib.php';
+require_once '../class/affaires.class.php';
 
 // Translations
-$langs->load("lead@lead");
+$langs->load("affaires@affaires");
 $langs->load("admin");
 
 // Access control
@@ -53,10 +53,10 @@ $scandir = GETPOST('scandir', 'alpha');
  */
 
 if ($action == 'updateMask') {
-	$maskconstlead = GETPOST('maskconstlead', 'alpha');
-	$masklead = GETPOST('masklead', 'alpha');
-	if ($maskconstlead)
-		$res = dolibarr_set_const($db, $maskconstlead, $masklead, 'chaine', 0, '', $conf->entity);
+	$maskconstaffaires = GETPOST('maskconstaffaires', 'alpha');
+	$maskaffaires = GETPOST('maskaffaires', 'alpha');
+	if ($maskconstaffaires)
+		$res = dolibarr_set_const($db, $maskconstaffaires, $maskaffaires, 'chaine', 0, '', $conf->entity);
 
 	if (! $res > 0)
 		$error ++;
@@ -118,27 +118,27 @@ if ($action == 'updateMask') {
 	$errordb = 0;
 	$errors = array();
 	if ($force_use_thirdparty == 1) {
-		$sql = 'ALTER TABLE llx_lead ADD INDEX idx_llx_lead_fk_soc (fk_soc)';
+		$sql = 'ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_fk_soc (fk_soc)';
 		$resql = $db->query($sql);
 		if (! $resql) {
 			$errordb ++;
 			$errors[] = $db->lasterror;
 		}
 
-		$sql = 'ALTER TABLE llx_lead ADD CONSTRAINT llx_lead_ibfk_3 FOREIGN KEY (fk_soc) REFERENCES llx_societe (rowid)';
+		$sql = 'ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_3 FOREIGN KEY (fk_soc) REFERENCES llx_societe (rowid)';
 		$resql = $db->query($sql);
 		if (! $resql) {
 			$errordb ++;
 			$errors[] = $db->lasterror;
 		}
 	} else {
-		$sql = 'ALTER TABLE llx_lead DROP FOREIGN KEY llx_lead_ibfk_3';
+		$sql = 'ALTER TABLE llx_affaires DROP FOREIGN KEY llx_affaires_ibfk_3';
 		$resql = $db->query($sql);
 		if (! $resql && ($db->errno() != 'DB_ERROR_NOSUCHFIELD' && $db->errno() != 'DB_ERROR_NO_INDEX_TO_DROP')) {
 			$errordb ++;
 			$errors[] = $db->lasterror;
 		}
-		$sql = 'ALTER TABLE llx_lead DROP INDEX idx_llx_lead_fk_soc';
+		$sql = 'ALTER TABLE llx_affaires DROP INDEX idx_llx_affaires_fk_soc';
 		$resql = $db->query($sql);
 		if (! $resql && ($db->errno() != 'DB_ERROR_NOSUCHFIELD' && $db->errno() != 'DB_ERROR_NO_INDEX_TO_DROP')) {
 			$errordb ++;
@@ -159,7 +159,7 @@ if ($action == 'updateMask') {
 /*
  * View
  */
-$page_name = "LeadSetup";
+$page_name = "AffairesSetup";
 llxHeader('', $langs->trans($page_name));
 
 // Subheader
@@ -167,13 +167,13 @@ $linkback = '<a href="' . DOL_URL_ROOT . '/admin/modules.php">' . $langs->trans(
 print_fiche_titre($langs->trans($page_name), $linkback);
 
 // Configuration header
-$head = leadAdminPrepareHead();
-dol_fiche_head($head, 'settings', $langs->trans("Module103111Name"), 0, "lead@lead");
+$head = affairesAdminPrepareHead();
+dol_fiche_head($head, 'settings', $langs->trans("Module103111Name"), 0, "affaires@affaires");
 
 /*
  * Module numerotation
  */
-print_fiche_titre($langs->trans("LeadSetupPage"));
+print_fiche_titre($langs->trans("AffairesSetupPage"));
 
 $dirmodels = array_merge(array(
 		'/'
@@ -193,7 +193,7 @@ clearstatcache();
 $form = new Form($db);
 
 foreach ( $dirmodels as $reldir ) {
-	$dir = dol_buildpath($reldir . "core/modules/lead/");
+	$dir = dol_buildpath($reldir . "core/modules/affaires/");
 
 	if (is_dir($dir)) {
 		$handle = opendir($dir);
@@ -201,13 +201,13 @@ foreach ( $dirmodels as $reldir ) {
 			$var = true;
 
 			while ( ($file = readdir($handle)) !== false ) {
-				if ((substr($file, 0, 9) == 'mod_lead_') && substr($file, dol_strlen($file) - 3, 3) == 'php') {
+				if ((substr($file, 0, 9) == 'mod_affaires_') && substr($file, dol_strlen($file) - 3, 3) == 'php') {
 					$file = substr($file, 0, dol_strlen($file) - 4);
 					require_once $dir . $file . '.php';
 
 					/**
 					 *
-					 * @var ModeleNumRefLead $module
+					 * @var ModeleNumRefAffaires $module
 					 */
 					$module = new $file();
 
@@ -244,7 +244,7 @@ foreach ( $dirmodels as $reldir ) {
 						}
 						print '</td>';
 
-						$businesscase = new Lead($db);
+						$businesscase = new Affaires($db);
 						$businesscase->initAsSpecimen();
 
 						// Info
@@ -276,7 +276,7 @@ foreach ( $dirmodels as $reldir ) {
 print "</table><br>\n";
 
 // Admin var of module
-print_fiche_titre($langs->trans("LeadAdmVar"));
+print_fiche_titre($langs->trans("AffairesAdmVar"));
 
 print '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" >';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -290,7 +290,7 @@ print '<td width="400px">' . $langs->trans("Valeur") . '</td>';
 print "</tr>\n";
 
 // Nb Days
-print '<tr class="pair"><td>' . $langs->trans("LeadNbDayDefaultClosure") . '</td>';
+print '<tr class="pair"><td>' . $langs->trans("AffairesNbDayDefaultClosure") . '</td>';
 print '<td align="left">';
 print '<input type="text" name="LEAD_NB_DAY_COSURE_AUTO" value="' . $conf->global->LEAD_NB_DAY_COSURE_AUTO . '" size="4" ></td>';
 print '</tr>';
@@ -302,13 +302,13 @@ print '<input type="text" name="LEAD_PERSONNAL_TEMPLATE" value="' . $conf->globa
 print '</tr>';
 
 // User Group
-print '<tr class="pair"><td>' . $langs->trans("LeadUserGroupAffect") . '</td>';
+print '<tr class="pair"><td>' . $langs->trans("AffairesUserGroupAffect") . '</td>';
 print '<td align="left">';
 print $form->select_dolgroups($conf->global->LEAD_GRP_USER_AFFECT, 'LEAD_GRP_USER_AFFECT', 1, array(), 0, '', '', $conf->entity);
 print '</tr>';
 
 // Force use thirdparty
-print '<tr class="impair"><td>' . $langs->trans("LeadForceUseThirdparty") . '</td>';
+print '<tr class="impair"><td>' . $langs->trans("AffairesForceUseThirdparty") . '</td>';
 print '<td align="left">';
 $arrval = array(
 		'0' => $langs->trans("No"),
@@ -317,8 +317,8 @@ $arrval = array(
 print $form->selectarray("LEAD_FORCE_USE_THIRDPARTY", $arrval, $conf->global->LEAD_FORCE_USE_THIRDPARTY);
 print '</tr>';
 
-// Allow multiple lead on contract
-print '<tr class="pair"><td>' . $langs->trans("LeadAllowMultipleOnContract") . '</td>';
+// Allow multiple affaires on contract
+print '<tr class="pair"><td>' . $langs->trans("AffairesAllowMultipleOnContract") . '</td>';
 print '<td align="left">';
 $arrval = array(
 		'0' => $langs->trans("No"),
@@ -329,7 +329,7 @@ print '</tr>';
 
 if (! empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
 
-	print '<tr class="impair"><td>' . $langs->trans("LeadTypeRelance") . '</td>';
+	print '<tr class="impair"><td>' . $langs->trans("AffairesTypeRelance") . '</td>';
 	print '<td align="left">';
 	dol_include_once('/core/class/html.formactions.class.php');
 	$formactions = new FormActions($db);

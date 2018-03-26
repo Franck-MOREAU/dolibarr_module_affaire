@@ -17,32 +17,32 @@
  */
 
 /**
- * \file		lib/lead.lib.php
- * \ingroup	lead
+ * \file		lib/affaires.lib.php
+ * \ingroup	affaires
  * \brief		This file is an example module library
  * Put some comments here
  */
-function leadAdminPrepareHead()
+function affairesAdminPrepareHead()
 {
 	global $langs, $conf;
 	
-	$langs->load("lead@lead");
+	$langs->load("affaires@affaires");
 	$langs->load("admin");
 	
 	$h = 0;
 	$head = array();
 	
-	$head[$h][0] = dol_buildpath("/lead/admin/admin_lead.php", 1);
-	$head[$h][1] = $langs->trans("SettingsLead");
+	$head[$h][0] = dol_buildpath("/affaires/admin/admin_affaires.php", 1);
+	$head[$h][1] = $langs->trans("SettingsAffaires");
 	$head[$h][2] = 'settings';
 	$h ++;
 	
-	$head[$h][0] = dol_buildpath("/lead/admin/lead_extrafields.php", 1);
+	$head[$h][0] = dol_buildpath("/affaires/admin/affaires_extrafields.php", 1);
 	$head[$h][1] = $langs->trans("ExtraFields");
 	$head[$h][2] = 'attributes';
 	$h ++;
 	
-	$head[$h][0] = dol_buildpath("/lead/admin/about.php", 1);
+	$head[$h][0] = dol_buildpath("/affaires/admin/about.php", 1);
 	$head[$h][1] = $langs->trans("About");
 	$head[$h][2] = 'about';
 	$h ++;
@@ -50,12 +50,12 @@ function leadAdminPrepareHead()
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	// $this->tabs = array(
-	// 'entity:+tabname:Title:@lead:/lead/mypage.php?id=__ID__'
+	// 'entity:+tabname:Title:@affaires:/affaires/mypage.php?id=__ID__'
 	// ); // to add new tab
 	// $this->tabs = array(
-	// 'entity:-tabname:Title:@lead:/lead/mypage.php?id=__ID__'
+	// 'entity:-tabname:Title:@affaires:/affaires/mypage.php?id=__ID__'
 	// ); // to remove a tab
-	complete_head_from_modules($conf, $langs, null, $head, $h, 'lead_admin');
+	complete_head_from_modules($conf, $langs, null, $head, $h, 'affaires_admin');
 	
 	return $head;
 }
@@ -63,30 +63,30 @@ function leadAdminPrepareHead()
 /**
  * Prepare page head
  *
- * @param Lead $object The lead
+ * @param Affaires $object The affaires
  *
  * @return array Header contents (tabs)
  */
-function lead_prepare_head($object)
+function affaires_prepare_head($object)
 {
 	global $langs, $conf;
 	
-	$langs->load("lead@lead");
+	$langs->load("affaires@affaires");
 	
 	$h = 0;
 	$head = array();
 	
-	$head[$h][0] = dol_buildpath("/lead/lead/card.php", 1) . '?id=' . $object->id;
-	$head[$h][1] = $langs->trans("LeadLead");
+	$head[$h][0] = dol_buildpath("/affaires/affaires/card.php", 1) . '?id=' . $object->id;
+	$head[$h][1] = $langs->trans("AffairesAffaires");
 	$head[$h][2] = 'card';
 	$h ++;
 	
-	$head[$h][0] = dol_buildpath("/lead/lead/contact.php", 1) . '?id=' . $object->id;
+	$head[$h][0] = dol_buildpath("/affaires/affaires/contact.php", 1) . '?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Contacts");
 	$head[$h][2] = 'contact';
 	$h ++;
 	
-	$head[$h][0] = dol_buildpath("/lead/lead/document.php", 1) . '?id=' . $object->id;
+	$head[$h][0] = dol_buildpath("/affaires/affaires/document.php", 1) . '?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Documents");
 	$head[$h][2] = 'documents';
 	$h ++;
@@ -96,14 +96,14 @@ function lead_prepare_head($object)
 		$nbNote = 0;
 		if(!empty($object->note_private)) $nbNote++;
 		if(!empty($object->note_public)) $nbNote++;
-		$head[$h][0] = dol_buildpath("/lead/lead/note.php", 1) . '?id=' . $object->id;
+		$head[$h][0] = dol_buildpath("/affaires/affaires/note.php", 1) . '?id=' . $object->id;
 		$head[$h][1] = $langs->trans('Notes');
 		if($nbNote > 0) $head[$h][1].= ' ('.$nbNote.')';
 		$head[$h][2] = 'note';
 		$h++;
 	}
 	
-	$head[$h][0] = dol_buildpath("/lead/lead/info.php", 1) . '?id=' . $object->id;
+	$head[$h][0] = dol_buildpath("/affaires/affaires/info.php", 1) . '?id=' . $object->id;
 	$head[$h][1] = $langs->trans("Info");
 	$head[$h][2] = 'info';
 	$h ++;
@@ -111,12 +111,12 @@ function lead_prepare_head($object)
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	// $this->tabs = array(
-	// 'entity:+tabname:Title:@lead:/lead/mypage.php?id=__ID__'
+	// 'entity:+tabname:Title:@affaires:/affaires/mypage.php?id=__ID__'
 	// ); // to add new tab
 	// $this->tabs = array(
-	// 'entity:-tabname:Title:@lead:/lead/mypage.php?id=__ID__'
+	// 'entity:-tabname:Title:@affaires:/affaires/mypage.php?id=__ID__'
 	// ); // to remove a tab
-	complete_head_from_modules($conf, $langs, $object, $head, $h, 'lead');
+	complete_head_from_modules($conf, $langs, $object, $head, $h, 'affaires');
 	
 	return $head;
 }
@@ -126,29 +126,29 @@ function lead_prepare_head($object)
  *
  * @return array Header contents (tabs)
  */
-function lead_stats_prepare_head()
+function affaires_stats_prepare_head()
 {
 	global $langs, $conf;
 
-	$langs->load("lead@lead");
+	$langs->load("affaires@affaires");
 
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = dol_buildpath("/lead/index.php", 1);
-	$head[$h][1] = $langs->trans("LeadStats");
+	$head[$h][0] = dol_buildpath("/affaires/index.php", 1);
+	$head[$h][1] = $langs->trans("AffairesStats");
 	$head[$h][2] = 'stat';
 	$h ++;
 
 	// Show more tabs from modules
 	// Entries must be declared in modules descriptor with line
 	// $this->tabs = array(
-	// 'entity:+tabname:Title:@lead:/lead/mypage.php?id=__ID__'
+	// 'entity:+tabname:Title:@affaires:/affaires/mypage.php?id=__ID__'
 	// ); // to add new tab
 	// $this->tabs = array(
-	// 'entity:-tabname:Title:@lead:/lead/mypage.php?id=__ID__'
+	// 'entity:-tabname:Title:@affaires:/affaires/mypage.php?id=__ID__'
 	// ); // to remove a tab
-	complete_head_from_modules($conf, $langs, null, $head, $h, 'lead_stats');
+	complete_head_from_modules($conf, $langs, null, $head, $h, 'affaires_stats');
 
 	return $head;
 }

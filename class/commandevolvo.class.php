@@ -47,7 +47,7 @@ class CommandeVolvo extends Commande
 	 * @param User $user Objet user that close
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function cloture($user) {
+	function cloture($user, $notrigger = 0) {
 		global $conf;
 
 		$error = 0;
@@ -101,7 +101,7 @@ class CommandeVolvo extends Commande
 	 * @param User $user Object user making the change
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function classifyBilled(User $user) {
+	function classifyBilled(User $user, $notrigger = 0) {
 		global $user;
 		$error = 0;
 
@@ -675,7 +675,7 @@ class CommandeVolvo extends Commande
 			if ($statut==self::STATUS_VALIDATED) return $langs->trans('StatusOrderValidatedShort') . $billedtext;
 			if ($statut==self::STATUS_ACCEPTED) return $langs->trans('StatusOrderSentShort') . $billedtext;
 			if ($statut>=self::STATUS_CLOSED) return $langs->trans('StatusOrderDelivered') . $billedtext;
-			
+
 		}
 		elseif ($mode == 2)
 		{
@@ -692,7 +692,7 @@ class CommandeVolvo extends Commande
 			if ($statut==self::STATUS_VALIDATED) return img_picto($langs->trans('StatusOrderValidated'. $billedtext),'statut1');
 			if ($statut==self::STATUS_ACCEPTED) return img_picto($langs->trans('StatusOrderSentShort'. $billedtext),'statut3');
 			if ($statut>=self::STATUS_CLOSED) return img_picto($langs->trans('StatusOrderDelivred'. $billedtext),'statut7');
-			
+
 		}
 		elseif ($mode == 4)
 		{
@@ -708,11 +708,11 @@ class CommandeVolvo extends Commande
 			if ($statut==self::STATUS_DRAFT) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderDraftShort').' </span>'.img_picto($langs->trans('StatusOrderDraft'),'statut0');
 			if ($statut==self::STATUS_VALIDATED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderValidatedShort').$billedtext.' </span>'.img_picto($langs->trans('StatusOrderValidated').$billedtext,'statut1');
 			if ($statut==self::STATUS_ACCEPTED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderSentShort').$billedtext.' </span>'.img_picto($langs->trans('StatusOrderSent').$billedtext,'statut3');
-			if ($statut>=self::STATUS_CLOSED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderToBillShort').' </span>'.img_picto($langs->trans('StatusOrderToBill'),'statut7');		
+			if ($statut>=self::STATUS_CLOSED) return '<span class="hideonsmartphone">'.$langs->trans('StatusOrderToBillShort').' </span>'.img_picto($langs->trans('StatusOrderToBill'),'statut7');
 		}
 	}
 
-	function deleteline($lineid)
+	function deleteline($user = NULL,$lineid=0)
 
 	{
 		global $user, $conf, $lang;
@@ -793,7 +793,7 @@ class CommandeVolvo extends Commande
 		//         }
 	}
 
-	function updateline($rowid, $desc, $pu, $qty, $remise_percent, $txtva, $txlocaltax1=0.0,$txlocaltax2=0.0, $price_base_type='HT', $info_bits=0, $date_start='', $date_end='', $type=0, $fk_parent_line=0, $skip_update_total=0, $fk_fournprice=null, $pa_ht=0, $label='', $special_code=0, $array_options=0, $fk_unit=null)
+	function updateline($rowid, $desc, $pu, $qty, $remise_percent, $txtva, $txlocaltax1=0.0,$txlocaltax2=0.0, $price_base_type='HT', $info_bits=0, $date_start='', $date_end='', $type=0, $fk_parent_line=0, $skip_update_total=0, $fk_fournprice=null, $pa_ht=0, $label='', $special_code=0, $array_options=0, $fk_unit=null, $pu_ht_devise = 0, $notrigger = 0)
 	{
 		global $conf, $mysoc, $langs,$user;
 

@@ -594,7 +594,7 @@ class Markdown_Parser
 	{
 		// Do Horizontal Rules:
 		return preg_replace('{
-				^[ ]{0,3}	# Leading space
+				^[ ]{0,3}	# Affairesing space
 				([-*_])		# $1: First marker
 				(?>			# Repeated marker group
 					[ ]{0,2}	# Zero, one, or two spaces.
@@ -1077,8 +1077,8 @@ class Markdown_Parser
 		$list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
 		
 		$list_str = preg_replace_callback('{
-			(\n)?							# leading line = $1
-			(^[ ]*)							# leading whitespace = $2
+			(\n)?							# affairesing line = $1
+			(^[ ]*)							# affairesing whitespace = $2
 			(' . $marker_any_re . '				# list marker and space = $3
 				(?:[ ]+|(?=\n))	# space only required if item is not empty
 			)
@@ -1097,14 +1097,14 @@ class Markdown_Parser
 	function _processListItems_callback($matches)
 	{
 		$item = $matches[4];
-		$leading_line = & $matches[1];
-		$leading_space = & $matches[2];
+		$affairesing_line = & $matches[1];
+		$affairesing_space = & $matches[2];
 		$marker_space = $matches[3];
 		$tailing_blank_line = & $matches[5];
 		
-		if ($leading_line || $tailing_blank_line || preg_match('/\n{2,}/', $item)) {
+		if ($affairesing_line || $tailing_blank_line || preg_match('/\n{2,}/', $item)) {
 			// Replace marker with the appropriate whitespace indentation
-			$item = $leading_space . str_repeat(' ', strlen($marker_space)) . $item;
+			$item = $affairesing_space . str_repeat(' ', strlen($marker_space)) . $item;
 			$item = $this->runBlockGamut($this->outdent($item) . "\n");
 		} else {
 			// Recursion for sub-lists:
@@ -1145,7 +1145,7 @@ class Markdown_Parser
 		$codeblock = $this->outdent($codeblock);
 		$codeblock = htmlspecialchars($codeblock, ENT_NOQUOTES);
 		
-		// trim leading newlines and trailing newlines
+		// trim affairesing newlines and trailing newlines
 		$codeblock = preg_replace('/\A\n+|\n+\z/', '', $codeblock);
 		
 		$codeblock = "<pre><code>$codeblock\n</code></pre>";
@@ -1358,7 +1358,7 @@ class Markdown_Parser
 		$bq = $this->runBlockGamut($bq); // recurse
 		
 		$bq = preg_replace('/^/m', "  ", $bq);
-		// These leading spaces cause problem with <pre> content,
+		// These affairesing spaces cause problem with <pre> content,
 		// so we need to fix that:
 		$bq = preg_replace_callback('{(\s*<pre>.+?</pre>)}sx', array(
 			&$this,
@@ -1381,7 +1381,7 @@ class Markdown_Parser
 		// Params:
 		// $text - string to process with html <p> tags
 		//
-		// Strip leading and trailing lines:
+		// Strip affairesing and trailing lines:
 		$text = preg_replace('/\A\n+|\n+\z/', '', $text);
 		
 		$grafs = preg_split('/\n{2,}/', $text, - 1, PREG_SPLIT_NO_EMPTY);
@@ -1650,7 +1650,7 @@ class Markdown_Parser
 	function outdent($text)
 	{
 		//
-		// Remove one level of line-leading tabs or spaces
+		// Remove one level of line-affairesing tabs or spaces
 		//
 		return preg_replace('/^(\t|[ ]{1,' . $this->tab_width . '})/m', '', $text);
 	}

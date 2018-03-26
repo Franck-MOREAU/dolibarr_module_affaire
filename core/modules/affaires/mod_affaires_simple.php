@@ -17,16 +17,16 @@
  */
 
 /**
- * \file lead/core/modules/lead/mod_lead_simple.php
- * \ingroup lead
- * \brief File with class to manage the numbering module Simple for lead references
+ * \file affaires/core/modules/affaires/mod_affaires_simple.php
+ * \ingroup affaires
+ * \brief File with class to manage the numbering module Simple for affaires references
  */
-dol_include_once('/lead/core/modules/lead/modules_lead.php');
+dol_include_once('/affaires/core/modules/affaires/modules_affaires.php');
 
 /**
- * Class to manage the numbering module Simple for lead references
+ * Class to manage the numbering module Simple for affaires references
  */
-class mod_lead_simple extends ModeleNumRefLead
+class mod_affaires_simple extends ModeleNumRefAffaires
 {
 
 	var $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
@@ -44,7 +44,7 @@ class mod_lead_simple extends ModeleNumRefLead
 	function info()
 	{
 		global $langs;
-		return $langs->trans("LeadSimpleNumRefModelDesc", $this->prefix);
+		return $langs->trans("AffairesSimpleNumRefModelDesc", $this->prefix);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class mod_lead_simple extends ModeleNumRefLead
 		
 		$posindice = 8;
 		$sql = "SELECT MAX(SUBSTRING(ref FROM " . $posindice . ")) as max";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires";
 		$sql .= " WHERE ref LIKE '" . $this->prefix . "____-%'";
 		// $sql.= " AND entity = ".$conf->entity;
 		$resql = $db->query($sql);
@@ -97,17 +97,17 @@ class mod_lead_simple extends ModeleNumRefLead
 	 *
 	 * @param int $fk_user User creating
 	 * @param Societe $objsoc Party
-	 * @param Lead $lead Lead
+	 * @param Affaires $affaires Affaires
 	 * @return string Valeur
 	 */
-	function getNextValue($fk_user, $objsoc, $lead)
+	function getNextValue($fk_user, $objsoc, $affaires)
 	{
 		global $db, $conf;
 		
 		// D'abord on recupere la valeur max
 		$posindice = 10;
 		$sql = "SELECT MAX(SUBSTRING(ref FROM " . $posindice . ")) as max";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "lead";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires";
 		$sql .= " WHERE ref like '" . $this->prefix . "____-%'";
 		
 		$resql = $db->query($sql);
@@ -118,17 +118,17 @@ class mod_lead_simple extends ModeleNumRefLead
 			else
 				$max = 0;
 		} else {
-			dol_syslog("mod_lead_simple::getNextValue sql=" . $sql);
+			dol_syslog("mod_affaires_simple::getNextValue sql=" . $sql);
 			return - 1;
 		}
 		
-		$date = empty($lead->datec) ? dol_now() : $lead->datec;
+		$date = empty($affaires->datec) ? dol_now() : $affaires->datec;
 		
 		// $yymm = strftime("%y%m",time());
 		$yymm = strftime("%y%m", $date);
 		$num = sprintf("%04s", $max + 1);
 		
-		dol_syslog("mod_lead_simple::getNextValue return " . $this->prefix . $yymm . "-" . $num);
+		dol_syslog("mod_affaires_simple::getNextValue return " . $this->prefix . $yymm . "-" . $num);
 		return $this->prefix . $yymm . "-" . $num;
 	}
 }

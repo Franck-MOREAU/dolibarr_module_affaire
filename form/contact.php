@@ -26,15 +26,15 @@ if (! $res)
 	$res = @include '../../../main.inc.php'; // For "custom" directory
 if (! $res)
 	die("Include of main fails");
-require_once '../class/lead.class.php';
+require_once '../class/affaires.class.php';
 require_once DOL_DOCUMENT_ROOT . '/contact/class/contact.class.php';
-require_once '../lib/lead.lib.php';
+require_once '../lib/affaires.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formcompany.class.php';
-require_once '../class/html.formlead.class.php';
+require_once '../class/html.formaffaires.class.php';
 
 $langs->load("facture");
-$langs->load("lead@lead");
+$langs->load("affaires@affaires");
 $langs->load("orders");
 $langs->load("sendings");
 $langs->load("companies");
@@ -45,10 +45,10 @@ $lineid = GETPOST('lineid', 'int');
 $action = GETPOST('action', 'alpha');
 
 // Security check
-if (! $user->rights->lead->read)
+if (! $user->rights->affaires->read)
 	accessforbidden();
 
-$object = new Lead($db);
+$object = new Affaires($db);
 
 // Load object
 if ($id > 0) {
@@ -73,7 +73,7 @@ if (! $error) {
  * Ajout d'un nouveau contact
  */
 
-if ($action == 'addcontact' && $user->rights->lead->write) {
+if ($action == 'addcontact' && $user->rights->affaires->write) {
 	if ($object->id > 0) {
 		$contactid = (GETPOST('userid', 'int') ? GETPOST('userid', 'int') : GETPOST('contactid', 'int'));
 		$result = $object->add_contact($contactid, $_POST["type"], $_POST["source"]);
@@ -93,14 +93,14 @@ if ($action == 'addcontact' && $user->rights->lead->write) {
 } 
 
 // Bascule du statut d'un contact
-else if ($action == 'swapstatut' && $user->rights->lead->write) {
+else if ($action == 'swapstatut' && $user->rights->affaires->write) {
 	if ($object->id > 0) {
 		$result = $object->swapContactStatus(GETPOST('ligne'));
 	}
 } 
 
 // Efface un contact
-else if ($action == 'deletecontact' && $user->rights->lead->write) {
+else if ($action == 'deletecontact' && $user->rights->affaires->write) {
 	$result = $object->delete_contact($lineid);
 	
 	if ($result >= 0) {
@@ -115,19 +115,19 @@ else if ($action == 'deletecontact' && $user->rights->lead->write) {
  * View
  */
 
-llxHeader('', $langs->trans('LeadContact'));
+llxHeader('', $langs->trans('AffairesContact'));
 
 $form = new Form($db);
 $formcompany = new FormCompany($db);
 $formother = new FormOther($db);
-$formlead = new FormLead($db);
+$formaffaires = new FormAffaires($db);
 
 if ($object->id > 0) {
-	$head = lead_prepare_head($object);
-	dol_fiche_head($head, 'contact', $langs->trans("LeadContact"), 0, 'contact');
+	$head = affaires_prepare_head($object);
+	dol_fiche_head($head, 'contact', $langs->trans("AffairesContact"), 0, 'contact');
 	
 	/*
-	 * Lead synthese pour rappel
+	 * Affaires synthese pour rappel
 	 */
 	print '<table class="border" width="100%">';
 	
@@ -135,12 +135,12 @@ if ($object->id > 0) {
 	
 	// Ref
 	print '<tr><td width="25%">' . $langs->trans('Ref') . '</td><td colspan="3">';
-	print $formlead->showrefnav($object, 'id', $linkback, 1, 'rowid', 'ref', '');
+	print $formaffaires->showrefnav($object, 'id', $linkback, 1, 'rowid', 'ref', '');
 	print '</td></tr>';
 	
 	print '<tr>';
 	print '<td width="20%">';
-	print $langs->trans('LeadCommercial');
+	print $langs->trans('AffairesCommercial');
 	print '</td>';
 	print '<td>';
 	$userstatic = new User($db);
@@ -163,7 +163,7 @@ if ($object->id > 0) {
 	
 	print '<tr>';
 	print '<td>';
-	print $langs->trans('LeadStatus');
+	print $langs->trans('AffairesStatus');
 	print '</td>';
 	print '<td>';
 	print $object->status_label;
@@ -172,7 +172,7 @@ if ($object->id > 0) {
 	
 	print '<tr>';
 	print '<td>';
-	print $langs->trans('LeadType');
+	print $langs->trans('AffairesType');
 	print '</td>';
 	print '<td>';
 	print $object->type_label;

@@ -17,27 +17,26 @@
  */
 
 /**
- * \file		core/boxes/mybox.php
- * \ingroup	mymodule
- * \brief		This file is a sample box definition file
- * Put some comments here
+ * \file	core/boxes/box_affaires_late.php
+ * \ingroup	affaires
+ * \brief	Late affairess box
  */
 include_once DOL_DOCUMENT_ROOT . "/core/boxes/modules_boxes.php";
 
 /**
  * Class to manage the box
  */
-class box_lead extends ModeleBoxes
+class box_affaires_late extends ModeleBoxes
 {
 
-	public $boxcode = "lead";
+	public $boxcode = "affaires_late";
 
-	public $boximg = "lead@lead";
+	public $boximg = "affaires@affaires";
 
 	public $boxlabel;
 
 	public $depends = array(
-		"lead"
+		"affaires"
 	);
 
 	public $db;
@@ -55,16 +54,15 @@ class box_lead extends ModeleBoxes
 	{
 		global $langs;
 		$langs->load("boxes");
-		$langs->load("lead@lead");
+		$langs->load("affaires@affaires");
 
-		$this->boxlabel = $langs->transnoentitiesnoconv("LeadLate");
+		$this->boxlabel = $langs->transnoentitiesnoconv("AffairesListLate");
 	}
 
 	/**
 	 * Load data into info_box_contents array to show array later.
 	 *
-	 * @param int $max of records to load
-	 *
+	 * @param int $max Max number of records to load
 	 * @return void
 	 */
 	public function loadBox($max = 5)
@@ -73,47 +71,50 @@ class box_lead extends ModeleBoxes
 
 		$this->max = $max;
 
-		dol_include_once('/lead/class/lead.class.php');
+		dol_include_once('/affaires/class/affaires.class.php');
 
-		$lead = new Lead($db);
+		$affaires = new Affaires($db);
 
-		$lead->fetch_all('DESC', 't.date_closure', $max, 0, array(
-			't.fk_c_status' => 6,'t.fk_user_resp'=>$user->id
+		$affaires->fetch_all('DESC', 't.date_closure', $max, 0, array(
+			't.date_closure<' => dol_now()
 		));
 
-		$text = $langs->trans("LeadLate", $max);
+		$text = $langs->trans("AffairesListLate", $max);
+		$text .= " (" . $langs->trans("LastN", $max) . ")";
 		$this->info_box_head = array(
 			'text' => $text,
 			'limit' => dol_strlen($text)
 		);
 
 		$i = 0;
-		foreach ($lead->lines as $line) {
-			// FIXME: line is an array, not an object
+		foreach ($affaires->lines as $line) {
+			/**
+			 * @var Affaires $line
+			 */
 			$line->fetch_thirdparty();
 			// Ref
 			$this->info_box_contents[$i][0] = array(
 				'td' => 'align="left" width="16"',
 				'logo' => $this->boximg,
-				'url' => dol_buildpath('/lead/lead/card.php', 1) . '?id=' . $line->id
+				'url' => dol_buildpath('/affaires/affaires/card.php', 1) . '?id=' . $line->id
 			);
 
 			$this->info_box_contents[$i][1] = array(
 				'td' => 'align="left"',
 				'text' => $line->ref,
-				'url' => dol_buildpath('/lead/lead/card.php', 1) . '?id=' . $line->id
+				'url' => dol_buildpath('/affaires/affaires/card.php', 1) . '?id=' . $line->id
 			);
 
 			$this->info_box_contents[$i][2] = array(
 				'td' => 'align="left" width="16"',
 				'logo' => 'company',
-				'url' => DOL_URL_ROOT . "/comm/fiche.php?socid=" . $line->fk_soc
+				'url' => DOL_URL_ROOT . "/comm/card.php?socid=" . $line->fk_soc
 			);
 
 			$this->info_box_contents[$i][3] = array(
 				'td' => 'align="left"',
 				'text' => dol_trunc($line->thirdparty->name, 40),
-				'url' => DOL_URL_ROOT . "/comm/fiche.php?socid=" . $line->fk_soc
+				'url' => DOL_URL_ROOT . "/comm/card.php?socid=" . $line->fk_soc
 			);
 
 			// Amount Guess
@@ -136,12 +137,11 @@ class box_lead extends ModeleBoxes
 	/**
 	 * Method to show box
 	 *
-	 * @param array $head with properties of box title
-	 * @param array $contents with properties of box lines
-	 *
+	 * @param array $head With properties of box title
+	 * @param array $contents With properties of box lines
 	 * @return void
 	 */
-	public function showBox($head = null, $contents = null)
+	public function showBox($head = null, $contents = null, $nooutput = 0)
 	{
 		parent::showBox($this->info_box_head, $this->info_box_contents);
 	}
