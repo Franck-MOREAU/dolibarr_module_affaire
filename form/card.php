@@ -206,6 +206,8 @@ elseif ($action == 'edit') {
 
 	print '<tr>';
 	print '<td>';
+	$user_resp = new User($db);
+	$user_resp->fetch($object->fk_user_resp);
 	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
 	print '</td>';
 	print '<td>';
