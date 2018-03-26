@@ -201,7 +201,7 @@ foreach ( $dirmodels as $reldir ) {
 			$var = true;
 
 			while ( ($file = readdir($handle)) !== false ) {
-				if ((substr($file, 0, 9) == 'mod_affaires_') && substr($file, dol_strlen($file) - 3, 3) == 'php') {
+				if ((substr($file, 0, 13) == 'mod_affaires_') && substr($file, dol_strlen($file) - 3, 3) == 'php') {
 					$file = substr($file, 0, dol_strlen($file) - 4);
 					require_once $dir . $file . '.php';
 
