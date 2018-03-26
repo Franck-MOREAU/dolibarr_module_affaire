@@ -125,7 +125,7 @@ llxHeader('', 'Affaires');
 $form = new Form($db);
 $now = dol_now();
 
-if ($action == 'create' && $user->rights->lead->write) {
+if ($action == 'create' && $user->rights->affaires->write) {
 	dol_include_once('/core/class/html.formother.class.php');
 	$formother = new FormOther($db);
 	
@@ -157,7 +157,7 @@ if ($action == 'create' && $user->rights->lead->write) {
 	
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("cv").': ' . $form->selectarray('fk_type', '',$object->fk_c_type);
+	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
 	print '</td>';
 	print '<td>';
 	print $langs->trans("year").': ';
@@ -177,7 +177,7 @@ if ($action == 'create' && $user->rights->lead->write) {
 	print '</table>';
 	
 	print '<div class="center">';
-	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('CreateDraft') . '">';
+	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('Create') . '">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
 	print '</div>';
@@ -237,7 +237,7 @@ elseif ($action == 'edit') {
 	print '</table>';
 	
 	print '<div class="center">';
-	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('CreateDraft') . '">';
+	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('update') . '">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
 	print '</div>';
