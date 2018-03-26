@@ -41,7 +41,13 @@ if (! empty($conf->commande->enabled))
 $action = GETPOST('action', 'alpha');
 $id = GETPOST('id', 'int');
 $confirm = GETPOST('confirm', 'alpha');
-$fk_soc= GETPOST('fk_soc,int');
+$fk_soc= GETPOST('fk_soc','int');
+$fk_user_resp = GETPOST('fk_user_resp','int');
+
+$fk_ctm = GETPOST('fk_ctm','int');
+$fk_cv = GETPOST('fk_type','int');
+$year = GETPOST('year','int');
+$description= GETPOST('description','none');
 
 $object = new Affaires($db);
 
@@ -71,12 +77,6 @@ if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
  */
 
 if($action=="add"){
-	$fk_soc = GETPOST('fk_soc');
-	$fk_user_resp = GETPOST('fk_user_resp');
-	$fk_ctm = GETPOST('fk_ctm');
-	$fk_cv = GETPOST('fk_type');
-	$year = GETPOST('year');
-
 
 	$object = new Affaires($db);
 	$object->fk_soc = $fk_soc;
@@ -84,10 +84,13 @@ if($action=="add"){
 	$object->fk_ctm = $fk_ctm;
 	$object->fk_c_type = $fk_cv;
 	$object->year = $year;
+	$object->description = $description;
 	$object->ref = $object->getNextNumRef();
+
 	$res = $object->create($user);
 	if($res <0){
 		setEventMessages(null, $object->errors, 'errors');
+		$action='create';
 	}else{
 		$id = $res;
 		$ret = $object->fetch($id);
@@ -97,16 +100,11 @@ if($action=="add"){
 }
 
 if($action=="update"){
-	$fk_soc = GETPOST('fk_soc');
-	$fk_user_resp = GETPOST('fk_user_resp');
-	$fk_ctm = GETPOST('fk_ctm');
-	$fk_cv = GETPOST('fk_type');
-	$year = GETPOST('year');
-
 
 	$object = new Affaires($db);
 	$object->fk_ctm = $fk_ctm;
 	$object->year = $year;
+	$object->description = $description;
 	$res = $object->update($user);
 	if($res <0){
 		setEventMessages(null, $object->errors, 'errors');
@@ -142,16 +140,16 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	print $langs->trans("affnum").': Nouvelle Affaire';
 	print '</td>';
 	print '<td width="65%">';
-	print $langs->trans("client").': ' . $form->select_thirdparty_list($fk_soc, 'fk_soc', 's.client>0', 0);
+	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
 	print '</td>';
 	print '</tr>';
 
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'fk_user_resp', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
 	print '</td>';
 	print '<td>';
-	print $langs->trans("ctm").': '. $form->select_thirdparty_list('', 'fk_ctm', 's.client>0', 0);;
+	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
 	print '</td>';
 	print '</tr>';
 
@@ -166,7 +164,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	print '</tr>';
 
 	$note_public = $object->description;
-	$doleditor = new DolEditor('description','', '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
+	$doleditor = new DolEditor('description',$object->description, '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
 
 	print '<tr>';
 	print '<td colspan="2">';
@@ -208,7 +206,7 @@ elseif ($action == 'edit') {
 
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'fk_user_resp', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
 	print '</td>';
 	print '<td>';
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
@@ -310,12 +308,27 @@ elseif ($action == 'edit') {
 	print '<div class="tabsAction">';
 	if ($user->rights->affaires->write) {
 		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
+		print '<div class="inline-block divButAction"><a href="javascript:popCreateAffaireDet()" class="butAction">Ajouter un véhicule</a></div>';
 	}
 	// Delete
 	if ($user->rights->affaires->delete) {
 		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans("Delete") . "</a></div>\n";
 	}
 	print '</div>';
+	?>
+	<script type="text/javascript">
+	function popCreateAffaireDet() {
+		$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?id='.$object->id,1) ?>"></iframe></div>');
+		$div.dialog({
+			modal:true
+			,width:"90%"
+					,height:$(window).height() - 50
+					,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/card.php',2).'?id='.$object->id;?>';}
+		});
+	}
+	</script>
+	<?php
+
 
 
 }

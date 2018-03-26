@@ -607,7 +607,7 @@ class Affaires extends CommonObject
 			$classname = $conf->global->AFFAIRES_ADDON;
 
 			// Include file with class
-			$dir = dol_buildpath('/affaire/core/modules/affaires/');
+			$dir = dol_buildpath('/affaires/core/modules/affaires/');
 
 			// Load file with numbering class (if found)
 			$mybool|=@include_once $dir.$file;
