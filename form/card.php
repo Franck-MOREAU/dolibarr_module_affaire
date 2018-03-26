@@ -108,6 +108,7 @@ if($action=="update"){
 	$res = $object->update($user);
 	if($res <0){
 		setEventMessages(null, $object->errors, 'errors');
+		$action = 'edit';
 	}else{
 		$action='';
 	}
