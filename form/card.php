@@ -165,6 +165,15 @@ if ($action == 'create' && $user->rights->lead->write) {
 	print '</td>';
 	print '</tr>';
 	
+	$note_public = $object->description;
+	$doleditor = new DolEditor('description','', '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
+	
+	print '<tr>';
+	print '<td colspan="2">';
+	print $doleditor->Create(1);
+	print '</td>';
+	print '</tr>';
+	
 	print '</table>';
 	
 	print '<div class="center">';
@@ -213,6 +222,15 @@ elseif ($action == 'edit') {
 	print '<td>';
 	print $langs->trans("year").': ';
 	$formother->select_year($object->year,'year',0);
+	print '</td>';
+	print '</tr>';
+	
+	$note_public = $object->description;
+	$doleditor = new DolEditor('description','', '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
+	
+	print '<tr>';
+	print '<td colspan="2">';
+	print $doleditor->Create(1);
 	print '</td>';
 	print '</tr>';
 	
@@ -276,13 +294,20 @@ elseif ($action == 'edit') {
 	print '</tr>';
 	
 	print '<tr>';
-	print '<td>';
-	print '<div class="tabsAction">';
+	print '<td valign="top" colspan="2">';
+	print $langs->trans("Description") . '</br>';
+	print $object->description;
+	print '</td>';
+	print '</tr>';
+	
+	print '</table>';
+	
 	/*
 	 * Barre d'actions
 	 */
 	
 	// Edit
+	print '<div class="tabsAction">';
 	if ($user->rights->affaires->write) {
 		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
 	}
@@ -291,15 +316,6 @@ elseif ($action == 'edit') {
 		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans("Delete") . "</a></div>\n";
 	}
 	print '</div>';
-	print '</td>';
-	print '<td valign="top">';
-	print $langs->trans("Description") . '</br>';
-	print $object->description;
-	print '</td>';
-	print '</tr>';
-	
-	print '</table>';
-	
 	
 			
 }
