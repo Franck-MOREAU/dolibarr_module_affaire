@@ -226,8 +226,7 @@ elseif ($action == 'edit') {
 	print '</td>';
 	print '</tr>';
 
-	$note_public = $object->description;
-	$doleditor = new DolEditor('description','', '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
+	$doleditor = new DolEditor('description',$object->description, '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
 
 	print '<tr>';
 	print '<td colspan="2">';
