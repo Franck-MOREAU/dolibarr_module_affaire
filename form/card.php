@@ -341,7 +341,6 @@ elseif ($action == 'edit') {
 	print '<div class="tabsAction">';
 	if ($user->rights->affaires->write) {
 		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
-		print '<div class="inline-block divButAction"><a href="javascript:popCreateAffaireDet(0);" class="butAction">Ajouter un véhicule</a></div>';
 	}
 	// Delete
 	if ($user->rights->affaires->delete) {
@@ -363,7 +362,9 @@ elseif ($action == 'edit') {
 	<?php
 }
 dol_fiche_head();
-print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
+$head = '<div style="display:inline-block">' . $langs->trans("vhlist") . ' - ' . $object->ref . '</div>';
+$head.= '<div style="display:inline-block;float:right" class="divButAction"><a href="javascript:popCreateAffaireDet()" class="butAction">Ajouter un véhicule</a></div>';
+print_fiche_titre( $head , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 print '<table class="border" width="100%">';
 //var_dump($object);
 

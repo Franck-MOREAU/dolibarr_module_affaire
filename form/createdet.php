@@ -99,32 +99,39 @@ print '<input type="hidden" name="action" value="'.(empty($vehid)?'createdet':'e
 
 print '<table class="border" width="100%">';
 print '<tr class="liste_titre">';
-print '<th align="center" colspan="8">' . "Ajout d'un véhicule</th>";
+print '<th align="center" colspan="5">' . "Ajout d'un véhicule</th>";
 print '</tr>';
-print '<tr class="oddeven">';
-print '<td align="center">' . $langs->trans('Gamme') . '</td>';
-print '<td align="center">' . $langs->trans('Silhouette') .'</td>';
-print '<td align="center">' . $langs->trans('Genre'). '</td>';
-print '<td align="center">' . $langs->trans('Carroserie'). '</td>';
-print '<td align="center">' . $langs->trans('Marque'). '</td>';
-print '<td align="center">' . $langs->trans('Status'). '</td>';
-print '<td align="center">' . $langs->trans('Spec'). '</td>';
-if (!empty($vehid)) {
-	print '<td align="center">' . $langs->trans('MotifPerte'). '</td>';
-}
+print '<tr class="liste_titre">';
+print '<th class="liste_titre" align="center">' . $langs->trans('Genre'). '</td>';
+print '<th class="liste_titre" align="center">' . $langs->trans('Gamme') . '</td>';
+print '<th class="liste_titre" align="center">' . $langs->trans('Silhouette') .'</td>';
+print '<th class="liste_titre" align="center">' . $langs->trans('Carroserie'). '</td>';
+print '<th class="liste_titre" align="center">' . $langs->trans('Status'). '</td>';
 print '</tr>';
+
 print '<tr class="oddeven">';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($genre,'genre',0,'genre_dict',array('cv'=>$object->fk_c_type)). '</td>';
 print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($gamme,'gamme',0,'gamme_dict',array('cv'=>$object->fk_c_type)) . '</td>';
 print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($silhouette,'silhouette',0,'silhouette_dict',array('cv'=>$object->fk_c_type)) .'</td>';
-print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($genre,'genre',0,'genre_dict',array('cv'=>$object->fk_c_type)). '</td>';
 print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($carrosserie,'carrosserie',0,'carrosserie_dict'). '</td>';
-print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($marque_trt,'marque_trt',0,'marque_trt_dict'). '</td>';
 print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($status,'status',0). '</td>';
-print '<td align="center">' . '<input type="text" name="spec" id="spec" value="'.$spec.'"/>'. '</td>';
-if (!empty($vehid)) {
-	print '<td align="center">' . $formAffaires->select_affairesdet_motifs($motifs,'motifs'). '</td>';
-}
 print '</tr>';
+
+if (!empty($vehid)) {
+	print '<tr><td colspan="5"></td></tr>';
+	print '<tr class="liste_titre">';
+	print '<th class="liste_titre" align="center">' . $langs->trans('Spec'). '</td>';
+	print '<th class="liste_titre" align="center" colspan="2">' . $langs->trans('Marque traitée'). '</td>';
+	print '<th class="liste_titre" align="center" colspan="2">' . $langs->trans('Motifs de Perte'). '</td>';
+	print '</tr>';
+	print '<tr class="oddeven">';
+	print '<td align="center">' . '<input type="text" name="spec" id="spec" value="'.$spec.'"/>'. '</td>';
+	print '<td align="center" colspan="2">' . $formAffaires->select_affairesdet_fromdict($marque_trt,'marque_trt',0,'marque_trt_dict'). '</td>';
+	print '<td align="center" colspan="2">' . $formAffaires->select_affairesdet_motifs($motifs,'motifs'). '</td>';
+	print '</tr>';
+}
+
+
 print '</table>';
 
 print '<div class="tabsAction">';
