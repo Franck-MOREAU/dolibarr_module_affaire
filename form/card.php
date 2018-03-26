@@ -200,13 +200,13 @@ elseif ($action == 'edit') {
 	print $langs->trans("affnum").': ' . $object->ref;
 	print '</td>';
 	print '<td width="65%">';
-	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
+	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
 
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'fk_user_resp', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
 	print '</td>';
 	print '<td>';
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
@@ -215,7 +215,7 @@ elseif ($action == 'edit') {
 
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
+	print $langs->trans("cv").': ' . $object->type_label;
 	print '</td>';
 	print '<td>';
 	print $langs->trans("year").': ';
