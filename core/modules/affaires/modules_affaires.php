@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2014-2016 Florian HENRY <florian.henry@atm-consulting.fr>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -79,12 +79,10 @@ abstract class ModeleNumRefAffaires
 	/**
 	 * Renvoi prochaine valeur attribuee
 	 *
-	 * @param int $fk_user User creating
-	 * @param Societe $objsoc party
 	 * @param Affaires $affaires Affaires
 	 * @return string Valeur
 	 */
-	function getNextValue($fk_user, $objsoc, $affaires)
+	function getNextValue($affaires)
 	{
 		global $langs;
 		return $langs->trans("NotAvailable");
