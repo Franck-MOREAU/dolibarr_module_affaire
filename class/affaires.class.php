@@ -592,10 +592,9 @@ class Affaires extends CommonObject
 	 *  Returns the reference to the following non used Proposal used depending on the active numbering module
 	 *  defined into PROPALE_ADDON
 	 *
-	 *  @param	Societe		$soc  	Object thirdparty
 	 *  @return string      		Reference libre pour la propale
 	 */
-	function getNextNumRef($soc)
+	function getNextNumRef()
 	{
 		global $conf,$langs;
 		$langs->load("propal");
