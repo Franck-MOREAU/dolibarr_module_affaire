@@ -361,6 +361,8 @@ elseif ($action == 'edit') {
 	</script>
 	<?php
 }
+dol_fiche_end();
+
 dol_fiche_head();
 $head = '<div style="display:inline-block">' . $langs->trans("vhlist") . ' - ' . $object->ref . '</div>';
 $head.= '<div style="display:inline-block;float:right" class="divButAction"><a href="javascript:popCreateAffaireDet()" class="butAction">Ajouter un véhicule</a></div>';
@@ -379,7 +381,5 @@ print '</table>';
 
 dol_fiche_end();
 
-
-dol_fiche_end();
 llxFooter();
 $db->close();

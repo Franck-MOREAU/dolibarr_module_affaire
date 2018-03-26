@@ -255,7 +255,7 @@ class Affaires extends CommonObject
 
 				// loading affaires lines into affaires_det array of object
 				$det = New Affaires_det($this->db);
-				$det->fetch_all('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
+				$det->fetch_all('ASC','fk_status, fk_commande',0,0,array('fk_affaires'=>$this->id));
 				$this->affaires_det=array();
 				foreach ($det->lines as $line){
 					$this->affaires_det[$line->id]=$line;
@@ -1434,20 +1434,20 @@ class Affaires_det extends CommonObject
 
  		//Button
  		$return.= '<div style="display: inline-block; float:right;">';
- 		if ($user->rights->affaires->write) {
+ 		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
  			//TODO only if affaire traiter et pas de commande dessus
- 			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
+ 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
  		}
- 		if ($user->rights->affaires->write) {
+ 		if ($user->rights->affaires->write && $this->fk_status== 6 && $this->fk_commande<1) {
  			//TODO only if affaire traiter et pas de commande dessus
  			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
  		}
- 		if ($user->admin) {
- 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
- 		}
- 		if ($user->rights->affaires->write) {
+ 		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
  			//TODO only if affaire traiter et pas de commande dessus
- 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
+ 			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
+ 		}
+ 		if ($user->admin && !($this->fk_status== 6 && $this->fk_commande>0)) {
+ 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
  		}
  		$return.='</div>';
 
