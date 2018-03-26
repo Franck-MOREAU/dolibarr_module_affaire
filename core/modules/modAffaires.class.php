@@ -130,8 +130,8 @@ class modAffaires extends DolibarrModules
 		);
 		$this->langfiles = array(
 			"affaires@affaires"
-		); 
-		
+		);
+
 		$this->const = array(
 			0 => array(
 				'AFFAIRES_ADDON',
@@ -142,7 +142,7 @@ class modAffaires extends DolibarrModules
 				'current',
 				1
 			),
-			
+
 		);
 
 		// Array to add new pages in new tabs
@@ -201,7 +201,7 @@ class modAffaires extends DolibarrModules
 				"Affaires -- Genres de véhicules",
 				"Affaires -- Carrosseries",
 				"Affaires -- Marques de véhicules",
-				"Affaires -- Motifs de perte d'affaires"	
+				"Affaires -- Motifs de perte d'affaires"
 			),
 			'tabsql' => array(
 				'SELECT f.rowid as rowid, f.code, f.label, f.active FROM ' . MAIN_DB_PREFIX . 'c_affaires_status as f',
@@ -368,20 +368,6 @@ class modAffaires extends DolibarrModules
 		$this->menu[$r] = array(
 				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
 				'type' => 'left',
-				'titre' => 'Affaires chaude',
-				'url' => '/affaires/form/list.php?viewtype=hot',
-				'langs' => 'affaires@affaires',
-				'position' => 100+$r,
-				'enabled' => '$user->rights->affaires->all',
-				'perms' => '$user->rights->affaires->all',
-				'target' => '',
-				'user' => 0
-		);
-		$r ++;
-
-		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=affaires',
-				'type' => 'left',
 				'titre' => 'Affaires traitées',
 				'url' => '/affaires/form/list.php?viewtype=won',
 				'langs' => 'affaires@affaires',
@@ -482,20 +468,6 @@ class modAffaires extends DolibarrModules
 		$this->menu[$r] = array(
 				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
 				'type' => 'left',
-				'titre' => 'mes affaires Chaudes',
-				'url' => '/affaires/form/list.php?viewtype=myhot',
-				'langs' => 'affaires@affaires',
-				'position' => 100+$r,
-				'enabled' => '$user->rights->affaires->read',
-				'perms' => '$user->rights->affaires->read',
-				'target' => '',
-				'user' => 0
-		);
-		$r ++;
-
-		$this->menu[$r] = array(
-				'fk_menu' => 'fk_mainmenu=affaires,fk_leftmenu=myaffaires',
-				'type' => 'left',
 				'titre' => 'mes affaires traitées',
 				'url' => '/affaires/form/list.php?viewtype=mywon',
 				'langs' => 'affaires@affaires',
@@ -534,7 +506,7 @@ class modAffaires extends DolibarrModules
 				'user' => 0
 		);
 		$r ++;
-		
+
 	}
 
 	/**
