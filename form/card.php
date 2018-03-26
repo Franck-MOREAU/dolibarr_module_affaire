@@ -76,8 +76,8 @@ if($action=="add"){
 	$fk_ctm = GETPOST('fk_ctm');
 	$fk_cv = GETPOST('fk_type');
 	$year = GETPOST('year');
-	
-	
+
+
 	$object = new Affaires($db);
 	$object->fk_soc = $fk_soc;
 	$object->fk_user_resp = $fk_user_resp;
@@ -102,8 +102,8 @@ if($action=="update"){
 	$fk_ctm = GETPOST('fk_ctm');
 	$fk_cv = GETPOST('fk_type');
 	$year = GETPOST('year');
-	
-	
+
+
 	$object = new Affaires($db);
 	$object->fk_ctm = $fk_ctm;
 	$object->year = $year;
@@ -128,14 +128,14 @@ $now = dol_now();
 if ($action == 'create' && $user->rights->affaires->write) {
 	dol_include_once('/core/class/html.formother.class.php');
 	$formother = new FormOther($db);
-	
+
 	dol_fiche_head('', '', 'Nouvelle Affaire ' , 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	print_fiche_titre($langs->trans("affaire") , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
-	
+
 	print '<form name="createlead" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="add">';
-	
+
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td width="35%">';
@@ -145,7 +145,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	print $langs->trans("client").': ' . $form->select_thirdparty_list($fk_soc, 'fk_soc', 's.client>0', 0);
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td>';
 	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
@@ -154,7 +154,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list('', 'fk_ctm', 's.client>0', 0);;
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td>';
 	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
@@ -164,38 +164,38 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	$formother->select_year(dol_print_date(dol_now(),'%Y'),'year',0);
 	print '</td>';
 	print '</tr>';
-	
+
 	$note_public = $object->description;
 	$doleditor = new DolEditor('description','', '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
-	
+
 	print '<tr>';
 	print '<td colspan="2">';
 	print $doleditor->Create(1);
 	print '</td>';
 	print '</tr>';
-	
+
 	print '</table>';
-	
+
 	print '<div class="center">';
 	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('Create') . '">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
 	print '</div>';
-	
+
 	print '</form>';
 }
 
 elseif ($action == 'edit') {
 	dol_include_once('/core/class/html.formother.class.php');
 	$formother = new FormOther($db);
-	
+
 	dol_fiche_head('', '', 'Affaire ' . $object->ref , 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 	print_fiche_titre($langs->trans("affaire") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 
 	print '<form name="editlead" action="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '" method="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="action" value="update">';
-	
+
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td width="35%">';
@@ -205,7 +205,7 @@ elseif ($action == 'edit') {
 	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td>';
 	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'userid', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
@@ -214,7 +214,7 @@ elseif ($action == 'edit') {
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td>';
 	print $langs->trans("cv").': ' . $form->selectarray('fk_type', $object->type,$object->fk_c_type);
@@ -224,33 +224,33 @@ elseif ($action == 'edit') {
 	$formother->select_year($object->year,'year',0);
 	print '</td>';
 	print '</tr>';
-	
+
 	$note_public = $object->description;
 	$doleditor = new DolEditor('description','', '', 80, 'dolibarr_notes', 'In', 0, false, true, ROWS_3, '90%');
-	
+
 	print '<tr>';
 	print '<td colspan="2">';
 	print $doleditor->Create(1);
 	print '</td>';
 	print '</tr>';
-	
+
 	print '</table>';
-	
+
 	print '<div class="center">';
 	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('update') . '">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
 	print '</div>';
-	
+
 	print '</form>';
-	
+
 } else {
 	// Confirm form
 	$formconfirm = '';
 	if ($action == 'delete') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LeadDelete'), $langs->trans('LeadConfirmDelete'), 'confirm_delete', '', 0, 1);
 	}
-	
+
 	if ($formconfirm) {
 		print $formconfirm;
 	}
@@ -260,7 +260,7 @@ elseif ($action == 'edit') {
 	 */
 	dol_fiche_head();
 	print_fiche_titre($langs->trans("affaire") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
-	
+
 	print '<table class="border" width="100%">';
 	print '<tr>';
 	print '<td width="35%">';
@@ -272,7 +272,7 @@ elseif ($action == 'edit') {
 	print $langs->trans("client").': ' . $object->thirdparty->getNomUrl(1);
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td>';
 	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
@@ -283,7 +283,7 @@ elseif ($action == 'edit') {
 	}
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td>';
 	print $langs->trans("cv").': ' . $object->type_label;
@@ -292,20 +292,20 @@ elseif ($action == 'edit') {
 	print $langs->trans("year").': '.$object->year;
 	print '</td>';
 	print '</tr>';
-	
+
 	print '<tr>';
 	print '<td valign="top" colspan="2">';
 	print $langs->trans("Description") . '</br>';
 	print $object->description;
 	print '</td>';
 	print '</tr>';
-	
+
 	print '</table>';
-	
+
 	/*
 	 * Barre d'actions
 	 */
-	
+
 	// Edit
 	print '<div class="tabsAction">';
 	if ($user->rights->affaires->write) {
@@ -316,8 +316,8 @@ elseif ($action == 'edit') {
 		print '<div class="inline-block divButAction"><a class="butActionDelete" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=delete">' . $langs->trans("Delete") . "</a></div>\n";
 	}
 	print '</div>';
-	
-			
+
+
 }
 dol_fiche_head();
 print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
