@@ -163,14 +163,13 @@ if($action=="confirm_changemotif" && $user->rights->affaires->write){
 			$objectdet->fk_motifs_array[]=$keymotif;
 		}
 	}
+	$objectdet->fk_marque_trt=GETPOST('marque_trt','int');
 	$res = $objectdet->update($user);
 	if($res <0){
 		setEventMessages(null, $objectdet->errors, 'errors');
 		$action = '';
 	}else{
-		$ret = $object->fetch($id);
-		$action ='';
-		if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+		header('Location: ' . dol_buildpath('/affaires/form/card.php',2) . '?id='.$object->id);
 	}
 }
 
@@ -330,8 +329,14 @@ elseif ($action == 'edit') {
 		foreach($objectdet->motifs_dict as $keymotif=>$valmotif) {
 			$formquestion[]=array('type' => 'checkbox', 'name' => 'motif_'.$keymotif,   'label' => $valmotif,   'value' => (in_array($keymotif,$objectdet->fk_motifs_array)));
 		}
+		$formquestion[]=array(
+				'type' => 'other',
+				'name' => 'marque_trt',
+				'label' => 'Marque Traité',
+				'value' => $formAffaires->select_affairesdet_fromdict($objectdet->fk_marque_trt,'marque_trt',0,'marque_trt_dict')
+		);
 
-		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.$objectdet->id, $langs->trans('ChangeMotif'), '', 'confirm_changemotif', $formquestion, 0, 1, 500);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.$objectdet->id, $langs->trans('ChangeMotif'), '', 'confirm_changemotif', $formquestion, 0, 1, 600);
 	}
 	if ($formconfirm) {
 		print $formconfirm;

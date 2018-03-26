@@ -81,7 +81,7 @@ if ($vehid > 0) {
 	$silhouette=$objectdet->fk_silhouette;
 	$genre=$objectdet->fk_genre;
 	$carrosserie=$objectdet->fk_carrosserie;
-	$marque_trt=$objectdet->marque_trt;
+	$marque_trt=$objectdet->fk_marque_trt;
 	$status=$objectdet->fk_status;
 	$motifs=$objectdet->fk_motifs_array;
 	$spec=$objectdet->spec;
