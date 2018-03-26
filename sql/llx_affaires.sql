@@ -17,6 +17,7 @@
 
 CREATE TABLE IF NOT EXISTS llx_affaires (
 rowid 			integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
+entity			integer NOT NULL DEFAULT 1,
 ref				varchar(50) NOT NULL,
 fk_user_resp 	integer NOT NULL,
 fk_soc	 		integer NOT NULL,

@@ -646,40 +646,48 @@ class Affaires extends CommonObject
 
 class Affaires_det extends CommonObject
 {
-	var $db; // !< To store db handler
-	var $error; // !< To return error code (or message)
-	var $errors = array (); // !< To return several error codes (or messages)
-	var $element = 'affaires_det'; // !< Id that identify managed objects
-	var $table_element = 'affaires_det'; // !< Name of table without prefix where object is stored
+	public $db; // !< To store db handler
+	public $error; // !< To return error code (or message)
+	public $errors = array (); // !< To return several error codes (or messages)
+	public $element = 'affaires_det'; // !< Id that identify managed objects
+	public $table_element = 'affaires_det'; // !< Name of table without prefix where object is stored
 
-	var $id;
-	var $fk_affaires;
-	var $fk_gamme;
-	var $gamme_label;
-	var $gamme = array();
-	var $fk_silhouette;
-	var $silhouette_label;
-	var $silhouette = array();
-	var $fk_genre;
-	var $genre_label;
-	var $genre = array();
-	var $fk_carrosserie;
-	var $carrosserie_label;
-	var $carrosserie = array();
-	var $fk_status;
-	var $status_label;
-	var $fk_marque_trt;
-	var $marque_trt_label;
-	var $marque_trt= array();
-	var $fk_motifs;
-	var $motifs= array();
-	var $spec;
-	var $fk_commande;
-	var $fk_user_author;
-	var $datec;
-	var $fk_user_mod;
-	var $tms;
-	var $lines = array ();
+	public $id;
+	public $fk_affaires;
+	public $fk_gamme;
+	public $gamme_label;
+	public $gamme = array();
+	public $gamme_dict = array();
+	public $status = array();
+	public $status_dict = array();
+	public $fk_silhouette;
+	public $silhouette_label;
+	public $silhouette = array();
+	public $silhouette_dict = array();
+	public $fk_genre;
+	public $genre_label;
+	public $genre = array();
+	public $genre_dict = array();
+	public $fk_carrosserie;
+	public $carrosserie_label;
+	public $carrosserie = array();
+	public $carrosserie_dict = array();
+	public $fk_status;
+	public $status_label;
+	public $fk_marque_trt;
+	public $marque_trt_label;
+	public $marque_trt= array();
+	public $marque_trt_dict= array();
+	public $fk_motifs;
+	public $motifs= array();
+	public $motifs_dict= array();
+	public $spec;
+	public $fk_commande;
+	public $fk_user_author;
+	public $datec;
+	public $fk_user_mod;
+	public $tms;
+	public $lines = array ();
 
 	function __construct($db) {
 
@@ -736,6 +744,7 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				$this->gamme[$obj->rowid] = $obj;
+				$this->gamme_dict[$obj->rowid] = $obj->gamme;
 			}
 			$this->db->free($resql);
 
@@ -758,6 +767,7 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				$this->silhouette[$obj->rowid] = $obj;
+				$this->silhouette_dict[$obj->rowid] = $obj->silhouette;
 			}
 			$this->db->free($resql);
 
@@ -780,6 +790,7 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				$this->genre[$obj->rowid] = $obj;
+				$this->genre_dict[$obj->rowid] = $obj->genre;
 			}
 			$this->db->free($resql);
 
@@ -802,6 +813,7 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				$this->carrosserie[$obj->rowid] = $obj;
+				$this->carrosserie_dict[$obj->rowid] = $obj->carrosserie;
 			}
 			$this->db->free($resql);
 
@@ -824,6 +836,7 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				$this->marque_trt[$obj->rowid] = $obj;
+				$this->marque_trt_dict[$obj->rowid] = $obj->marque;
 			}
 			$this->db->free($resql);
 
@@ -846,6 +859,7 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
 				$this->motifs[$obj->rowid] = $obj;
+				$this->motifs_dict[$obj->rowid] = $obj->motif;
 			}
 			$this->db->free($resql);
 
@@ -899,32 +913,32 @@ class Affaires_det extends CommonObject
 
 		if (empty($this->fk_gamme)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Gamme'));
 		}
 
 		if (empty($this->fk_genre)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Genre'));
 		}
 
 		if (empty($this->fk_silhouette)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Silhouette'));
 		}
 
 		if (empty($this->fk_carrosserie)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Carrosserie'));
 		}
 
 		if (empty($this->fk_status)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
 		}
 
 		if (! $error) {
 			// Insert request
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "affaires(";
+			$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element."(";
 
 			$sql .= "fk_affaires,";
 			$sql .= "fk_gamme,";
@@ -1212,42 +1226,32 @@ class Affaires_det extends CommonObject
 
 		if (empty($this->fk_gamme)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Gamme'));
 		}
 
 		if (empty($this->fk_genre)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Genre'));
 		}
 
 		if (empty($this->fk_silhouette)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Silhouette'));
 		}
 
 		if (empty($this->fk_carrosserie)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Carrosserie'));
 		}
 
 		if (empty($this->fk_status)) {
 			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
-		}
-
-		if (empty($this->fk_user_author)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
-		}
-
-		if (empty($this->datec)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
 		}
 
 		if (!empty($this->fk_commande)) {
 			$error ++;
-			$this->errors[] = "un chassis command� ne peut etre modifi�";
+			$this->errors[] = "un chassis commandé ne peut etre modifié";
 		}
 
 		if (! $error) {
@@ -1323,7 +1327,7 @@ class Affaires_det extends CommonObject
 
 		if (!empty($this->fk_commande)) {
 			$error ++;
-			$this->errors[] = "un chassis command� ne peut etre supprim�";
+			$this->errors[] = "un chassis commandé ne peut etre supprimé";
 		}
 
 		if (! $error) {

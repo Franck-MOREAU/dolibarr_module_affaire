@@ -196,13 +196,13 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affaires_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='')
+	function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='')
 	{
 		if (empty($type)) {
 			$type=$htmlname;
 		}
 		require_once 'affaires.class.php';
-		$affaires = new Affaires($this->db);
+		$affaires = new Affaires_det($this->db);
 
 		return $this->selectarray($htmlname, $affaires->$type, $selected, $showempty);
 	}

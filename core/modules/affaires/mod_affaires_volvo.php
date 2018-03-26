@@ -71,7 +71,7 @@ class mod_affaires_volvo extends ModeleNumRefAffaires
 		$coyymm=''; $max='';
 
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref, 2, 3) AS SIGNED)) as max";
-		$sql.= " FROM ".MAIN_DB_PREFIX."commande";
+		$sql.= " FROM ".MAIN_DB_PREFIX."affaires";
 		$sql.= " WHERE ref REGEXP '^[NSV][0-9][0-9][0-9][/][0-9][0-9]$'";
 		$sql.= " AND entity = ".$conf->entity;
 
@@ -115,7 +115,7 @@ class mod_affaires_volvo extends ModeleNumRefAffaires
 		// D'abord on recupere la valeur max
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref, 4, 3) AS SIGNED)) as max";
 		$sql.= " FROM ".MAIN_DB_PREFIX."affaires";
-		$sql.= " WHERE ref REGEXP '^" . $trig . "[0-9][0-9][0-9][/]" . $yy . "'";
+		$sql.= " WHERE ref REGEXP '^" . $trig . "[0-9][0-9][0-9][/]" . $date . "'";
 		$sql.= " AND entity = ".$conf->entity;
 
 		dol_syslog(__METHOD__,LOG_DEBUG);
@@ -132,7 +132,7 @@ class mod_affaires_volvo extends ModeleNumRefAffaires
 			return -1;
 		}
 		$num = sprintf("%03s",$max+1);
-		$nextref=$trig.$num."/".$yy;
+		$nextref=$trig.$num."/".$date;
 		dol_syslog(__METHOD__." return ".$nextref);
 		return $nextref;
 	}

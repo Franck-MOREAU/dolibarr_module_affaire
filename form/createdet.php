@@ -49,9 +49,9 @@ if ($action == 'createdet') {
 	$objectdet->fk_motifs = $motifs;
 	$objectdet->spec = $spec;
 
-	$res = $lead->create($user);
+	$res = $objectdet->create($user);
 	if ($res<0){
-		setEventMessage($lead->errors,'errors');
+		setEventMessage($objectdet->errors,'errors');
 	} else {
 		top_htmlhead('', '');
 		print '<script type="text/javascript">'."\n";
@@ -65,6 +65,8 @@ if ($action == 'createdet') {
 	}
 }
 
+top_htmlhead('', '');
+
 print '<form name="createorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="leadid" value="' . $leadid . '">';
@@ -72,7 +74,7 @@ print '<input type="hidden" name="action" value="createdet">';
 
 print '<table class="border" width="100%">';
 print '<tr class="liste_titre">';
-print '<th align="center" colspan="7">' . "Ajout d'un véhicule</th>";
+print '<th align="center" colspan="8">' . "Ajout d'un véhicule</th>";
 print '</tr>';
 print '<tr class="oddeven">';
 print '<td align="center">' . $langs->trans('Gamme') . '</td>';
@@ -85,19 +87,19 @@ print '<td align="center">' . $langs->trans('Spec'). '</td>';
 print '<td align="center">' . $langs->trans('MotifPerte'). '</td>';
 print '</tr>';
 print '<tr class="oddeven">';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($gamme,'gamme',0) . '</td>';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($silhouette,'silhouette',0) .'</td>';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($genre,'genre',0). '</td>';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($carrosserie,'carrosserie',0). '</td>';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($marque_trt,'marque_trt',0). '</td>';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($status,'status',0). '</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($gamme,'gamme',0,'gamme_dict') . '</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($silhouette,'silhouette',0,'silhouette_dict') .'</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($genre,'genre',0,'genre_dict'). '</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($carrosserie,'carrosserie',0,'carrosserie_dict'). '</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($marque_trt,'marque_trt',0,'marque_trt_dict'). '</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($status,'status',0). '</td>';
 print '<td align="center">' . '<input type="text" name="spec" id="spec" value="'.$spec.'"/>'. '</td>';
-print '<td align="center">' . $formAffaires->select_affaires_fromdict($motifs,'motifs',1). '</td>';
+print '<td align="center">' . $formAffaires->select_affairesdet_fromdict($motifs,'motifs',1,'motifs_dict'). '</td>';
 print '</tr>';
 print '</table>';
 
 print '<div class="tabsAction">';
-print '<input type="submit" align="center" class="button" value="' . $langs->trans('Save') . '" name="save" id="save"/>';
+print '<input type="submit" align="center" class="button" value="' . $langs->trans('Add') . '" name="save" id="save"/>';
 print '</div>';
 print '</form>';
 

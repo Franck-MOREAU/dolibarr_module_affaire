@@ -323,7 +323,7 @@ elseif ($action == 'edit') {
 			modal:true
 			,width:"90%"
 					,height:$(window).height() - 50
-					,close:function() {document.location.href='<?php echo dol_buildpath('/affairesform//card.php',2).'?id='.$object->id;?>';}
+					,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/form/card.php',2).'?id='.$object->id;?>';}
 		});
 	}
 	</script>
