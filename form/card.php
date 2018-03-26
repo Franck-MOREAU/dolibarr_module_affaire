@@ -318,12 +318,12 @@ elseif ($action == 'edit') {
 	?>
 	<script type="text/javascript">
 	function popCreateAffaireDet() {
-		$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?id='.$object->id,1) ?>"></iframe></div>');
+		$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?affaireid='.$object->id,1) ?>"></iframe></div>');
 		$div.dialog({
 			modal:true
 			,width:"90%"
 					,height:$(window).height() - 50
-					,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/card.php',2).'?id='.$object->id;?>';}
+					,close:function() {document.location.href='<?php echo dol_buildpath('/affairesform//card.php',2).'?id='.$object->id;?>';}
 		});
 	}
 	</script>

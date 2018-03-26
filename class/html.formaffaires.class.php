@@ -192,6 +192,27 @@ class FormAffaires extends Form
 	 * @param string $selected Value
 	 * @param string $htmlname Name of the component
 	 * @param int $showempty Row
+	 * @param string $type dictname
+	 *
+	 * @return string HTML select
+	 */
+	function select_affaires_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='')
+	{
+		if (empty($type)) {
+			$type=$htmlname;
+		}
+		require_once 'affaires.class.php';
+		$affaires = new Affaires($this->db);
+
+		return $this->selectarray($htmlname, $affaires->$type, $selected, $showempty);
+	}
+
+	/**
+	 * Return combo list of differents type
+	 *
+	 * @param string $selected Value
+	 * @param string $htmlname Name of the component
+	 * @param int $showempty Row
 	 * @param array $filter Filter results
 	 *
 	 * @return string HTML select
