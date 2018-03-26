@@ -196,15 +196,58 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='')
+	function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='',$filter=array())
 	{
 		if (empty($type)) {
 			$type=$htmlname;
 		}
 		require_once 'affaires.class.php';
 		$affaires = new Affaires_det($this->db);
+		if (count($filter)>0) {
+			foreach($affaires->$htmlname as $key=>$obj) {
+				foreach($filter as $keyfilter=>$valfilter) {
+					if (property_exists($obj, $keyfilter)) {
+						if ($obj->$keyfilter!==$valfilter) {
+							unset($affaires->$type[$key]);
+						}
+					}
+				}
+			}
+		}
 
 		return $this->selectarray($htmlname, $affaires->$type, $selected, $showempty);
+	}
+
+	/**
+	 * Return combo list of differents type
+	 *
+	 * @param string $selected Value
+	 * @param string $htmlname Name of the component
+	 * @param int $showempty Row
+	 * @param string $type dictname
+	 *
+	 * @return string HTML select
+	 */
+	function select_affairesdet_motifs($selected = array(), $htmlname = 'motifs', $filter=array())
+	{
+		if (empty($type)) {
+			$type=$htmlname;
+		}
+		require_once 'affaires.class.php';
+		$affaires = new Affaires_det($this->db);
+		if (count($filter)>0) {
+			foreach($affaires->motifs_dict as $key=>$obj) {
+				foreach($filter as $keyfilter=>$valfilter) {
+					if (property_exists($obj, $keyfilter)) {
+						if ($obj->$keyfilter!==$valfilter) {
+							unset($affaires->motifs_dict[$key]);
+						}
+					}
+				}
+			}
+		}
+
+		return $this->multiselectarray($htmlname, $affaires->motifs_dict, $selected, 0,0,'',0,'100%','','');
 	}
 
 	/**

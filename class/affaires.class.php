@@ -679,7 +679,8 @@ class Affaires_det extends CommonObject
 	public $marque_trt= array();
 	public $marque_trt_dict= array();
 	public $fk_motifs;
-	public $motifs= array();
+	public $fk_motifs_array= array();
+	public $motifs=array();
 	public $motifs_dict= array();
 	public $spec;
 	public $fk_commande;
@@ -903,9 +904,8 @@ class Affaires_det extends CommonObject
 			$this->fk_commande = trim($this->fk_commande);
 
 
-			// Check parameters
-			// Put here code to add control on parameters values
-
+		// Check parameters
+		// Put here code to add control on parameters values
 		if (empty($this->fk_affaires)) {
 			$error ++;
 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
@@ -935,6 +935,9 @@ class Affaires_det extends CommonObject
 			$error ++;
 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
 		}
+		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
+			$this->fk_motifs=implode(',',$this->fk_motifs_array);
+		}
 
 		if (! $error) {
 			// Insert request
@@ -947,7 +950,7 @@ class Affaires_det extends CommonObject
 			$sql .= "fk_carrosserie,";
 			$sql .= "fk_status,";
 			$sql .= "fk_marque_trt,";
-			$sql .= "fk_motif,";
+			$sql .= "fk_motifs,";
 			$sql .= "fk_commande,";
 			$sql .= "spec,";
 			$sql .= "fk_user_author,";
@@ -983,7 +986,7 @@ class Affaires_det extends CommonObject
 			}
 
 			if (! $error) {
-				$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "affaires");
+				$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . $this->table_element);
 
 				if (! $notrigger) {
 					// Uncomment this and change MYOBJECT to your own tag if you
@@ -1013,6 +1016,9 @@ class Affaires_det extends CommonObject
 				$this->db->commit();
 				return $this->id;
 			}
+		} else {
+			dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
+			return - 1;
 		}
 	}
 
@@ -1033,7 +1039,7 @@ class Affaires_det extends CommonObject
 		$sql .= " t.fk_carrosserie,";
 		$sql .= " t.fk_status,";
 		$sql .= " t.fk_marque_trt,";
-		$sql .= " t.fk_motif,";
+		$sql .= " t.fk_motifs,";
 		$sql .= " t.spec,";
 		$sql .= " t.fk_commande,";
 		$sql .= " t.fk_user_author,";
@@ -1059,6 +1065,9 @@ class Affaires_det extends CommonObject
 				$this->fk_status = $obj->fk_status;
 				$this->fk_marque_trt = $obj->fk_marque_trt;
 				$this->fk_motifs = $obj->fk_motifs;
+				if (!empty($this->fk_motifs)) {
+					$this->fk_motifs_array= explode(',',$obj->fk_motifs);
+				}
 				$this->spec = $obj->spec;
 				$this->fk_commande = $obj->fk_commande;
 				$this->fk_user_author = $obj->fk_user_author;
@@ -1157,6 +1166,9 @@ class Affaires_det extends CommonObject
 				$line->fk_status = $obj->fk_status;
 				$line->fk_marque_trt = $obj->fk_marque_trt;
 				$line->fk_motifs = $obj->fk_motifs;
+				if (!empty($this->fk_motifs)) {
+					$this->fk_motifs_array= explode(',',$obj->fk_motifs);
+				}
 				$line->fk_commande = $obj->fk_commande;
 				$line->spec = $obj->spec;
 				$line->fk_user_author = $obj->fk_user_author;
@@ -1253,6 +1265,9 @@ class Affaires_det extends CommonObject
 			$error ++;
 			$this->errors[] = "un chassis commandé ne peut etre modifié";
 		}
+		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
+			$this->fk_motifs=implode(',',$this->fk_motifs_array);
+		}
 
 		if (! $error) {
 			// Update request
@@ -1266,7 +1281,7 @@ class Affaires_det extends CommonObject
 			$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
 			$sql .= " fk_marque_trt=" . (isset($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
 			$sql .= " fk_motifs=" . (isset($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
-			$sql .= " fk_commmande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
+			$sql .= " fk_commande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
 			$sql .= " spec=" . (isset($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
 			$sql .= " fk_user_mod=" . $user->id . ",";
 			$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
@@ -1371,9 +1386,10 @@ class Affaires_det extends CommonObject
 	}
 
 	function vh_tile($whithcustomerdetails=0){
+		global $user;
 
 		if($this->fk_genre==1){
-			$img = img_picto('porteur', 'porteur.png.png@affaires');
+			$img = img_picto('porteur', 'porteur.png@affaires');
 		}elseif($this->fk_genre==2){
 			$img = img_picto('porteur', 'tracteur.png@affaires');
 		}
@@ -1396,8 +1412,13 @@ class Affaires_det extends CommonObject
 			$color = '#cccccc';
 			$color2= '#b2b2b2';
 		}
- 		$return = '<div align="left" draggable="true"; ondragstart="drag(event);" id="'. $line->id . '" style="background:' . $color .'; background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')) ';
- 		$return.= ';border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
+
+ 		$return = '<div id="vh_'. $this->id . '" style="background:' . $color .'; ';
+ 		$return.= ' background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')); ';
+ 		$return.= ' border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
+
+ 		//Info veh
+ 		$return .= '<div style="display: inline-block; ">';
  		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
  		if($this->fk_status==6){
  			$return.= ' - Spécification: ' . $this->spec;
@@ -1408,6 +1429,27 @@ class Affaires_det extends CommonObject
  				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
  			}
  		}
+ 		$return.= '</div>';
+
+ 		//Button
+ 		$return.= '<div style="display: inline-block; float:right;">';
+ 		if ($user->rights->affaires->write) {
+ 			//TODO only if affaire traiter et pas de commande dessus
+ 			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
+ 		}
+ 		if ($user->rights->affaires->write) {
+ 			//TODO only if affaire traiter et pas de commande dessus
+ 			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
+ 		}
+ 		if ($user->admin) {
+ 			$return.= '<a href="javascript:popDelAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
+ 		}
+ 		if ($user->rights->affaires->write) {
+ 			//TODO only if affaire traiter et pas de commande dessus
+ 			$return.= '<a href="javascript:popClassAffaire('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
+ 		}
+ 		$return.='</div>';
+
  		$return.= '</div>';
 
 //		$return = var_dump($this);

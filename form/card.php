@@ -110,7 +110,24 @@ if($action=="update"){
 		setEventMessages(null, $object->errors, 'errors');
 		$action = 'edit';
 	}else{
-		$action='';
+		$ret = $object->fetch($id);
+		$action ='';
+		if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+	}
+}
+
+if($action=="confirm_deletevehid"){
+
+	$object = new Affaires_det($db);
+	$object->id = GETPOST('vehid','int');
+	$res = $object->delete($user);
+	if($res <0){
+		setEventMessages(null, $object->errors, 'errors');
+		$action = 'edit';
+	}else{
+		$ret = $object->fetch($id);
+		$action ='';
+		if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
 	}
 }
 
@@ -237,7 +254,7 @@ elseif ($action == 'edit') {
 	print '</table>';
 
 	print '<div class="center">';
-	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('update') . '">';
+	print '<input type="submit" class="button" name="bouton" value="' . $langs->trans('Save') . '">';
 	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	print '<input type="button" class="button" name="cancel" value="' . $langs->trans("Cancel") . '" onclick="javascript:history.go(-1)">';
 	print '</div>';
@@ -249,6 +266,9 @@ elseif ($action == 'edit') {
 	$formconfirm = '';
 	if ($action == 'delete') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('LeadDelete'), $langs->trans('LeadConfirmDelete'), 'confirm_delete', '', 0, 1);
+	}
+	if ($action == 'deleteveh') {
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.GETPOST('vehid'), $langs->trans('ConfrimDeleteVeh'), $langs->trans('ConfrimDeleteVeh'), 'confirm_deletevehid', '', 0, 1);
 	}
 
 	if ($formconfirm) {
@@ -310,7 +330,6 @@ elseif ($action == 'edit') {
 	print '<div class="tabsAction">';
 	if ($user->rights->affaires->write) {
 		print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=edit">' . $langs->trans("Modifier") . "</a></div>\n";
-
 	}
 	// Delete
 	if ($user->rights->affaires->delete) {
@@ -319,12 +338,12 @@ elseif ($action == 'edit') {
 	print '</div>';
 	?>
 	<script type="text/javascript">
-	function popCreateAffaireDet() {
-		$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?affaireid='.$object->id,1) ?>"></iframe></div>');
+	function popCreateAffaireDet(vehid) {
+		$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?affaireid='.$object->id,1) ?>&vehid='+vehid+'"></iframe></div>');
 		$div.dialog({
 			modal:true
 			,width:"90%"
-					,height:$(window).height() - 50
+					,height:$(window).height() - 200
 					,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/form/card.php',2).'?id='.$object->id;?>';}
 		});
 	}
