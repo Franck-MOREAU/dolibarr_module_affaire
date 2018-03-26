@@ -1447,7 +1447,7 @@ class Affaires_det extends CommonObject
  		}
  		if ($user->rights->affaires->write) {
  			//TODO only if affaire traiter et pas de commande dessus
- 			$return.= '<a href="javascript:popClassAffaire('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
+ 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
  		}
  		$return.='</div>';
 

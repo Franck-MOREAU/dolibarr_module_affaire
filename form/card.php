@@ -25,6 +25,7 @@ dol_include_once('affaires/class/affaires.class.php');
 dol_include_once('/core/class/doleditor.class.php');
 dol_include_once('/user/class/user.class.php');
 dol_include_once('/user/class/usergroup.class.php');
+dol_include_once('/affaires/class/html.formaffaires.class.php');
 
 
 if (! empty($conf->commande->enabled))
@@ -50,6 +51,7 @@ $year = GETPOST('year','int');
 $description= GETPOST('description','none');
 
 $object = new Affaires($db);
+$formAffaires = new FormAffaires($db);
 
 // Load object
 if ($id > 0) {
@@ -270,7 +272,16 @@ elseif ($action == 'edit') {
 	if ($action == 'deleteveh') {
 		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.GETPOST('vehid'), $langs->trans('ConfrimDeleteVeh'), $langs->trans('ConfrimDeleteVeh'), 'confirm_deletevehid', '', 0, 1);
 	}
-
+	if ($action == 'classveh') {
+		$formquestion=array();
+		$formquestion[]=array(
+				'type' => 'other',
+				'name' => 'status',
+				'label' => 'Statut',
+				'value' => $formAffaires->select_affairesdet_fromdict($status,'status',0)
+		);
+		$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id.'&vehid='.GETPOST('vehid'), $langs->trans('ConfrimDeleteVeh'), '', 'confirm_cahngestatus', $formquestion, 0, 1);
+	}
 	if ($formconfirm) {
 		print $formconfirm;
 	}
@@ -350,9 +361,6 @@ elseif ($action == 'edit') {
 	}
 	</script>
 	<?php
-
-
-
 }
 dol_fiche_head();
 print_fiche_titre($langs->trans("vhlist") . ' - ' . $object->ref , '', dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
