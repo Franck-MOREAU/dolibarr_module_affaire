@@ -61,7 +61,7 @@ class FormAffaires extends Form
 		$sql .= " FROM " . MAIN_DB_PREFIX . $tablename;
 		//TODO Fix sourcetype can be different from tablename (exemple project/projet)
 		$sqlwhere=array();
-		//if ($tablename!='contrat' || empty($conf->global->LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT)) {
+		//if ($tablename!='contrat' || empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT)) {
 			$sql_inner='  rowid NOT IN (SELECT fk_source FROM ' . MAIN_DB_PREFIX . 'element_element WHERE targettype=\'' . $this->db->escape($affaires->element) . '\'';
 			$sql_inner.=' AND sourcetype=\''.$this->db->escape($tablename).'\')';
 			$sqlwhere[]= $sql_inner;

@@ -22,12 +22,12 @@
  *  \ingroup    commande
  *  \brief      File of class to manage customer order numbering rules Marbre
  */
-dol_include_once('/lead/core/modules/lead/modules_lead.php');
+dol_include_once('/affaires/core/modules/affaires/modules_affaires.php');
 
 /**
  *	Class to manage customer order numbering rules Marbre
  */
-class mod_lead_volvo extends ModeleNumRefLead
+class mod_affaires_volvo extends ModeleNumRefAffaires
 {
 	var $version='dolibarr';		// 'development', 'experimental', 'dolibarr'
 	var $prefix='';
@@ -98,18 +98,14 @@ class mod_lead_volvo extends ModeleNumRefLead
 	 *  @param  Object		$object		Object we need next value for
 	 *  @return string      			Value if KO, <0 if KO
 	 */
-	function getNextValue($fk_user, $objsoc, $lead)
+	function getNextValue($affaires)
 	{
 		global $db,$conf;
 
-		$date=$lead->date;
-		$yy = strftime("%y",$date);
-		if ($yy==70){
-			$yy = strftime("%y",dol_now());
-		}
+		$date=$affaires->year;
 
 		$usr = new User($db);
-		$usr->fetch($fk_user);
+		$usr->fetch($affaires->fk_user_resp);
 		if (!empty($usr->lastname)) {
 			$trig=strtoupper(str_pad($usr->lastname,3,'A'));
 		} else {
@@ -118,7 +114,7 @@ class mod_lead_volvo extends ModeleNumRefLead
 		$trig=substr($trig,0,3);
 		// D'abord on recupere la valeur max
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref, 4, 3) AS SIGNED)) as max";
-		$sql.= " FROM ".MAIN_DB_PREFIX."lead";
+		$sql.= " FROM ".MAIN_DB_PREFIX."affaires";
 		$sql.= " WHERE ref REGEXP '^" . $trig . "[0-9][0-9][0-9][/]" . $yy . "'";
 		$sql.= " AND entity = ".$conf->entity;
 
@@ -149,7 +145,7 @@ class mod_lead_volvo extends ModeleNumRefLead
 	 * 	@param	string		$objforref	Object for number to search
 	 *  @return string      			Next free value
 	 */
-	function lead_get_num($objsoc,$objforref)
+	function affaires_get_num($objsoc,$objforref)
 	{
 		return $this->getNextValue($objsoc,$objforref);
 	}

@@ -61,7 +61,7 @@ class ActionsAffaires // extends CommonObject
 
 			print '<br>';
 			print_fiche_titre($langs->trans('Affaires'));
-			if (count($affaires->doclines) == 0 || ($object->table_element=='contrat' && !empty($conf->global->LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT))) {
+			if (count($affaires->doclines) == 0 || ($object->table_element=='contrat' && !empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT))) {
 				print '<form action="' . dol_buildpath("/affaires/affaires/manage_link.php", 1) . '" method="POST">';
 				print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 				print '<input type="hidden" name="redirect" value="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">';
@@ -80,7 +80,7 @@ class ActionsAffaires // extends CommonObject
 				$filter['t.rowid !IN'] = implode($array_exclude_affaires, ',');
 			}
 			$selectList = $formaffaires->select_affaires('', 'affairesid', 1, $filter);
-			if (! empty($selectList) && (count($affaires->doclines) == 0  || ($object->table_element=='contrat' && !empty($conf->global->LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT)))) {
+			if (! empty($selectList) && (count($affaires->doclines) == 0  || ($object->table_element=='contrat' && !empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT)))) {
 				print '<tr>';
 				print '<td>';
 				print $selectList;
@@ -101,7 +101,7 @@ class ActionsAffaires // extends CommonObject
 				print '</tr>';
 			}
 			print "</table>";
-			if (count($affaires->doclines) == 0  || ($object->table_element=='contrat' && !empty($conf->global->LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT))) {
+			if (count($affaires->doclines) == 0  || ($object->table_element=='contrat' && !empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT))) {
 				print "</form>";
 			}
 		}

@@ -588,6 +588,61 @@ class Affaires extends CommonObject
 		$this->initAsSpecimenCommon();
 	}
 
+	/**
+	 *  Returns the reference to the following non used Proposal used depending on the active numbering module
+	 *  defined into PROPALE_ADDON
+	 *
+	 *  @param	Societe		$soc  	Object thirdparty
+	 *  @return string      		Reference libre pour la propale
+	 */
+	function getNextNumRef($soc)
+	{
+		global $conf,$langs;
+		$langs->load("propal");
+
+		if (! empty($conf->global->AFFAIRES_ADDON))
+		{
+			$mybool=false;
+
+			$file = $conf->global->AFFAIRES_ADDON.".php";
+			$classname = $conf->global->AFFAIRES_ADDON;
+
+			// Include file with class
+			$dir = dol_buildpath('/affaire/core/modules/affaires/');
+
+			// Load file with numbering class (if found)
+			$mybool|=@include_once $dir.$file;
+
+
+			if (! $mybool)
+			{
+				dol_print_error('',"Failed to include file ".$file);
+				return '';
+			}
+
+			$obj = new $classname();
+			$numref = "";
+			$numref = $obj->getNextValue($this);
+
+			if ($numref != "")
+			{
+				return $numref;
+			}
+			else
+			{
+				$this->error=$obj->error;
+				//dol_print_error($db,"Propale::getNextNumRef ".$obj->error);
+				return "";
+			}
+		}
+		else
+		{
+			$langs->load("errors");
+			print $langs->trans("Error")." ".$langs->trans("ErrorModuleSetupNotComplete");
+			return "";
+		}
+	}
+
 }
 
 class Affaires_det extends CommonObject

@@ -50,9 +50,9 @@ $startyear=$year-1;
 $endyear=$year;
 
 $includeuserlist=array();
-if (!empty($conf->global->LEAD_GRP_USER_AFFECT)) {
+if (!empty($conf->global->AFFAIRES_GRP_USER_AFFECT)) {
 	$usergroup=new UserGroup($db);
-	$result=$usergroup->fetch($conf->global->LEAD_GRP_USER_AFFECT);
+	$result=$usergroup->fetch($conf->global->AFFAIRES_GRP_USER_AFFECT);
 	if ($result < 0)
 		setEventMessage($usergroup->error, 'errors');
 

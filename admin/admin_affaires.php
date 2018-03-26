@@ -67,50 +67,50 @@ if ($action == 'updateMask') {
 		setEventMessages($langs->trans("Error"), null, 'errors');
 	}
 } else if ($action == 'setmod') {
-	dolibarr_set_const($db, "LEAD_ADDON", $value, 'chaine', 0, '', $conf->entity);
+	dolibarr_set_const($db, "AFFAIRES_ADDON", $value, 'chaine', 0, '', $conf->entity);
 } else if ($action == 'setvar') {
 
-	$nb_day = GETPOST('LEAD_NB_DAY_COSURE_AUTO', 'int');
+	$nb_day = GETPOST('AFFAIRES_NB_DAY_COSURE_AUTO', 'int');
 	if (! empty($nb_day)) {
-		$res = dolibarr_set_const($db, 'LEAD_NB_DAY_COSURE_AUTO', $nb_day, 'chaine', 0, '', $conf->entity);
+		$res = dolibarr_set_const($db, 'AFFAIRES_NB_DAY_COSURE_AUTO', $nb_day, 'chaine', 0, '', $conf->entity);
 	}
 	if (! $res > 0) {
 		$error ++;
 	}
 
-	$user_goup = GETPOST('LEAD_GRP_USER_AFFECT', 'int');
+	$user_goup = GETPOST('AFFAIRES_GRP_USER_AFFECT', 'int');
 	if ($user_goup == - 1)
 		$user_goup = '';
 
-	$res = dolibarr_set_const($db, 'LEAD_GRP_USER_AFFECT', $user_goup, 'chaine', 0, '', $conf->entity);
+	$res = dolibarr_set_const($db, 'AFFAIRES_GRP_USER_AFFECT', $user_goup, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0) {
 		$error ++;
 	}
 
-	$template = GETPOST('LEAD_PERSONNAL_TEMPLATE', 'alpha');
+	$template = GETPOST('AFFAIRES_PERSONNAL_TEMPLATE', 'alpha');
 	if (! file_exists(dol_buildpath($template))) {
 		$template = '';
 	}
 
-	$res = dolibarr_set_const($db, 'LEAD_PERSONNAL_TEMPLATE', $template, 'chaine', 0, '', $conf->entity);
+	$res = dolibarr_set_const($db, 'AFFAIRES_PERSONNAL_TEMPLATE', $template, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0) {
 		$error ++;
 	}
 
-	$force_use_thirdparty = GETPOST('LEAD_FORCE_USE_THIRDPARTY', 'int');
-	$res = dolibarr_set_const($db, 'LEAD_FORCE_USE_THIRDPARTY', $force_use_thirdparty, 'yesno', 0, '', $conf->entity);
+	$force_use_thirdparty = GETPOST('AFFAIRES_FORCE_USE_THIRDPARTY', 'int');
+	$res = dolibarr_set_const($db, 'AFFAIRES_FORCE_USE_THIRDPARTY', $force_use_thirdparty, 'yesno', 0, '', $conf->entity);
 	if (! $res > 0) {
 		$error ++;
 	}
 
-	$allow_multiple = GETPOST('LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT', 'int');
-	$res = dolibarr_set_const($db, 'LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT', $allow_multiple, 'yesno', 0, '', $conf->entity);
+	$allow_multiple = GETPOST('AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT', 'int');
+	$res = dolibarr_set_const($db, 'AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT', $allow_multiple, 'yesno', 0, '', $conf->entity);
 	if (! $res > 0) {
 		$error ++;
 	}
 
-	$LEAD_EVENT_RELANCE_TYPE = GETPOST('LEAD_EVENT_RELANCE_TYPE');
-	$res = dolibarr_set_const($db, 'LEAD_EVENT_RELANCE_TYPE', $LEAD_EVENT_RELANCE_TYPE, 'chaine', 0, '', $conf->entity);
+	$AFFAIRES_EVENT_RELANCE_TYPE = GETPOST('AFFAIRES_EVENT_RELANCE_TYPE');
+	$res = dolibarr_set_const($db, 'AFFAIRES_EVENT_RELANCE_TYPE', $AFFAIRES_EVENT_RELANCE_TYPE, 'chaine', 0, '', $conf->entity);
 	if (! $res > 0) {
 		$error ++;
 	}
@@ -235,7 +235,7 @@ foreach ( $dirmodels as $reldir ) {
 						print '</td>' . "\n";
 
 						print '<td align="center">';
-						if ($conf->global->LEAD_ADDON == "$file") {
+						if ($conf->global->AFFAIRES_ADDON == "$file") {
 							print img_picto($langs->trans("Activated"), 'switch_on');
 						} else {
 							print '<a href="' . $_SERVER["PHP_SELF"] . '?action=setmod&amp;value=' . $file . '">';
@@ -292,19 +292,19 @@ print "</tr>\n";
 // Nb Days
 print '<tr class="pair"><td>' . $langs->trans("AffairesNbDayDefaultClosure") . '</td>';
 print '<td align="left">';
-print '<input type="text" name="LEAD_NB_DAY_COSURE_AUTO" value="' . $conf->global->LEAD_NB_DAY_COSURE_AUTO . '" size="4" ></td>';
+print '<input type="text" name="AFFAIRES_NB_DAY_COSURE_AUTO" value="' . $conf->global->AFFAIRES_NB_DAY_COSURE_AUTO . '" size="4" ></td>';
 print '</tr>';
 
 // template
 print '<tr class="impair"><td>Chemin du template personnel</td>';
 print '<td align="left">';
-print '<input type="text" name="LEAD_PERSONNAL_TEMPLATE" value="' . $conf->global->LEAD_PERSONNAL_TEMPLATE . '" size="30" ></td>';
+print '<input type="text" name="AFFAIRES_PERSONNAL_TEMPLATE" value="' . $conf->global->AFFAIRES_PERSONNAL_TEMPLATE . '" size="30" ></td>';
 print '</tr>';
 
 // User Group
 print '<tr class="pair"><td>' . $langs->trans("AffairesUserGroupAffect") . '</td>';
 print '<td align="left">';
-print $form->select_dolgroups($conf->global->LEAD_GRP_USER_AFFECT, 'LEAD_GRP_USER_AFFECT', 1, array(), 0, '', '', $conf->entity);
+print $form->select_dolgroups($conf->global->AFFAIRES_GRP_USER_AFFECT, 'AFFAIRES_GRP_USER_AFFECT', 1, array(), 0, '', '', $conf->entity);
 print '</tr>';
 
 // Force use thirdparty
@@ -314,7 +314,7 @@ $arrval = array(
 		'0' => $langs->trans("No"),
 		'1' => $langs->trans("Yes")
 );
-print $form->selectarray("LEAD_FORCE_USE_THIRDPARTY", $arrval, $conf->global->LEAD_FORCE_USE_THIRDPARTY);
+print $form->selectarray("AFFAIRES_FORCE_USE_THIRDPARTY", $arrval, $conf->global->AFFAIRES_FORCE_USE_THIRDPARTY);
 print '</tr>';
 
 // Allow multiple affaires on contract
@@ -324,7 +324,7 @@ $arrval = array(
 		'0' => $langs->trans("No"),
 		'1' => $langs->trans("Yes")
 );
-print $form->selectarray("LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT", $arrval, $conf->global->LEAD_ALLOW_MULIPLE_LEAD_ON_CONTRACT);
+print $form->selectarray("AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT", $arrval, $conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT);
 print '</tr>';
 
 if (! empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
@@ -333,7 +333,7 @@ if (! empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
 	print '<td align="left">';
 	dol_include_once('/core/class/html.formactions.class.php');
 	$formactions = new FormActions($db);
-	$formactions->select_type_actions($conf->global->LEAD_EVENT_RELANCE_TYPE, "LEAD_EVENT_RELANCE_TYPE", "systemauto", 0, - 1);
+	$formactions->select_type_actions($conf->global->AFFAIRES_EVENT_RELANCE_TYPE, "AFFAIRES_EVENT_RELANCE_TYPE", "systemauto", 0, - 1);
 	print '</tr>';
 }
 

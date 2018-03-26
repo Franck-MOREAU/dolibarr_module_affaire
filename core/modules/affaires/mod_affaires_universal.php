@@ -52,7 +52,7 @@ class mod_affaires_universal extends ModeleNumRefAffaires
 		$texte .= '<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 		$texte .= '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 		$texte .= '<input type="hidden" name="action" value="updateMask">';
-		$texte .= '<input type="hidden" name="maskconstaffaires" value="LEAD_UNIVERSAL_MASK">';
+		$texte .= '<input type="hidden" name="maskconstaffaires" value="AFFAIRES_UNIVERSAL_MASK">';
 		$texte .= '<table class="nobordernopadding" width="100%">';
 		
 		$tooltip = $langs->trans("GenericMaskCodes", $langs->transnoentities("AffairesAffaires"), $langs->transnoentities("AffairesAffaires"));
@@ -63,7 +63,7 @@ class mod_affaires_universal extends ModeleNumRefAffaires
 		
 		// Parametrage du prefix
 		$texte .= '<tr><td>' . $langs->trans("Mask") . ':</td>';
-		$texte .= '<td align="right">' . $form->textwithpicto('<input type="text" class="flat" size="24" name="maskaffaires" value="' . $conf->global->LEAD_UNIVERSAL_MASK . '">', $tooltip, 1, 1) . '</td>';
+		$texte .= '<td align="right">' . $form->textwithpicto('<input type="text" class="flat" size="24" name="maskaffaires" value="' . $conf->global->AFFAIRES_UNIVERSAL_MASK . '">', $tooltip, 1, 1) . '</td>';
 		
 		$texte .= '<td align="left" rowspan="2">&nbsp; <input type="submit" class="button" value="' . $langs->trans("Modify") . '" name="Button"></td>';
 		
@@ -110,7 +110,7 @@ class mod_affaires_universal extends ModeleNumRefAffaires
 		require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
 		
 		// On defini critere recherche compteur
-		$mask = $conf->global->LEAD_UNIVERSAL_MASK;
+		$mask = $conf->global->AFFAIRES_UNIVERSAL_MASK;
 		
 		if (! $mask) {
 			$this->error = 'NotConfigured';

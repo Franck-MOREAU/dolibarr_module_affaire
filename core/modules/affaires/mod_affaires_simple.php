@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2014-2016 Florian HENRY <florian.henry@atm-consulting.fr>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@ class mod_affaires_simple extends ModeleNumRefAffaires
 {
 
 	var $version = 'dolibarr'; // 'development', 'experimental', 'dolibarr'
-	var $prefix = 'LEA-';
+	var $prefix = 'AFF-';
 
 	var $error = '';
 
@@ -66,10 +66,10 @@ class mod_affaires_simple extends ModeleNumRefAffaires
 	function canBeActivated()
 	{
 		global $conf, $langs;
-		
+
 		$coyymm = '';
 		$max = '';
-		
+
 		$posindice = 8;
 		$sql = "SELECT MAX(SUBSTRING(ref FROM " . $posindice . ")) as max";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires";
@@ -103,13 +103,13 @@ class mod_affaires_simple extends ModeleNumRefAffaires
 	function getNextValue($fk_user, $objsoc, $affaires)
 	{
 		global $db, $conf;
-		
+
 		// D'abord on recupere la valeur max
 		$posindice = 10;
 		$sql = "SELECT MAX(SUBSTRING(ref FROM " . $posindice . ")) as max";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires";
 		$sql .= " WHERE ref like '" . $this->prefix . "____-%'";
-		
+
 		$resql = $db->query($sql);
 		if ($resql) {
 			$obj = $db->fetch_object($resql);
@@ -121,13 +121,13 @@ class mod_affaires_simple extends ModeleNumRefAffaires
 			dol_syslog("mod_affaires_simple::getNextValue sql=" . $sql);
 			return - 1;
 		}
-		
+
 		$date = empty($affaires->datec) ? dol_now() : $affaires->datec;
-		
+
 		// $yymm = strftime("%y%m",time());
 		$yymm = strftime("%y%m", $date);
 		$num = sprintf("%04s", $max + 1);
-		
+
 		dol_syslog("mod_affaires_simple::getNextValue return " . $this->prefix . $yymm . "-" . $num);
 		return $this->prefix . $yymm . "-" . $num;
 	}
