@@ -225,6 +225,29 @@ class ActionsAffaires // extends CommonObject
 			}
 		}
 
+		if (in_array('thirdpartycard', $current_context)){
+			$out = '<script type="text/javascript">' . "\n";
+			$out .= '  	$(document).ready(function() {' . "\n";
+			$out .= '		$a = $(\'<a href="javascript:popCalendar()" class="butAction">Créer un calendrier</a>\');' . "\n";
+			$out .= '		$(\'div.fiche div.tabsAction\').first().prepend($a);' . "\n";
+			$out .= '  	});' . "\n";
+			$out .= '' . "\n";
+			$out .= '  	function popCalendar() {' . "\n";
+			$out .= '  		$div = $(\'<div id="popCalendar"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/event/createcustcalendar.php?socid=' . $object->id, 1) . '"></iframe></div>\');' . "\n";
+			$out .= '' . "\n";
+			$out .= '  		$div.dialog({' . "\n";
+			$out .= '  			modal:true' . "\n";
+			$out .= '  			,width:"90%"' . "\n";
+			$out .= '  			,height:$(window).height() - 150' . "\n";
+			$out .= '  			,close:function() {document.location.reload(true);}' . "\n";
+			$out .= '  		});' . "\n";
+			$out .= '' . "\n";
+			$out .= '  	}' . "\n";
+			$out .= '' . "\n";
+			$out .= '</script>';
+			print $out;
+		}
+
 		// Always OK
 		return 0;
 	}
@@ -249,4 +272,34 @@ class ActionsAffaires // extends CommonObject
 
 		$this->results = $arrayresult;
 	}
+
+	/**
+	 * doActions Method Hook Call
+	 *
+	 * @param string[] $parameters parameters
+	 * @param CommonObject $object Object to use hooks on
+	 * @param string $action Action code on calling page ('create', 'edit', 'view', 'add', 'update', 'delete'...)
+	 * @param HookManager $hookmanager class instance
+	 * @return int Hook status
+	 */
+	function doActions($parameters, &$object, &$action, $hookmanager) {
+		global $langs, $conf, $user, $db, $bc;
+
+		$current_context = explode(':', $parameters['context']);
+
+		if (in_array('ordercard', $current_context)) {
+			$dest = dol_buildpath('/affaires/volvo/commande/card.php',2). '?id=' . $object->id;
+			header("Location: ".$dest);
+			exit;
+
+		} elseif (in_array('ordersuppliercard', $current_context)) {
+			$dest = dol_buildpath('/affaires/volvo/fourn/commande/card.php',2). '?id=' . $object->id;
+			header("Location: ".$dest);
+			exit;
+
+		}
+
+		return 0;
+	}
+
 }
