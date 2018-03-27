@@ -47,8 +47,7 @@ $limit = GETPOST('limit', 'int') ? GETPOST('limit', 'int') : $conf->liste_limit;
 $do_action = GETPOST('do_action', 'int');
 
 // Initialize technical object to manage context to save list fields
-$contextpage=GETPOST('contextpage','aZ')?GETPOST('contextpage','aZ'):'affaireslist';
-
+$contextpage = GETPOST('contextpage', 'aZ') ? GETPOST('contextpage', 'aZ') : 'affaireslist';
 
 // Socid is fill when come from thirdparty tabs
 $socid = GETPOST('socid', 'int');
@@ -68,25 +67,38 @@ $search_type = GETPOST('search_type');
 if ($search_type == - 1) {
 	$search_type = 0;
 }
-$search_eftype = GETPOST('search_eftype');
-if ($search_eftype == - 1) {
-	$search_eftype = 0;
-}
-$search_carrosserie = GETPOST('search_carrosserie');
-if ($search_carrosserie == - 1) {
-	$search_carrosserie = 0;
-}
 $search_commercial = GETPOST('search_commercial');
 if ($search_commercial == - 1) {
 	$search_commercial = '';
 }
 $search_year = GETPOST('search_year', 'int');
+if ($search_year == - 1) {
+	$search_year = '';
+}
 $search_gamme = GETPOST('search_gamme', 'int');
+if ($search_gamme == - 1) {
+	$search_gamme = '';
+}
 $search_genre = GETPOST('search_genre', 'int');
+if ($search_genre == - 1) {
+	$search_genre = '';
+}
 $search_silhouette = GETPOST('search_silhouette', 'int');
+if ($search_silhouette == - 1) {
+	$search_silhouette = '';
+}
 $search_carrosserie = GETPOST('search_carrosserie', 'int');
+if ($search_carrosserie == - 1) {
+	$search_carrosserie = '';
+}
 $search_spec = GETPOST('search_spec', 'san_alpha');
+if ($search_spec == - 1) {
+	$search_spec = '';
+}
 $search_cv_type = GETPOST('search_cv_type', 'int');
+if ($search_cv_type == - 1) {
+	$search_cv_type = '';
+}
 
 $link_element = GETPOST("link_element");
 if (! empty($link_element)) {
@@ -107,7 +119,7 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
 	$search_silhouette = '';
 	$search_carrosserie = '';
 	$search_spec = '';
-	$search_cv_type='';
+	$search_cv_type = '';
 }
 
 $search_commercial_disabled = 0;
@@ -127,93 +139,121 @@ $arrayfields = array(
 				'label' => $langs->trans("affnum"),
 				'checked' => 1,
 				'search' => '<input class="flat" type="text" size="6" name="search_ref" value="' . $search_ref . '">',
-				'displayfield' => 'ref_url'
+				'displayfield' => 'ref_url',
+				'sortfield'=>'t.ref'
 		),
 		't.fk_c_type' => array(
 				'label' => $langs->trans("cv"),
 				'checked' => 1,
-				'search' => $form->selectarray('search_cv_type', $object->type,$object->fk_c_type),
-				'displayfield' => 'cv_type_label'
+				'search' => $form->selectarray('search_cv_type', $object->type, $object->fk_c_type, 1),
+				'displayfield' => 'cv_type_label',
+				'sortfield'=>'cv.label'
 		),
 		't.fk_user_resp' => array(
 				'label' => $langs->trans("userresp"),
 				'checked' => 1,
-				'search' => $formAffaires->select_salesmans(empty($search_commercial) ? $user->id : $search_commercial, 'search_commercial', 'Commerciaux'),
-				'displayfield' => 'usrname'
+				'search' => $formAffaires->select_salesmans(empty($search_commercial) ? $user->id : $search_commercial, 'search_commercial', 'Commerciaux', 1),
+				'displayfield' => 'usrname',
+				'sortfield'=>'usr.lastname'
 		),
 		'soc.nom' => array(
 				'label' => $langs->trans("client"),
 				'checked' => 1,
 				'search' => '<input type="text" class="flat" name="search_soc" value="' . $search_soc . '" size="20">',
-				'displayfield' => 'soc_url'
+				'displayfield' => 'soc_url',
+				'sortfield'=>'soc.nom'
 		),
 		'ctm.nom' => array(
 				'label' => $langs->trans("ctm"),
 				'checked' => 1,
 				'search' => '<input type="text" class="flat" name="search_ctm" value="' . $search_ctm . '" size="20">',
-				'displayfield' => 'ctm_url'
+				'displayfield' => 'ctm_url',
+				'sortfield'=>'ctm.nom'
 		),
 		't.year' => array(
 				'label' => $langs->trans("Year"),
 				'checked' => 1,
 				'search' => $formother->selectyear($search_year ? $search_year : - 1, 'search_year', 1, 20, 5),
-				'displayfield' => 'year'
+				'displayfield' => 'year',
+				'sortfield'=>'t.year'
 		),
 		'det.fk_genre' => array(
 				'label' => $langs->trans("genre"),
 				'checked' => 1,
 				'search' => $formAffaires->select_affairesdet_fromdict($search_genre, 'search_genre', 1, 'genre_dict'),
-				'displayfield' => 'genre_label'
+				'displayfield' => 'genre_label',
+				'sortfield'=>'genre.genre'
 		),
 		'det.fk_gamme' => array(
 				'label' => $langs->trans("gamme"),
 				'checked' => 1,
 				'search' => $formAffaires->select_affairesdet_fromdict($search_gamme, 'search_gamme', 1, 'gamme_dict'),
-				'displayfield' => 'gamme_label'
+				'displayfield' => 'gamme_label',
+				'sortfield'=>'gamme.gamme'
 		),
 		'det.fk_silhouette' => array(
 				'label' => $langs->trans("Silhouette"),
 				'checked' => 1,
 				'search' => $formAffaires->select_affairesdet_fromdict($search_silhouette, 'search_silhouette', 1, 'silhouette_dict'),
-				'displayfield' => 'silhouette_label'
+				'displayfield' => 'silhouette_label',
+				'sortfield'=>'silhouette.silhouette'
+
 		),
 		'det.fk_carrosserie' => array(
 				'label' => $langs->trans("Carroserie"),
 				'checked' => 1,
 				'search' => $formAffaires->select_affairesdet_fromdict($search_carrosserie, 'search_carrosserie', 1, 'carrosserie_dict'),
-				'displayfield' => 'carrosserie_label'
+				'displayfield' => 'carrosserie_label',
+				'sortfield'=>'carrosserie.carrosserie'
 		),
 		'det.fk_status' => array(
 				'label' => $langs->trans("Status"),
 				'checked' => 1,
-				'search' => $formAffaires->select_affairesdet_fromdict($search_carrosserie, 'search_status', 1),
-				'displayfield' => 'status_label'
+				'search' => $formAffaires->select_affairesdet_fromdict($search_status, 'search_status', 1, 'status'),
+				'displayfield' => 'status_label',
+				'sortfield'=>'status.label'
 		),
 		'det.spec' => array(
 				'label' => $langs->trans("Spec"),
 				'checked' => 1,
 				'search' => '<input type="text" name="spec" id="search_spec" value="' . $search_spec . '"/>',
-				'displayfield'=>'spec'
-		)
-);
+				'displayfield' => 'spec',
+				'sortfield'=>'det.spec'
+		),
+		'amountorder' => array(
+				'label' => $langs->trans("Montant des commandes"),
+				'checked' => 1,
+				'search' => '<div id="totalamountorder"></div>',
+				'displayfield' => '',
+				'sortfield'=>'',
+				'evaldisplayfield' => 'getAmountOrder',
+				'moredisplayvalue'=>$langs->getCurrencySymbol($conf->currency),
+				'sumvar'=>1
+		),
+		'margedate' => array(
+				'label' => $langs->trans("Marge a date"),
+				'checked' => 1,
+				'search' => '<div id="totalmargedate"></div>',
+				'displayfield' => '',
+				'sortfield'=>'',
+				'evaldisplayfield' => 'getMarginDate',
+				'moredisplayvalue'=>$langs->getCurrencySymbol($conf->currency),
+				'sumvar'=>1
+		),
+		'margedatereel' => array(
+				'label' => $langs->trans("Marge a date réelle"),
+				'checked' => 1,
+				'search' => '<div id="totalmargedatereel"></div>',
+				'displayfield' => '',
+				'sortfield'=>'',
+				'evaldisplayfield' => 'getMarginReelDate',
+				'moredisplayvalue'=>$langs->getCurrencySymbol($conf->currency),
+				'sumvar'=>1
+		),
 
+);
 // Selection of new fields
 include DOL_DOCUMENT_ROOT . '/core/actions_changeselectedfields.inc.php';
-
-/* Action */
-if ($do_action > 0) {
-	$act_type = GETPOST('action_' . $do_action, 'int');
-	if (isset($act_type)) {
-		if ($act_type == 1) {
-			// TODO open certedet.php
-		} else {
-			$lead = new Affaires_det($db);
-			$lead->fetch($do_action);
-			$lead->fk_status = $act_type;
-			$lead->update($user);
-		}
-	}
-}
 
 $filter = array();
 if (! empty($search_ref)) {
@@ -355,7 +395,10 @@ if ($resql != - 1) {
 
 	print_barre_liste($title, $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', $num, $nbtotalofrecords, 'affaires@affaires.png', 0, '', '', $limit);
 
-	print '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" name="search_form">' . "\n";
+	print '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" name="searchFormList" id="searchFormList">' . "\n";
+	print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
+	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
 
 	if (! empty($sortfield)) {
 		print '<input type="hidden" name="sortfield" value="' . $sortfield . '"/>';
@@ -367,7 +410,7 @@ if ($resql != - 1) {
 		print '<input type="hidden" name="page" value="' . $page . '"/>';
 	}
 	if (! empty($limit)) {
-		print '<input type="hidden" name="page" value="' . $limit . '"/>';
+		print '<input type="hidden" name="limit" value="' . $limit . '"/>';
 	}
 	if (! empty($viewtype)) {
 		print '<input type="hidden" name="viewtype" value="' . $viewtype . '"/>';
@@ -387,19 +430,12 @@ if ($resql != - 1) {
 	print '<td class="liste_titre"></td>';
 
 	foreach ( $arrayfields as $key => $val ) {
-		if (! empty($arrayfields[$key]['checked'])) {
+		if (! empty($val['checked'])) {
 			print '<td class="liste_titre">';
 			print $arrayfields[$key]['search'];
 			print '</td>';
 		}
 	}
-
-	// Montant
-	print '<td class="liste_titre"></td>';
-	print '<td class="liste_titre"></td>';
-	print '<td class="liste_titre"></td>';
-	print '<td class="liste_titre"></td>';
-	print '<td class="liste_titre"></td>';
 
 	// Filter button
 	print '<td class="liste_titre" align="middle">';
@@ -415,17 +451,11 @@ if ($resql != - 1) {
 	print '<th></th>';
 
 	foreach ( $arrayfields as $key => $val ) {
-		if (! empty($arrayfields[$key]['checked'])) {
-			print_liste_field_titre($arrayfields[$key]['label'], $_SERVER["PHP_SELF"], $key, '', $option, '', $sortfield, $sortorder);
+		if (! empty($val['checked'])) {
+			print_liste_field_titre($val['label'], $_SERVER["PHP_SELF"], $val['sortfield'], '', $option, '', $sortfield, $sortorder);
 		}
 	}
 
-	// Montant
-	print '<th>Nb commandé</th>';
-	print '<th>Montant annoncé</th>';
-	print '<th>Montant des commandes</th>';
-	print '<th>Marge a date</th>';
-	print '<th>Marge a date réelle</th>';
 	// Filter button
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', $option, 'align="center"', $sortfield, $sortorder, 'maxwidthsearch ');
 	print '</tr>' . "\n";
@@ -435,25 +465,21 @@ if ($resql != - 1) {
 
 	foreach ( $objectdet->lines as $line ) {
 
-		$list='';
+		$list = '';
 		if ($user->rights->affaires->write) {
 			$list = '<select class="flat" id="action_' . $line->id . '" name="action_' . $line->id . '" style="width: 75px;">';
 			$list .= '<option value="1" selected>Editer</option>';
-			if ($line->fk_status != 6) {
-				$list .= '<option value="6">traitée</option>';
+			foreach($objectdet->status as $keystatus=>$labelstatus) {
+				if ($line->fk_status != $keystatus) {
+					if (($keystatus==7 || $keystatus==11) && !empty($line->fk_commande)) {
+						//$list .= '<option value="'.$keystatus.'">'.$labelstatus.'</option>';
+					} else {
+						$list .= '<option value="'.$keystatus.'">'.$labelstatus.'</option>';
+					}
+				}
 			}
-			if ($line->fk_status != 7 && $line->fk_commande>0) {
-				$list .= '<option value="7">perdue</option>';
-			}
-			if ($line->fk_status != 11 && $line->fk_commande>0) {
-				$list .= $list .= '<option value="11">s. suite</option>';
-			}
-			if ($line->fk_status != 5) {
-				$list .= '<option value="5">En cours</option>';
-			}
-
 			$list .= '</select>';
-			$list .= '<button type="submit" name="do_action" value="' . $line->id . '"><img src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/tick.png">';
+			$list.= '<a href="javascript:do_action('.$line->id.')" style="color:black"><i class="fa fa-check-square-o paddingright"></i></a>';
 		}
 
 		// Affichage tableau des lead
@@ -462,47 +488,85 @@ if ($resql != - 1) {
 		print '<td align="center" style="white-space:nowrap">' . $list . '</td>';
 
 		foreach ( $arrayfields as $key => $val ) {
-			if (! empty($arrayfields[$key]['checked'])) {
-				print '<td>'.$line->{$arrayfields[$key]['displayfield']}.'</td>';
+			if (! empty($val['checked'])) {
+				print '<td>';
+				if (!empty($val['displayfield'])) {
+					print  $line->{$val['displayfield']};
+
+					if (array_key_exists('sumvar', $val) && !empty($val['sumvar'])) {
+						${$key}+=$line->{$val['displayfield']};
+					}
+				} elseif (!empty($val['evaldisplayfield'])) {
+					print price(call_user_func_array(array($objectdet, $val['evaldisplayfield']),array($line->id)));
+
+					if (array_key_exists('sumvar', $val) && !empty($val['sumvar'])) {
+						${$key}+=call_user_func_array(array($objectdet, $val['evaldisplayfield']),array($line->id));
+					}
+				}
+				if (array_key_exists('moredisplayvalue', $val) && !empty($val['moredisplayvalue'])) {
+					print $val['moredisplayvalue'];
+				}
+				print '</td>';
+
 			}
 		}
-		// Amount real
-		// TODO getRealAmount2
-		// $amount = $lead->getRealAmount2();
-		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
-		$totalamountreal += $amount;
 
-		// MArgin
-		// TODO Margin
-		// $amount = $lead->getmargin('theo');
-		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
-		$totalmargin += $amount;
-
-		// Margin real
-		// TODO Margin
-		// $amount = $lead->getmargin('real');
-		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
-		$totalmarginreal += $amount;
+		print '<td></td>';
 
 		print "</tr>\n";
-
-		$i ++;
 	}
 
 	print "</table>";
 	print '</div>';
 
 	print '</form>';
+	?>
+<script type="text/javascript">
 
-	print '<script type="text/javascript" language="javascript">' . "\n";
-	print
-			'$(document).ready(function() {
-					$("#totalamountguess").append("' . price($totalamountguess) . $langs->getCurrencySymbol($conf->currency) . '");
-					$("#totalamountreal").append("' . price($totalamountreal) . $langs->getCurrencySymbol($conf->currency) . '");
-					$("#totalmargin").append("' . price($totalmargin) . $langs->getCurrencySymbol($conf->currency) . '");
-					$("#totalmarginreal").append("' . price($totalmarginreal) . $langs->getCurrencySymbol($conf->currency) . '");
-			});';
-	print "\n" . '</script>' . "\n";
+	$(document).ready(function() {
+	<?php
+	foreach ( $arrayfields as $key => $val ) {
+		if (! empty($val['checked'])) {
+			//var_dump($val);
+			if (array_key_exists('sumvar', $val) && !empty($val['sumvar'])) {
+		?>
+				$("#total<?php echo $key?>").append("<?php echo price(${$key}) . ((array_key_exists('moredisplayvalue', $val) && !empty($val['moredisplayvalue']))?$val['moredisplayvalue']:'') ?>");
+	<?php	}
+		}
+	}?>
+	});
+
+	function do_action(vehid) {
+		val=$('#action_' +vehid).val();
+		if (val==1) {
+			$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?affaireid='.$object->id,1) ?>&vehid='+vehid+'"></iframe></div>');
+			$div.dialog({
+				modal:true
+				,width:"90%"
+						,height:$(window).height() - 200
+						,close:function() {$("input[name='button_search']" ).click();}
+			});
+		} else {
+			$.ajax({
+		 		method: "POST",
+		 		url: "../ajax/interface.php",
+		 		data: {
+		 			vehid: vehid,
+		 			new_statut: val,
+		 			action:'updatestatus'
+		 		},
+		 		success: function(data){
+		 			if (data == 1){
+		 				$("input[name='button_search']" ).click();
+		 			} else {
+		 				alert( "erreur: " + data );
+		 			}
+		 		},
+		 	})
+		}
+	}
+</script>
+	<?php
 } else {
 	setEventMessages(null, $objectdet->errors, 'errors');
 }

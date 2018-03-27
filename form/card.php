@@ -154,6 +154,7 @@ if($action=="confirm_changemotif" && $user->rights->affaires->write){
 		$action = '';
 	}else{
 		header('Location: ' . dol_buildpath('/affaires/form/card.php',2) . '?id='.$object->id);
+		exit;
 	}
 }
 
@@ -190,7 +191,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("userresp").': '. $formAffaires->select_salesmans( empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp,'fk_user_resp','Commerciaux');
+	print $langs->trans("userresp").': '. $formAffaires->select_salesmans( empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp,'fk_user_resp','Commerciaux',0);
 	print '</td>';
 	print '<td>';
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 1);

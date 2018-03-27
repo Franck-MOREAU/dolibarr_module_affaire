@@ -1095,7 +1095,7 @@ class Affaires_det extends CommonObject
 
 			return 1;
 		} else {
-			$this->error = "Error " . $this->db->lasterror();
+			$this->errors[] = "Error " . $this->db->lasterror();
 			dol_syslog(get_class($this) . "::fetch " . $this->error, LOG_ERR);
 			return - 1;
 		}
@@ -1145,12 +1145,18 @@ class Affaires_det extends CommonObject
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'societe as ctm ON ctm.rowid=t.fk_ctm';
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'user as usr ON usr.rowid=t.fk_user_resp';
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_type as cv ON cv.rowid=t.fk_c_type';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_genre as genre ON genre.rowid=det.fk_genre';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_gamme as gamme ON gamme.rowid=det.fk_gamme';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_silhouette as silhouette ON silhouette.rowid=det.fk_silhouette';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_carrosserie as carrosserie ON carrosserie.rowid=det.fk_carrosserie';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_status as status ON status.rowid=det.fk_status';
 		$sql .= " WHERE 1";
 
 		if (is_array($filter)) {
 			foreach ( $filter as $key => $value ) {
 				if (($key == 'det.fk_affaires') || ($key == 'det.rowid') || ($key == 'det.fk_gamme') || ($key == 'det.fk_silhouette') || ($key == 'det.fk_genre')
-						|| ($key == 'det.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 'det.fk_marque_trt') || ($key == 'det.fk_commande') || $key == 't.fk_c_type') {
+						|| ($key == 'det.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 'det.fk_marque_trt')
+						|| ($key == 'det.fk_commande') || $key == 't.fk_c_type' || $key == 't.year') {
 					$sql .= ' AND ' . $key . ' = ' . $value;
 				} elseif ($key == 't.fk_status !IN') {
 					$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
@@ -1203,6 +1209,7 @@ class Affaires_det extends CommonObject
 				$line->carrosserie_label = $line->carrosserie[$line->fk_carrosserie]->carrosserie;
 				$line->status_label = $line->status[$line->fk_c_status];
 				$line->marque_trt_label = $line->marque_trt[$line->fk_marque_trt]->marque;
+				$line->status_label = $line->status[$line->fk_status];
 
 				$line->soc_url='';
 				if (!empty($obj->socid)) {
@@ -1220,8 +1227,7 @@ class Affaires_det extends CommonObject
 				$affstatic= new Affaires($this->db);
 				$affstatic->fetch($obj->fk_affaires,1);
 				$line->ref_url=$affstatic->getNomUrl();
-				var_dump($affstatic->type_label);
-				$this->cv_type_label = $affstatic->type_label;
+				$line->cv_type_label = $affstatic->type_label;
 
 				$line->year=$affstatic->year;
 				$line->usrname=$obj->usrname;
@@ -1497,5 +1503,42 @@ class Affaires_det extends CommonObject
 //		$return = var_dump($this);
 
 		return $return;
+	}
+
+	/**
+	 *
+	 * @param int $vehid
+	 * @return number
+	 */
+	public function getAmountOrder($vehid=0) {
+		$staticself=new self($this->db);
+		$staticself->fetch($vehid);
+		if($staticself->fk_commande > 0){
+			dol_include_once('/affaires/class/commandevolvo.class.php');
+			$cmd = new CommandeVolvo($this->db);
+			$cmd->fetch($staticself->fk_commande);
+			return $cmd->total_ht;
+		} else {
+			return 0;
+		}
+
+	}
+
+	/**
+	 *
+	 * @param int $vehid
+	 * @return number
+	 */
+	public function getMarginDate($vehid=0) {
+		return 0;
+	}
+
+	/**
+	 *
+	 * @param int $vehid
+	 * @return number
+	 */
+	public function getMarginReelDate($vehid=0) {
+		return 0;
 	}
 }

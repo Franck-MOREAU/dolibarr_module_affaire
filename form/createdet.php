@@ -76,6 +76,10 @@ if ($action == 'createdet' || $action == 'editdet' ) {
 
 if ($vehid > 0) {
 	$ret = $objectdet->fetch($vehid);
+	if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
+
+	$ret = $object->fetch($objectdet->fk_affaires);
+	if ($ret < 0) setEventMessages(null, $object->errors, 'errors');
 
 	$gamme=$objectdet->fk_gamme;
 	$silhouette=$objectdet->fk_silhouette;
@@ -93,8 +97,8 @@ top_htmlhead('', '');
 
 print '<form name="createorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
-print '<input type="hidden" name="affaireid" value="' . $affaireid . '">';
-print '<input type="hidden" name="vehid" value="' . $vehid . '">';
+print '<input type="hidden" name="affaireid" value="' . $object->id . '">';
+print '<input type="hidden" name="vehid" value="' . $objectdet->id . '">';
 print '<input type="hidden" name="action" value="'.(empty($vehid)?'createdet':'editdet').'">';
 
 print '<table class="border" width="100%">';

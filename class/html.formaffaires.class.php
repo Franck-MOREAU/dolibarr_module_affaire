@@ -214,7 +214,7 @@ class FormAffaires extends Form
 				}
 			}
 		}
-
+		//var_dump($type,$affaires->$type);
 		return $this->selectarray($htmlname, $affaires->$type, $selected, $showempty);
 	}
 
@@ -286,7 +286,7 @@ class FormAffaires extends Form
 	 * @param string $htmlname
 	 * @param string $filterbygroup
 	 */
-	public function select_salesmans($selected=0,$htmlname='fk_user_resp',$filterbygroup='Commerciaux') {
+	public function select_salesmans($selected=0,$htmlname='fk_user_resp',$filterbygroup='Commerciaux',$showempty=1) {
 
 		require_once DOL_DOCUMENT_ROOT.'/user/class/usergroup.class.php';
 
@@ -306,7 +306,7 @@ class FormAffaires extends Form
 				}
 			}
 
-			return $this->select_dolusers($selected, 'fk_user_resp', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+			return $this->select_dolusers($selected, 'fk_user_resp', $showempty, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
 	}
 
 }
