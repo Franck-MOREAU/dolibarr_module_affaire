@@ -207,7 +207,7 @@ class Affaires extends CommonObject
 	 * @param int $id object
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function fetch($id) {
+	function fetch($id,$nodetail=0) {
 		global $langs;
 		$sql = "SELECT";
 		$sql .= " t.rowid,";
@@ -252,13 +252,14 @@ class Affaires extends CommonObject
 					$soc->fetch($this->fk_ctm);
 					$this->contremarque = $soc;
 				}
-
-				// loading affaires lines into affaires_det array of object
-				$det = New Affaires_det($this->db);
-				$det->fetch_all('ASC','fk_status, fk_commande',0,0,array('fk_affaires'=>$this->id));
-				$this->affaires_det=array();
-				foreach ($det->lines as $line){
-					$this->affaires_det[$line->id]=$line;
+				if (empty($nodetail)) {
+					// loading affaires lines into affaires_det array of object
+					$det = New Affaires_det($this->db);
+					$det->fetch_all('ASC','fk_status, fk_commande',0,0,array('fk_affaires'=>$this->id));
+					$this->affaires_det=array();
+					foreach ($det->lines as $line){
+						$this->affaires_det[$line->id]=$line;
+					}
 				}
 			}
 			$this->db->free($resql);
@@ -691,6 +692,13 @@ class Affaires_det extends CommonObject
 	public $tms;
 	public $lines = array ();
 
+	public $soc_url='';
+	public $ctm_url='';
+	public $ref_url='';
+	public $year;
+	public $usrname='';
+	public $cv_type_label='';
+
 	function __construct($db) {
 
 		$this->db = $db;
@@ -1106,31 +1114,43 @@ class Affaires_det extends CommonObject
 	 * @return int <0 if KO, >0 if OK
 	 */
 	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array()) {
+
+		require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+
 		global $langs;
 		$sql = "SELECT";
-		$sql .= " t.rowid,";
-		$sql .= " t.fk_affaires,";
-		$sql .= " t.fk_gamme,";
-		$sql .= " t.fk_silhouette,";
-		$sql .= " t.fk_genre,";
-		$sql .= " t.fk_carrosserie,";
-		$sql .= " t.fk_status,";
-		$sql .= " t.fk_marque_trt,";
-		$sql .= " t.fk_motifs,";
-		$sql .= " t.spec,";
-		$sql .= " t.fk_commande,";
-		$sql .= " t.fk_user_author,";
-		$sql .= " t.datec,";
-		$sql .= " t.fk_user_mod,";
-		$sql .= " t.tms";
+		$sql .= " det.rowid,";
+		$sql .= " det.fk_affaires,";
+		$sql .= " det.fk_gamme,";
+		$sql .= " det.fk_silhouette,";
+		$sql .= " det.fk_genre,";
+		$sql .= " det.fk_carrosserie,";
+		$sql .= " det.fk_status,";
+		$sql .= " det.fk_marque_trt,";
+		$sql .= " det.fk_motifs,";
+		$sql .= " det.spec,";
+		$sql .= " det.fk_commande,";
+		$sql .= " det.fk_user_author,";
+		$sql .= " det.datec,";
+		$sql .= " det.fk_user_mod,";
+		$sql .= " det.tms,";
+		$sql .= " CONCAT(usr.lastname,' ',usr.firstname) as usrname,";
+		$sql .= " soc.rowid as socid,";
+		$sql .= " ctm.rowid as ctmid,";
+		$sql .= " t.year";
 
-		$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as t";
+		$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as det";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'affaires as t ON t.rowid=det.fk_affaires';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'societe as soc ON soc.rowid=t.fk_soc';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'societe as ctm ON ctm.rowid=t.fk_ctm';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'user as usr ON usr.rowid=t.fk_user_resp';
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_type as cv ON cv.rowid=t.fk_c_type';
 		$sql .= " WHERE 1";
 
 		if (is_array($filter)) {
 			foreach ( $filter as $key => $value ) {
-				if (($key == 't.fk_affaires') || ($key == 't.rowid') || ($key == 't.fk_gamme') || ($key == 't.fk_silhouette') || ($key == 't.fk_genre')
-				|| ($key == 't.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 't.fk_marque_trt') || ($key == 't.fk_commande')) {
+				if (($key == 'det.fk_affaires') || ($key == 'det.rowid') || ($key == 'det.fk_gamme') || ($key == 'det.fk_silhouette') || ($key == 'det.fk_genre')
+						|| ($key == 'det.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 'det.fk_marque_trt') || ($key == 'det.fk_commande') || $key == 't.fk_c_type') {
 					$sql .= ' AND ' . $key . ' = ' . $value;
 				} elseif ($key == 't.fk_status !IN') {
 					$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
@@ -1184,13 +1204,37 @@ class Affaires_det extends CommonObject
 				$line->status_label = $line->status[$line->fk_c_status];
 				$line->marque_trt_label = $line->marque_trt[$line->fk_marque_trt]->marque;
 
+				$line->soc_url='';
+				if (!empty($obj->socid)) {
+					$socstatic= new Societe($this->db);
+					$socstatic->fetch($obj->socid);
+					$line->soc_url=$socstatic->getNomUrl();
+				}
+				$line->ctm_url='';
+				if (!empty($obj->ctmid)) {
+					$socstatic= new Societe($this->db);
+					$socstatic->fetch($obj->ctmid);
+					$line->ctm_url=$socstatic->getNomUrl();
+				}
+
+				$affstatic= new Affaires($this->db);
+				$affstatic->fetch($obj->fk_affaires,1);
+				$line->ref_url=$affstatic->getNomUrl();
+				var_dump($affstatic->type_label);
+				$this->cv_type_label = $affstatic->type_label;
+
+				$line->year=$affstatic->year;
+				$line->usrname=$obj->usrname;
+
+
+
 				$this->lines[] = $line;
 			}
 			$this->db->free($resql);
 
 			return $num;
 		} else {
-			$this->error = "Error " . $this->db->lasterror();
+			$this->errors[] = "Error " . $this->db->lasterror();
 			dol_syslog(get_class($this) . "::fetch_all " . $this->error, LOG_ERR);
 			return - 1;
 		}
@@ -1435,15 +1479,12 @@ class Affaires_det extends CommonObject
  		//Button
  		$return.= '<div style="display: inline-block; float:right;">';
  		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			//TODO only if affaire traiter et pas de commande dessus
  			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
  		}
  		if ($user->rights->affaires->write && $this->fk_status== 6 && $this->fk_commande<1) {
- 			//TODO only if affaire traiter et pas de commande dessus
  			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
  		}
  		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			//TODO only if affaire traiter et pas de commande dessus
  			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
  		}
  		if ($user->admin && !($this->fk_status== 6 && $this->fk_commande>0)) {

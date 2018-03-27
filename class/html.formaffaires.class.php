@@ -24,11 +24,11 @@
 class FormAffaires extends Form
 {
 
-	var $db;
+	public $db;
 
-	var $error;
+	public $error;
 
-	var $num;
+	public $num;
 
 	/**
 	 * Build Select List of element associable to a businesscase
@@ -39,7 +39,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select list of element
 	 */
-	function select_element($tablename, $affaires, $htmlname = 'elementselect')
+	public function select_element($tablename, $affaires, $htmlname = 'elementselect')
 	{
 		global $langs, $conf;
 
@@ -114,7 +114,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string Portion HTML avec ref + boutons nav
 	 */
-	function showrefnav($object, $paramid, $morehtml = '', $shownav = 1, $fieldid = 'rowid', $fieldref = 'ref', $morehtmlref = '', $moreparam = '', $nodbprefix = 0, $morehtmlleft = '', $morehtmlstatus = '', $morehtmlright = '')
+	public function showrefnav($object, $paramid, $morehtml = '', $shownav = 1, $fieldid = 'rowid', $fieldref = 'ref', $morehtmlref = '', $moreparam = '', $nodbprefix = 0, $morehtmlleft = '', $morehtmlstatus = '', $morehtmlright = '')
 	{
 		global $langs, $conf;
 
@@ -161,7 +161,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affaires_status($selected = '', $htmlname = 'affairesstatus', $showempty = 1)
+	public function select_affaires_status($selected = '', $htmlname = 'affairesstatus', $showempty = 1)
 	{
 		require_once 'affaires.class.php';
 		$affaires = new Affaires($this->db);
@@ -178,7 +178,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affaires_type($selected = '', $htmlname = 'affairestype', $showempty = 1)
+	public function select_affaires_type($selected = '', $htmlname = 'affairestype', $showempty = 1)
 	{
 		require_once 'affaires.class.php';
 		$affaires = new Affaires($this->db);
@@ -196,7 +196,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='',$filter=array())
+	public function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='',$filter=array())
 	{
 		if (empty($type)) {
 			$type=$htmlname;
@@ -228,7 +228,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affairesdet_motifs($selected = array(), $htmlname = 'motifs', $filter=array())
+	public function select_affairesdet_motifs($selected = array(), $htmlname = 'motifs', $filter=array())
 	{
 		if (empty($type)) {
 			$type=$htmlname;
@@ -260,7 +260,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	function select_affaires($selected = '', $htmlname = 'affairesid', $showempty = 1, $filter=array())
+	public function select_affaires($selected = '', $htmlname = 'affairesid', $showempty = 1, $filter=array())
 	{
 		$affaires_array=array();
 		require_once 'affaires.class.php';
@@ -279,4 +279,34 @@ class FormAffaires extends Form
 		}
 		return null;
 	}
+
+	/**
+	 *
+	 * @param number $selected
+	 * @param string $htmlname
+	 * @param string $filterbygroup
+	 */
+	public function select_salesmans($selected=0,$htmlname='fk_user_resp',$filterbygroup='Commerciaux') {
+
+		require_once DOL_DOCUMENT_ROOT.'/user/class/usergroup.class.php';
+
+		$includeuserlist = array();
+		$usergroup = new UserGroup($this->db);
+		$result = $usergroup->fetch('',$filterbygroup);
+
+		if ($result < 0) {
+			setEventMessages(null, $usergroup->errors, 'errors');
+		}
+
+			$includeuserlisttmp = $usergroup->listUsersForGroup();
+
+			if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
+				foreach ( $includeuserlisttmp as $usertmp ) {
+					$includeuserlist[] = $usertmp->id;
+				}
+			}
+
+			return $this->select_dolusers($selected, 'fk_user_resp', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+	}
+
 }

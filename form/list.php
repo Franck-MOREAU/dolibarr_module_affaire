@@ -17,9 +17,9 @@
  */
 
 /**
- * \file affaires/affaires/list.php
- * \ingroup affaires
- * \brief list of affaires
+ * \file affaire/form/list.php
+ * \ingroup affaire
+ * \brief list of affaire
  */
 $res = @include '../../main.inc.php'; // For root directory
 if (! $res)
@@ -31,16 +31,10 @@ require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 require_once '../class/affaires.class.php';
 require_once '../lib/affaires.lib.php';
 require_once '../class/html.formaffaires.class.php';
-require_once '../class/reprise.class.php';
-require_once '../class/affaires.extend.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT . '/comm/propal/class/propal.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/facture/class/facture.class.php';
-
-global $user;
-
-$reprise = new Reprise($db);
 
 // Security check
 if (! $user->rights->affaires->read)
@@ -49,37 +43,50 @@ if (! $user->rights->affaires->read)
 $sortorder = GETPOST('sortorder', 'alpha');
 $sortfield = GETPOST('sortfield', 'alpha');
 $page = GETPOST('page', 'int');
-$do_action = GETPOST('do_action','int');
+$limit = GETPOST('limit', 'int') ? GETPOST('limit', 'int') : $conf->liste_limit;
+$do_action = GETPOST('do_action', 'int');
+
+// Initialize technical object to manage context to save list fields
+$contextpage=GETPOST('contextpage','aZ')?GETPOST('contextpage','aZ'):'affaireslist';
 
 
-//Socid is fill when come from thirdparty tabs
-$socid=GETPOST('socid','int');
+// Socid is fill when come from thirdparty tabs
+$socid = GETPOST('socid', 'int');
 
-//view type is special predefined filter
-$viewtype=GETPOST('viewtype','alpha');
+// view type is special predefined filter
+$viewtype = GETPOST('viewtype', 'alpha');
 
 // Search criteria
 $search_ref = GETPOST("search_ref");
 $search_soc = GETPOST("search_soc");
+$search_ctm = GETPOST("search_ctm");
 $search_status = GETPOST('search_status');
-if ($search_status == - 1)
+if ($search_status == - 1) {
 	$search_status = 0;
+}
 $search_type = GETPOST('search_type');
-if ($search_type == - 1)
+if ($search_type == - 1) {
 	$search_type = 0;
+}
 $search_eftype = GETPOST('search_eftype');
-if ($search_eftype == - 1)
+if ($search_eftype == - 1) {
 	$search_eftype = 0;
+}
 $search_carrosserie = GETPOST('search_carrosserie');
-if ($search_carrosserie == - 1)
+if ($search_carrosserie == - 1) {
 	$search_carrosserie = 0;
+}
 $search_commercial = GETPOST('search_commercial');
-if ($search_commercial == - 1)
+if ($search_commercial == - 1) {
 	$search_commercial = '';
-
-$search_month = GETPOST('search_month', 'aplha');
+}
 $search_year = GETPOST('search_year', 'int');
-
+$search_gamme = GETPOST('search_gamme', 'int');
+$search_genre = GETPOST('search_genre', 'int');
+$search_silhouette = GETPOST('search_silhouette', 'int');
+$search_carrosserie = GETPOST('search_carrosserie', 'int');
+$search_spec = GETPOST('search_spec', 'san_alpha');
+$search_cv_type = GETPOST('search_cv_type', 'int');
 
 $link_element = GETPOST("link_element");
 if (! empty($link_element)) {
@@ -87,80 +94,124 @@ if (! empty($link_element)) {
 }
 
 // Do we click on purge search criteria ?
-if (GETPOST("button_removefilter_x")) {
+if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
 	$search_ref = '';
 	$search_commercial = '';
 	$search_soc = '';
+	$search_ctm = '';
 	$search_status = '';
 	$search_type = '';
-	$search_eftype = '';
-	$search_carrosserie = '';
-	$search_month = '';
 	$search_year = '';
-}
-
-if($do_action > 0){
-	$act_type = GETPOST('action_'.$do_action,'int');
-	if(isset($act_type)){
-		if($act_type==1){
-			header('Location: ' . DOL_URL_ROOT . '/custom/affaires/affaires/card.php?id=' . $do_action . '&action=edit');
-			exit;
-		}elseif($act_type == 2){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->fk_c_status = 6;
-			$affaires->update($user);
-		}elseif($act_type == 3){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->fk_c_status = 7;
-			$affaires->update($user);
-		}elseif($act_type == 4){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->fk_c_status = 11;
-			$affaires->update($user);
-		}elseif($act_type == 5){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->fk_c_status = 5;
-			$affaires->update($user);
-		}elseif($act_type == 6){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->array_options["options_chaude"] = 1;
-			$affaires->update($user);
-		}elseif($act_type == 7){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->array_options["options_chaude"] = 0;
-			$affaires->update($user);
-		}elseif($act_type == 8){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->array_options["options_new"] = 1;
-			$affaires->update($user);
-		}elseif($act_type == 9){
-			$affaires = new Affairesext($db);
-			$affaires->fetch($do_action);
-			$affaires->array_options["options_new"] = 0;
-			$affaires->update($user);
-		}
-	}
+	$search_gamme = '';
+	$search_genre = '';
+	$search_silhouette = '';
+	$search_carrosserie = '';
+	$search_spec = '';
+	$search_cv_type='';
 }
 
 $search_commercial_disabled = 0;
-if (empty($user->rights->volvo->stat_all)){
+if (empty($user->rights->affaires->all)) {
 	$search_commercial = $user->id;
 	$selected_commercial = $user->id;
 }
 
-$user_included=array();
-$sqlusers = "SELECT fk_user FROM " . MAIN_DB_PREFIX . "usergroup_user WHERE fk_usergroup = 1";
-$resqlusers  = $db->query($sqlusers);
-if($resqlusers){
-	while ($users = $db->fetch_object($resqlusers)){
-		$user_included[] = $users->fk_user;
+$object = new Affaires($db);
+$objectdet = new Affaires_det($db);
+$form = new Form($db);
+$formother = new FormOther($db);
+$formAffaires = new FormAffaires($db);
+
+$arrayfields = array(
+		't.ref' => array(
+				'label' => $langs->trans("affnum"),
+				'checked' => 1,
+				'search' => '<input class="flat" type="text" size="6" name="search_ref" value="' . $search_ref . '">',
+				'displayfield' => 'ref_url'
+		),
+		't.fk_c_type' => array(
+				'label' => $langs->trans("cv"),
+				'checked' => 1,
+				'search' => $form->selectarray('search_cv_type', $object->type,$object->fk_c_type),
+				'displayfield' => 'cv_type_label'
+		),
+		't.fk_user_resp' => array(
+				'label' => $langs->trans("userresp"),
+				'checked' => 1,
+				'search' => $formAffaires->select_salesmans(empty($search_commercial) ? $user->id : $search_commercial, 'search_commercial', 'Commerciaux'),
+				'displayfield' => 'usrname'
+		),
+		'soc.nom' => array(
+				'label' => $langs->trans("client"),
+				'checked' => 1,
+				'search' => '<input type="text" class="flat" name="search_soc" value="' . $search_soc . '" size="20">',
+				'displayfield' => 'soc_url'
+		),
+		'ctm.nom' => array(
+				'label' => $langs->trans("ctm"),
+				'checked' => 1,
+				'search' => '<input type="text" class="flat" name="search_ctm" value="' . $search_ctm . '" size="20">',
+				'displayfield' => 'ctm_url'
+		),
+		't.year' => array(
+				'label' => $langs->trans("Year"),
+				'checked' => 1,
+				'search' => $formother->selectyear($search_year ? $search_year : - 1, 'search_year', 1, 20, 5),
+				'displayfield' => 'year'
+		),
+		'det.fk_genre' => array(
+				'label' => $langs->trans("genre"),
+				'checked' => 1,
+				'search' => $formAffaires->select_affairesdet_fromdict($search_genre, 'search_genre', 1, 'genre_dict'),
+				'displayfield' => 'genre_label'
+		),
+		'det.fk_gamme' => array(
+				'label' => $langs->trans("gamme"),
+				'checked' => 1,
+				'search' => $formAffaires->select_affairesdet_fromdict($search_gamme, 'search_gamme', 1, 'gamme_dict'),
+				'displayfield' => 'gamme_label'
+		),
+		'det.fk_silhouette' => array(
+				'label' => $langs->trans("Silhouette"),
+				'checked' => 1,
+				'search' => $formAffaires->select_affairesdet_fromdict($search_silhouette, 'search_silhouette', 1, 'silhouette_dict'),
+				'displayfield' => 'silhouette_label'
+		),
+		'det.fk_carrosserie' => array(
+				'label' => $langs->trans("Carroserie"),
+				'checked' => 1,
+				'search' => $formAffaires->select_affairesdet_fromdict($search_carrosserie, 'search_carrosserie', 1, 'carrosserie_dict'),
+				'displayfield' => 'carrosserie_label'
+		),
+		'det.fk_status' => array(
+				'label' => $langs->trans("Status"),
+				'checked' => 1,
+				'search' => $formAffaires->select_affairesdet_fromdict($search_carrosserie, 'search_status', 1),
+				'displayfield' => 'status_label'
+		),
+		'det.spec' => array(
+				'label' => $langs->trans("Spec"),
+				'checked' => 1,
+				'search' => '<input type="text" name="spec" id="search_spec" value="' . $search_spec . '"/>',
+				'displayfield'=>'spec'
+		)
+);
+
+// Selection of new fields
+include DOL_DOCUMENT_ROOT . '/core/actions_changeselectedfields.inc.php';
+
+/* Action */
+if ($do_action > 0) {
+	$act_type = GETPOST('action_' . $do_action, 'int');
+	if (isset($act_type)) {
+		if ($act_type == 1) {
+			// TODO open certedet.php
+		} else {
+			$lead = new Affaires_det($db);
+			$lead->fetch($do_action);
+			$lead->fk_status = $act_type;
+			$lead->update($user);
+		}
 	}
 }
 
@@ -169,101 +220,107 @@ if (! empty($search_ref)) {
 	$filter['t.ref'] = $search_ref;
 	$option .= '&search_ref=' . $search_ref;
 }
+if (! empty($search_cv_typef)) {
+	$filter['t.fk_c_type'] = $search_cv_typef;
+	$option .= '&search_cv_type=' . $search_cv_typef;
+}
 if (! empty($search_commercial)) {
 	$filter['t.fk_user_resp'] = $search_commercial;
 	$option .= '&search_commercial=' . $search_commercial;
 }
 if (! empty($search_soc)) {
-	$filter['so.nom'] = $search_soc;
+	$filter['soc.nom'] = $search_soc;
 	$option .= '&search_soc=' . $search_soc;
 }
+if (! empty($search_ctm)) {
+	$filter['ctm.nom'] = $search_ctm;
+	$option .= '&search_ctm=' . $search_ctm;
+}
 if (! empty($search_status)) {
-	$filter['t.fk_c_status'] = $search_status;
+	$filter['det.fk_status'] = $search_status;
 	$option .= '&search_status=' . $search_status;
 }
 if (! empty($search_type)) {
 	$filter['t.fk_c_type'] = $search_type;
 	$option .= '&search_type=' . $search_type;
 }
-if (! empty($search_eftype)) {
-	$filter['affairesextra.gamme'] = $search_eftype;
-	$option .= '&search_eftype=' . $search_eftype;
+if (! empty($search_gamme)) {
+	$filter['det.fk_gamme'] = $search_gamme;
+	$option .= '&search_gamme=' . $search_gamme;
+}
+if (! empty($search_genre)) {
+	$filter['det.fk_genre'] = $search_genre;
+	$option .= '&search_genre=' . $search_genre;
+}
+if (! empty($search_silhouette)) {
+	$filter['det.fk_silhouette'] = $search_silhouette;
+	$option .= '&search_silhouette=' . $search_silhouette;
 }
 if (! empty($search_carrosserie)) {
-	$filter['affairesextra.carroserie'] = $search_carrosserie;
+	$filter['det.fk_carrosserie'] = $search_carrosserie;
 	$option .= '&search_carrosserie=' . $search_carrosserie;
 }
-if (! empty($search_month)) {
-	$filter['MONTH(t.datec)'] = $search_month;
-	$option .= '&search_month=' . $search_month;
+if (! empty($search_spec)) {
+	$filter['det.spec'] = $search_spec;
+	$option .= '&search_spec=' . $search_spec;
 }
 if (! empty($search_year)) {
-	$filter['YEAR(t.datec)'] = $search_year;
+	$filter['t.year'] = $search_year;
 	$option .= '&search_year=' . $search_year;
 }
 
-if (!empty($viewtype)) {
-	if ($viewtype=='current') {
-		$filter['t.fk_c_status !IN'] = '6,7,11';
+if (! empty($viewtype)) {
+	if ($viewtype == 'current') {
+		$filter['det.fk_status !IN'] = '6,7,11';
 	}
-	if ($viewtype=='lost') {
-		$filter['t.fk_c_status !IN'] = '6,5,11';
+	if ($viewtype == 'lost') {
+		$filter['det.fk_status !IN'] = '6,5,11';
 	}
-	if ($viewtype=='cancel') {
-		$filter['t.fk_c_status !IN'] = '6,5,7';
+	if ($viewtype == 'cancel') {
+		$filter['det.fk_status !IN'] = '6,5,7';
 	}
-	if ($viewtype=='won') {
-		$filter['t.fk_c_status !IN'] = '5,7,11';
+	if ($viewtype == 'won') {
+		$filter['det.fk_status !IN'] = '5,7,11';
 	}
-	if ($viewtype=='hot') {
-		$filter['affairesextra.chaude'] = '1';
-		$filter['t.fk_c_status !IN'] = '6,7,11';
+	if ($viewtype == 'hot') {
+		$filter['det.fk_status !IN'] = '6,7,11';
 	}
-
-	if ($viewtype=='my') {
+	if ($viewtype == 'my') {
 		$filter['t.fk_user_resp'] = $user->id;
 	}
-	if ($viewtype=='mycurrent') {
+	if ($viewtype == 'mycurrent') {
 		$filter['t.fk_user_resp'] = $user->id;
-		$filter['t.fk_c_status !IN'] = '6,7,11';
+		$filter['det.fk_status !IN'] = '6,7,11';
 	}
-	if ($viewtype=='mylost') {
+	if ($viewtype == 'mylost') {
 		$filter['t.fk_user_resp'] = $user->id;
-		$filter['t.fk_c_status !IN'] = '6,5,11';
+		$filter['det.fk_status !IN'] = '6,5,11';
 	}
-	if ($viewtype=='mycancel') {
+	if ($viewtype == 'mycancel') {
 		$filter['t.fk_user_resp'] = $user->id;
-		$filter['t.fk_c_status !IN'] = '6,5,7';
+		$filter['det.fk_status !IN'] = '6,5,7';
 	}
-	if ($viewtype=='mywon') {
+	if ($viewtype == 'mywon') {
 		$filter['t.fk_user_resp'] = $user->id;
-		$filter['t.fk_c_status !IN'] = '5,7,11';
+		$filter['det.fk_status !IN'] = '5,7,11';
 	}
-	if ($viewtype=='late') {
-		$filter['t.fk_c_status !IN'] = '6,7,11';
-		$filter['t.date_closure<'] = dol_now();
+	if ($viewtype == 'late') {
+		$filter['det.fk_status !IN'] = '6,7,11';
 	}
-	if ($viewtype=='myhot') {
+	if ($viewtype == 'myhot') {
 		$filter['t.fk_user_resp'] = $user->id;
-		$filter['affairesextra.chaude'] = '1';
-		$filter['t.fk_c_status !IN'] = '6,7,11';
+		$filter['det.fk_status !IN'] = '6,7,11';
 	}
 	$option .= '&viewtype=' . $viewtype;
 }
 
-
-if ($page == - 1) {
+if (empty($page) || $page == - 1) {
 	$page = 0;
 }
 
-$offset = $conf->liste_limit * $page;
+$offset = $limit * $page;
 $pageprev = $page - 1;
 $pagenext = $page + 1;
-
-$form = new Form($db);
-$formaffaires = new FormAffaires($db);
-$object = new Affairesext($db);
-$formother = new FormOther($db);
 
 if (empty($sortorder))
 	$sortorder = "DESC";
@@ -274,238 +331,156 @@ $title = $langs->trans('AffairesList');
 
 llxHeader('', $title);
 
-if (!empty($socid)) {
+if (! empty($socid)) {
 	require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
+	require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 	$soc = new Societe($db);
 	$soc->fetch($socid);
 	$head = societe_prepare_head($soc);
 
-	dol_fiche_head($head, 'tabAffaires', $langs->trans("Module103111Name"),0,dol_buildpath('/affaires/img/object_affaires.png', 1),1);
+	dol_fiche_head($head, 'tabAffaire', $langs->trans("Module103111Name"), 0, dol_buildpath('/affaires/img/object_affaires.png', 1), 1);
 }
 
 // Count total nb of records
 $nbtotalofrecords = 0;
 
 if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST)) {
-	$nbtotalofrecords = $object->fetch_all($sortorder, $sortfield, 0, 0, $filter);
+	$nbtotalofrecords = $objectdet->fetch_all($sortorder, $sortfield, 0, 0, $filter);
 }
-$resql = $object->fetch_all($sortorder, $sortfield, $conf->liste_limit, $offset, $filter);
+$resql = $objectdet->fetch_all($sortorder, $sortfield, $limit, $offset, $filter);
 
+$moreforfilter = '';
 if ($resql != - 1) {
 	$num = $resql;
 
-	print_barre_liste($title, $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', $num, $nbtotalofrecords);
-
-
+	print_barre_liste($title, $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', $num, $nbtotalofrecords, 'affaires@affaires.png', 0, '', '', $limit);
 
 	print '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" name="search_form">' . "\n";
 
-	if (! empty($sortfield))
+	if (! empty($sortfield)) {
 		print '<input type="hidden" name="sortfield" value="' . $sortfield . '"/>';
-	if (! empty($sortorder))
+	}
+	if (! empty($sortorder)) {
 		print '<input type="hidden" name="sortorder" value="' . $sortorder . '"/>';
-	if (! empty($page))
+	}
+	if (! empty($page)) {
 		print '<input type="hidden" name="page" value="' . $page . '"/>';
-	if (! empty($viewtype))
+	}
+	if (! empty($limit)) {
+		print '<input type="hidden" name="page" value="' . $limit . '"/>';
+	}
+	if (! empty($viewtype)) {
 		print '<input type="hidden" name="viewtype" value="' . $viewtype . '"/>';
-	if (! empty($socid))
+	}
+	if (! empty($socid)) {
 		print '<input type="hidden" name="socid" value="' . $socid . '"/>';
-
-	$moreforfilter = $langs->trans('Period') . '(' . $langs->trans("AffairesDateDebut") . ')' . ': ';
-	$moreforfilter .= $langs->trans('Month') . ':<input class="flat" type="text" size="4" name="search_month" value="' . $search_month . '">';
-	$moreforfilter .= $langs->trans('Year') . ':' . $formother->selectyear($search_year ? $search_year : - 1, 'search_year', 1, 20, 5);
-
-	if ($moreforfilter) {
-		print '<div class="liste_titre">';
-		print $moreforfilter;
-		print '</div>';
 	}
 
-	$i = 0;
-	print '<table class="noborder" width="100%">';
+	$varpage = empty($contextpage) ? $_SERVER["PHP_SELF"] : $contextpage;
+	// This also change content of $arrayfields
+	$selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage);
+
+	print '<div class="div-table-responsive">';
+	print '<table class="tagtable liste' . ($moreforfilter ? " listwithfilterbefore" : "") . '">' . "\n";
+	print '<tr class="liste_titre_filter">';
+	// Action
+	print '<td class="liste_titre"></td>';
+
+	foreach ( $arrayfields as $key => $val ) {
+		if (! empty($arrayfields[$key]['checked'])) {
+			print '<td class="liste_titre">';
+			print $arrayfields[$key]['search'];
+			print '</td>';
+		}
+	}
+
+	// Montant
+	print '<td class="liste_titre"></td>';
+	print '<td class="liste_titre"></td>';
+	print '<td class="liste_titre"></td>';
+	print '<td class="liste_titre"></td>';
+	print '<td class="liste_titre"></td>';
+
+	// Filter button
+	print '<td class="liste_titre" align="middle">';
+	$searchpicto = $form->showFilterButtons();
+	print $searchpicto;
+	print '</td>';
+	print "</tr>\n";
+
+	// Fields title
 	print '<tr class="liste_titre">';
-	print '<td class="liste_titre" align="center">Action</td>';
-	print_liste_field_titre($langs->trans("Ref"), $_SERVEUR['PHP_SELF'], "t.ref", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("AffairesCommercial"), $_SERVEUR['PHP_SELF'], "usr.lastname", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("Customer"), $_SERVEUR['PHP_SELF'], "so.nom", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre($langs->trans("AffairesStatus"), $_SERVEUR['PHP_SELF'], "affairessta.label", "", $option, '', $sortfield, $sortorder);
-	print '<th>Nb Annoncé</th>';
-	print_liste_field_titre('Canal de vente', $_SERVEUR['PHP_SELF'], "affairestype.label", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre('Type', $_SERVEUR['PHP_SELF'], "affairesextra.gamme", "", $option, '', $sortfield, $sortorder);
-	print_liste_field_titre('Carrosserie', $_SERVEUR['PHP_SELF'], "affairesextra.carroserie", "", $option, '', $sortfield, $sortorder);
+
+	// Action
+	print '<th></th>';
+
+	foreach ( $arrayfields as $key => $val ) {
+		if (! empty($arrayfields[$key]['checked'])) {
+			print_liste_field_titre($arrayfields[$key]['label'], $_SERVER["PHP_SELF"], $key, '', $option, '', $sortfield, $sortorder);
+		}
+	}
+
+	// Montant
 	print '<th>Nb commandé</th>';
 	print '<th>Montant annoncé</th>';
 	print '<th>Montant des commandes</th>';
 	print '<th>Marge a date</th>';
 	print '<th>Marge a date réelle</th>';
+	// Filter button
+	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', $option, 'align="center"', $sortfield, $sortorder, 'maxwidthsearch ');
+	print '</tr>' . "\n";
 
-	print "</tr>\n";
-
-	print '<tr class="liste_titre">';
-
-	// edit button
-	print '<td class="liste_titre" align="center"><input class="liste_titre" type="image" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/search.png" value="' . dol_escape_htmltag($langs->trans("Search")) . '" title="' . dol_escape_htmltag($langs->trans("Search")) . '">';
-	print '&nbsp; ';
-	print '<input type="image" class="liste_titre" name="button_removefilter" src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/searchclear.png" value="' . dol_escape_htmltag($langs->trans("RemoveFilter")) . '" title="' . dol_escape_htmltag($langs->trans("RemoveFilter")) . '">';
-	print '</td>';
-
-	print '<td><input type="text" class="flat" name="search_ref" value="' . $search_ref . '" size="5"></td>';
-
-	print '<td class="liste_titre">';
-	print  $form->select_dolusers($search_commercial,'search_commercial',1,array(),$search_commercial_disabled,$user_included);
-	print '</td>';
-
-	print '<td class="liste_titre">';
-	print '<input type="text" class="flat" name="search_soc" value="' . $search_soc . '" size="20">';
-	print '</td>';
-
-	print '<td class="liste_titre">';
-	print $formaffaires->select_affaires_status($search_status, 'search_status', 1);
-	print '</td>';
-
-	// Nb commandé
-	print '<td id="totalcmd" align="right"></td>';
-
-	print '<td class="liste_titre">';
-	print $formaffaires->select_affaires_type($search_type, 'search_type', 1);
-	print '</td>';
-
-
-	print '<td class="liste_titre">';
-	print $form->selectarray('search_eftype',$reprise->gamme,$search_eftype,1);
-	print '</td>';
-
-	print '<td class="liste_titre">';
-	print $form->selectarray('search_carrosserie',$reprise->carrosserie_dict,$search_carrosserie,1);
-	print '</td>';
-
-	// Nb commandé
-	print '<td id="totalcmd" align="right"></td>';
-
-	// amount guess
-	print '<td id="totalamountguess" align="right"></td>';
-	// amount real
-	print '<td id="totalamountreal" align="right"></td>';
-
-	print '<td id="totalmargin" align="right"></td>';
-
-	print '<td id="totalmarginreal" align="right"></td>';
-
-	print "</tr>\n";
-
-
-	$var = true;
 	$totalamountguess = 0;
 	$totalamountreal = 0;
 
-	foreach ($object->lines as $line) {
-		$affaires = New Affairesext($db);
-		$affaires->fetch($line->id);
-		if ($affaires->array_options["options_chaude"] && $affaires->fk_c_status == 5) {
-			$chaude = '<img src="' . DOL_URL_ROOT . '/theme/eldy/img/recent.png">';
-		}else{
-			$chaude ='';
+	foreach ( $objectdet->lines as $line ) {
+
+		$list='';
+		if ($user->rights->affaires->write) {
+			$list = '<select class="flat" id="action_' . $line->id . '" name="action_' . $line->id . '" style="width: 75px;">';
+			$list .= '<option value="1" selected>Editer</option>';
+			if ($line->fk_status != 6) {
+				$list .= '<option value="6">traitée</option>';
+			}
+			if ($line->fk_status != 7 && $line->fk_commande>0) {
+				$list .= '<option value="7">perdue</option>';
+			}
+			if ($line->fk_status != 11 && $line->fk_commande>0) {
+				$list .= $list .= '<option value="11">s. suite</option>';
+			}
+			if ($line->fk_status != 5) {
+				$list .= '<option value="5">En cours</option>';
+			}
+
+			$list .= '</select>';
+			$list .= '<button type="submit" name="do_action" value="' . $line->id . '"><img src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/tick.png">';
 		}
-		if ($affaires->array_options["options_new"]) {
-			$new = '<img src="' . DOL_URL_ROOT . '/theme/eldy/img/high.png">';
-		}else{
-			$new = '<img src="' . DOL_URL_ROOT . '/theme/eldy/img/object_company.png">';
-		}
 
-		$list = '<select class="flat" id="action_' . $line->id . '" name="action_' . $line->id . '" style="width: 75px;">';
-    	$list.= '<option value="1" selected>Editer</option>';
-    	if($affaires->status_label !='Traitée') $list.= '<option value="2">traitée</option>';
-    	if($affaires->status_label !='Perdu' && $affaires->getnbchassisreal() ==0) $list.= '<option value="3">perdue</option>';
-    	if($affaires->status_label !='Sans suite' && $affaires->getnbchassisreal() ==0)	$list.= '<option value="4">s. suite</option>';
-    	if($affaires->status_label !='En cours' && $affaires->getnbchassisreal() == 0) $list.= '<option value="5">En cours</option>';
-    	if(empty($affaires->array_options["options_chaude"]) && $affaires->status_label =='En cours') $list.= '<option value="6">Chaude</option>';
-    	if(!empty($affaires->array_options["options_chaude"]) && $affaires->status_label =='En cours') 	$list.= '<option value="7">Froide</option>';
-    	if(empty($affaires->array_options["options_new"])) $list.= '<option value="8">Nouveau C</option>';
-    	if(!empty($affaires->array_options["options_new"])) 	$list.= '<option value="9">Déja C</option>';
-    	$list.= '</select>';
-        $list.= '<button type="submit" name="do_action" value="' . $line->id . '"><img src="' . DOL_URL_ROOT . '/theme/' . $conf->theme . '/img/tick.png">';
-
-
-		/**
-		 * @var Affaires $line
-		 */
-
-		// Affichage tableau des affaires
-		$var = ! $var;
-		print '<tr ' . $bc[$var] . '>';
+		// Affichage tableau des lead
+		print '<tr class="oddeven">';
 
 		print '<td align="center" style="white-space:nowrap">' . $list . '</td>';
 
-		// Ref
-		print '<td><a href="card.php?id=' . $line->id . '">' . $line->ref . '</a>';
-		if ($line->fk_c_status!=6) {
-			$result=$line->isObjectSignedExists();
-			if ($result<0) {
-				setEventMessages($line->error, null, 'errors');
-			}elseif ($result>0) {
-				print img_warning($langs->trans('AffairesObjectWindExists'));
+		foreach ( $arrayfields as $key => $val ) {
+			if (! empty($arrayfields[$key]['checked'])) {
+				print '<td>'.$line->{$arrayfields[$key]['displayfield']}.'</td>';
 			}
 		}
-		print '</td>';
-
-		// Commercial
-		print '<td>';
-		if (! empty($line->fk_user_resp)) {
-			$userstatic = new User($db);
-			$userstatic->fetch($line->fk_user_resp);
-			if (! empty($userstatic->id)) {
-				print $userstatic->getFullName($langs);
-			}
-		}
-		print '</td>';
-
-		// Societe
-		print '<td>';
-		if (! empty($line->fk_soc) && $line->fk_soc != - 1) {
-			$soc = new Societe($db);
-			$soc->fetch($line->fk_soc);
-			print $new . ' ';
-			print $soc->getNomURL(0);
-		} else {
-			print '&nbsp;';
-		}
-		print '</td>';
-
-		// Status
-		print '<td>' . $chaude . ' ' .$line->status_label . '</td>';
-
-		// Tnb chassis annoncé
-		print '<td>' . $line->array_options['options_nbchassis'] . '</td>';
-
-		// canal de vente
-		print '<td>' . $line->type_label . '</td>';
-
-		// gamme
-		print '<td>' . $reprise->gamme[$affaires->array_options['options_gamme']] . '</td>';
-
-		// carrosserie
-		print '<td>' . $reprise->carrosserie_dict[$affaires->array_options['options_carroserie']] . '</td>';
-
-		//nb chassis reel
-		print '<td>' . $affaires->getnbchassisreal() . '</td>';
-
-		// Amount prosp
-		print '<td align="right">' . price($line->amount_prosp) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
-		$totalamountguess += $line->amount_prosp;
-
 		// Amount real
-		$amount = $affaires->getRealAmount2();
+		// TODO getRealAmount2
+		// $amount = $lead->getRealAmount2();
 		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalamountreal += $amount;
 
 		// MArgin
-		$amount = $affaires->getmargin('theo');
+		// TODO Margin
+		// $amount = $lead->getmargin('theo');
 		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalmargin += $amount;
 
 		// Margin real
-		$amount = $affaires->getmargin('real');
+		// TODO Margin
+		// $amount = $lead->getmargin('real');
 		print '<td  align="right">' . price($amount) . ' ' . $langs->getCurrencySymbol($conf->currency) . '</td>';
 		$totalmarginreal += $amount;
 
@@ -515,11 +490,13 @@ if ($resql != - 1) {
 	}
 
 	print "</table>";
+	print '</div>';
 
 	print '</form>';
 
 	print '<script type="text/javascript" language="javascript">' . "\n";
-	print '$(document).ready(function() {
+	print
+			'$(document).ready(function() {
 					$("#totalamountguess").append("' . price($totalamountguess) . $langs->getCurrencySymbol($conf->currency) . '");
 					$("#totalamountreal").append("' . price($totalamountreal) . $langs->getCurrencySymbol($conf->currency) . '");
 					$("#totalmargin").append("' . price($totalmargin) . $langs->getCurrencySymbol($conf->currency) . '");
@@ -527,7 +504,7 @@ if ($resql != - 1) {
 			});';
 	print "\n" . '</script>' . "\n";
 } else {
-	setEventMessages(null, $object->errors, 'errors');
+	setEventMessages(null, $objectdet->errors, 'errors');
 }
 
 dol_fiche_end();

@@ -24,7 +24,6 @@ if (! $res)
 dol_include_once('affaires/class/affaires.class.php');
 dol_include_once('/core/class/doleditor.class.php');
 dol_include_once('/user/class/user.class.php');
-dol_include_once('/user/class/usergroup.class.php');
 dol_include_once('/affaires/class/html.formaffaires.class.php');
 
 
@@ -64,21 +63,6 @@ if ($id > 0) {
 if ($vehid > 0) {
 	$ret = $objectdet->fetch($vehid);
 	if ($ret < 0) setEventMessages(null, $objectdet->errors, 'errors');
-}
-
-$includeuserlist = array();
-$usergroup = new UserGroup($db);
-$result = $usergroup->fetch('','Commerciaux');
-
-if ($result < 0)
-	setEventMessages(null, $usergroup->errors, 'errors');
-
-$includeuserlisttmp = $usergroup->listUsersForGroup();
-
-if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
-	foreach ( $includeuserlisttmp as $usertmp ) {
-		$includeuserlist[] = $usertmp->id;
-	}
 }
 
 /*
@@ -206,7 +190,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 
 	print '<tr>';
 	print '<td>';
-	print $langs->trans("userresp").': '. $form->select_dolusers(empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp, 'fk_user_resp', 0, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+	print $langs->trans("userresp").': '. $formAffaires->select_salesmans( empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp,'fk_user_resp','Commerciaux');
 	print '</td>';
 	print '<td>';
 	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
