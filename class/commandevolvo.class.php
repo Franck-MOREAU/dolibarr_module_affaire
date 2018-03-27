@@ -253,8 +253,8 @@ class CommandeVolvo extends Commande
 
 	/**
 	 *
-	 * @param unknown $orderid
-	 * @param unknown $type
+	 * @param int $orderid
+	 * @param string $type
 	 * @return number
 	 */
 	public function getCostPriceReal($orderid, $type = 'real') {
@@ -348,10 +348,10 @@ class CommandeVolvo extends Commande
 	/**
 	 * Create supplier order from
 	 *
-	 * @param unknown $user
+	 * @param User $user
 	 * @return number
 	 */
-	public function createSupplierOrder($user, $pricefourn_qty_array = array(), $orderid) {
+	public function createSupplierOrder(User $user, $pricefourn_qty_array = array(), $orderid) {
 		global $conf;
 
 		$error = 0;
