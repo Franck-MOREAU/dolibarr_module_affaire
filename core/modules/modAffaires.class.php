@@ -92,10 +92,12 @@ class modAffaires extends DolibarrModules
 			// 'barcode' => 0,
 			// Set this to 1 if module has its own models directory
 			'models' => 1,
+			'tpl' => 1,
+			'js'=>'/volvo/js/jquery.flot.orderBars.js',
 		// Set this to relative path of css if module has its own css file
 		// 'css' => '/affaires/css/mycss.css.php',
 		// Set here all hooks context managed by module
-			'hooks' => array('commonobject','searchform'),
+				'hooks' => array('commonobject','searchform','ordercard','ordersuppliercard','thirdpartycard'),
 		// Set here all workflow context managed by module
 		// 'workflow' => array('order' => array('WORKFLOW_ORDER_AUTOCREATE_INVOICE'))
 				);
@@ -104,7 +106,11 @@ class modAffaires extends DolibarrModules
 		// Example: this->dirs = array("/affaires/temp");
 		$this->dirs = array(
 			'/affaires',
-			'/affaires/stats'
+			'/affaires/stats',
+			'/volvo',
+			'/volvo/import',
+			'/volvo/import/immat',
+			'/volvo/modelpdf'
 		);
 
 		// Config pages. Put here list of php pages
@@ -142,7 +148,438 @@ class modAffaires extends DolibarrModules
 				'current',
 				1
 			),
-
+			1 => array(
+				'MAIN_CAN_HIDE_EXTRAFIELDS',
+				'chaine',
+				'1',
+				'can hiden extrafiled',
+				0,
+				'current',
+				1
+			),
+			2 => array(
+				'COMMANDE_ADDON_PDF',
+				'chaine',
+				'analysevolvo',
+				'',
+				1,
+				'current',
+				1
+			),
+			3 => array(
+				'COMMANDE_ADDON_PDF_2',
+				'chaine',
+				'analysevolvolg',
+				'',
+				1,
+				'current',
+				1
+			),
+			4 => array(
+				'VOLVO_VCM_LIST',
+				'chaine',
+				'GOLD,GOLDS,SILVER,SILVER+,BLUE',
+				'Liste des articles Contrat de maintenance',
+				0,
+				'current',
+				1
+			),
+			5 => array(
+				'VOLVO_PACK_LIST',
+				'chaine',
+				'PPC,PCC,PVC',
+				'Liste des articles Pack Véhicules',
+				0,
+				'current',
+				1
+			),
+			6 => array(
+				'VOLVO_LOCK_DELAI',
+				'chaine',
+				'6',
+				'',
+				0,
+				'current',
+				1
+			),
+			7 => array(
+				'VOLVO_TRUCK',
+				'chaine',
+				'1',
+				'',
+				0,
+				'current',
+				1
+			),
+			8 => array(
+				'VOLVO_SURES',
+				'chaine',
+				'16',
+				'',
+				0,
+				'current',
+				1
+			),
+			9 => array(
+				'VOLVO_COM',
+				'chaine',
+				'13',
+				'',
+				0,
+				'current',
+				1
+			),
+			10 => array(
+				'VOLVO_FORFAIT_LIV',
+				'chaine',
+				'10',
+				'',
+				0,
+				'current',
+				1
+			),
+			11 => array(
+				'VOLVO_OBLIGATOIRE',
+				'chaine',
+				'5',
+				'',
+				0,
+				'current',
+				1
+			),
+			12 => array(
+				'VOLVO_INTERNE',
+				'chaine',
+				'2',
+				'',
+				0,
+				'current',
+				1
+			),
+			13 => array(
+				'VOLVO_EXTERNE',
+				'chaine',
+				'3',
+				'',
+				0,
+				'current',
+				1
+			),
+			14 => array(
+				'VOLVO_DIVERS',
+				'chaine',
+				'4',
+				'',
+				0,
+				'current',
+				1
+			),
+			15 => array(
+				'VOLVO_SOLTRS',
+				'chaine',
+				'13',
+				'',
+				0,
+				'current',
+				1
+			),
+			16 => array(
+				'VOLVO_ANALYSE_X',
+				'chaine',
+				'8,29.5,55,77,100,129,154,178',
+				'',
+				0,
+				'current',
+				1
+			),
+			17 => array(
+				'VOLVO_ANALYSE_Z',
+				'chaine',
+				'20.5,24.5,21,22,28,24,23,25.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			18 => array(
+				'VOLVO_ANALYSE_Y_ENTETE',
+				'chaine',
+				'17.5,23.5,29.5,35.5,42,48,54,60.5,72.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			19 => array(
+				'VOLVO_ANALYSE_Y_INTERNE_NB',
+				'chaine',
+				'10',
+				'',
+				0,
+				'current',
+				1
+			),
+			20 => array(
+				'VOLVO_ANALYSE_Y_INTERNE_OFFSET',
+				'chaine',
+				'84.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			21 => array(
+				'VOLVO_ANALYSE_Y_INTERNE_PAS',
+				'chaine',
+				'4.8',
+				'',
+				0,
+				'current',
+				1
+			),
+			22 => array(
+				'VOLVO_ANALYSE_Y_EXTERNE_NB',
+				'chaine',
+				'6',
+				'',
+				0,
+				'current',
+				1
+			),
+			23 => array(
+				'VOLVO_ANALYSE_Y_EXTERNE_OFFSET',
+				'chaine',
+				'139.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			24 => array(
+				'VOLVO_ANALYSE_Y_EXTERNE_PAS',
+				'chaine',
+				'4.8',
+				'',
+				0,
+				'current',
+				1
+			),
+			25 => array(
+				'VOLVO_ANALYSE_Y_DIVERS_NB',
+				'chaine',
+				'5',
+				'',
+				0,
+				'current',
+				1
+			),
+			26 => array(
+				'VOLVO_ANALYSE_Y_DIVERS_OFFSET',
+				'chaine',
+				'185.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			27 => array(
+				'VOLVO_ANALYSE_Y_DIVERS_PAS',
+				'chaine',
+				'4.8',
+				'',
+				0,
+				'current',
+				1
+			),
+			28 => array(
+				'VOLVO_ANALYSE_Y_VO_NB',
+				'chaine',
+				'2',
+				'',
+				0,
+				'current',
+				1
+			),
+			29 => array(
+				'VOLVO_ANALYSE_Y_VO_OFFSET',
+				'chaine',
+				'167.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			30 => array(
+				'VOLVO_ANALYSE_Y_VO_PAS',
+				'chaine',
+				'5',
+				'',
+				0,
+				'current',
+				1
+			),
+			31 => array(
+				'VOLVO_ANALYSE_Y_PIED',
+				'chaine',
+				'210.5,217,223,227.5,232.2,236.5,241,245.5,254.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			32 => array(
+				'VOLVO_ANALYSELG_X',
+				'chaine',
+				'6,28.5,53,74.5,98,127,154,178.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			33 => array(
+				'VOLVO_ANALYSELG_Z',
+				'chaine',
+				'21.5,23.5,20.5,22.5,28,26,23.5,25.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			34 => array(
+				'VOLVO_ANALYSELG_Y_ENTETE',
+				'chaine',
+				'157,21.7,27.7,33.7,40.7,55.7,61.7,67.7,73.7,86.7',
+				'',
+				0,
+				'current',
+				1
+			),
+			35 => array(
+				'VOLVO_ANALYSELG_Y_INTERNE_NB',
+				'chaine',
+				'31',
+				'',
+				0,
+				'current',
+				1
+			),
+			36 => array(
+				'VOLVO_ANALYSELG_Y_INTERNE_OFFSET',
+				'chaine',
+				'101.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			37 => array(
+				'VOLVO_ANALYSELG_Y_INTERNE_PAS',
+				'chaine',
+				'6.05',
+				'',
+				0,
+				'current',
+				1
+			),
+			38 => array(
+				'VOLVO_ANALYSELG_Y_EXTERNE_NB',
+				'chaine',
+				'10',
+				'',
+				0,
+				'current',
+				1
+			),
+			39 => array(
+				'VOLVO_ANALYSELG_Y_EXTERNE_OFFSET',
+				'chaine',
+				'12.3',
+				'',
+				0,
+				'current',
+				1
+			),
+			40 => array(
+				'VOLVO_ANALYSELG_Y_EXTERNE_PAS',
+				'chaine',
+				'6.05',
+				'',
+				0,
+				'current',
+				1
+			),
+			41 => array(
+				'VOLVO_ANALYSELG_Y_DIVERS_NB',
+				'chaine',
+				'16',
+				'',
+				0,
+				'current',
+				1
+			),
+			42 => array(
+				'VOLVO_ANALYSELG_Y_DIVERS_OFFSET',
+				'chaine',
+				'80.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			43 => array(
+				'VOLVO_ANALYSELG_Y_DIVERS_PAS',
+				'chaine',
+				'6.05',
+				'',
+				0,
+				'current',
+				1
+			),
+			44 => array(
+				'VOLVO_ANALYSELG_Y_VO_NB',
+				'chaine',
+				'2',
+				'',
+				0,
+				'current',
+				1
+			),
+			45 => array(
+				'VOLVO_ANALYSELG_Y_VO_OFFSET',
+				'chaine',
+				'186',
+				'',
+				0,
+				'current',
+				1
+			),
+			46 => array(
+				'VOLVO_ANALYSELG_Y_VO_PAS',
+				'chaine',
+				'6.05',
+				'',
+				0,
+				'current',
+				1
+			),
+			47 => array(
+				'VOLVO_VCM_OBLIG',
+				'chaine',
+				'1',
+				'',
+				0,
+				'current',
+				1
+			),
+			48 => array(
+				'VOLVO_ANALYSELG_Y_PIED',
+				'chaine',
+				'198.5,205.5,212.5,219,225,231,237,243,254.5',
+				'',
+				0,
+				'current',
+				1
+			),
 		);
 
 		// Array to add new pages in new tabs
@@ -279,14 +716,19 @@ class modAffaires extends DolibarrModules
 		// Add here list of php file(s) stored in core/boxes that contains class to show a box.
 		$this->boxes = array(); // Boxes list
 		$r = 0;
-		// Example:
 
-		//$this->boxes[$r][1] = "box_affaires_current@affaires";
-		//$r ++;
-		//$this->boxes[$r][1] = "box_affaires_late@affaires";
-		/*
-		 * $this->boxes[$r][1] = "myboxb.php"; $r++;
-		 */
+		$this->boxes[$r][1] = "box_pdmsoltrs_indiv@volvo";
+		$r ++;
+
+		$this->boxes[$r][1] = "box_pdmsoltrs_global@volvo";
+		$r ++;
+
+		$this->boxes[$r][1] = "box_delaicash_indiv@volvo";
+		$r ++;
+
+		$this->boxes[$r][1] = "box_delaicash_global@volvo";
+		$r ++;
+
 
 		// Permissions
 		$this->rights = array(); // Permission array used by this module
@@ -315,10 +757,82 @@ class modAffaires extends DolibarrModules
 		$this->rights[$r][4] = 'all';
 		$r ++;
 
+		$this->rights[$r][0] = 1017515;
+		$this->rights[$r][1] = 'Modifier les prix de reviens';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'update_cost';
+		$r ++;
+
+		$this->rights[$r][0] = 1017516;
+		$this->rights[$r][1] = 'Volvo - Consultation stat Vente exterieur';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'stat_ext';
+		$r ++;
+
+		$this->rights[$r][0] = 1017517;
+		$this->rights[$r][1] = 'Volvo - Consulter suivi Business';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'business';
+		$r ++;
+
+		$this->rights[$r][0] = 1017518;
+		$this->rights[$r][1] = 'Volvo - Consulter Suivi délai cash';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'delai_cash';
+		$r ++;
+
+		$this->rights[$r][0] = 1017519;
+		$this->rights[$r][1] = 'Volvo - Consulter Suvi d\'activité';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'activite';
+		$r ++;
+
+		$this->rights[$r][0] = 1017520;
+		$this->rights[$r][1] = 'Volvo - Consulter Affaires chaudes';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'chaudes';
+		$r ++;
+
+		$this->rights[$r][0] = 1017521;
+		$this->rights[$r][1] = 'Volvo - Consulter liste des contrats';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'contrat';
+		$r ++;
+
+		$this->rights[$r][0] = 1017522;
+		$this->rights[$r][1] = 'Volvo - Consulter tableau de bord solutions transports';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'soltrs';
+		$r ++;
+
+		$this->rights[$r][0] = 1017523;
+		$this->rights[$r][1] = 'Volvo - Import des données OM';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'om';
+		$r ++;
+
+		$this->rights[$r][0] = 1017524;
+		$this->rights[$r][1] = 'Volvo - Consulter le portefeuille de commande';
+		$this->rights[$r][3] = 1;
+		$this->rights[$r][4] = 'volvo';
+		$this->rights[$r][5] = 'port';
+		$r ++;
+
 		// $r++;
 		// Main menu entries
 		$this->menus = array(); // List of menus to add
 		$r = 0;
+
+		// menu Affaires
 
 		$this->menu[$r] = array(
 			'fk_menu' => 0,
@@ -342,7 +856,7 @@ class modAffaires extends DolibarrModules
 			'titre' => 'Affaires',
 			'leftmenu' => 'affaires',
 			'url' => '/affaires/form/list.php',
-				'langs' => 'affaires@affaires',
+			'langs' => 'affaires@affaires',
 			'position' => 100+$r,
 			'enabled' => '$user->rights->affaires->all',
 			'perms' => '$user->rights->affaires->all',
@@ -502,6 +1016,232 @@ class modAffaires extends DolibarrModules
 				'position' => 100+$r,
 				'enabled' => '$user->rights->affaires->read',
 				'perms' => '$user->rights->affaires->read',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		// menu Volvo
+
+		$this->menu[$r] = array(
+				'fk_menu' => 0,
+				'type' => 'top',
+				'titre' => 'Volvo',
+				'mainmenu' => 'volvo',
+				'url' => '/affaires/volvo/index.php',
+				'langs' => '',
+				'position' => 100,
+				'enabled' => '1',
+				'perms' => '1',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo',
+				'type' => 'left',
+				'titre' => 'Imports',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'imports',
+				'url' => '/affaires/volvo/import/index.php',
+				'langs' => '',
+				'position' => 100+$r,
+				'enabled' => '1',
+				'perms' => '1',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=imports',
+				'type' => 'left',
+				'titre' => 'Import Immat',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'immat',
+				'url' => '/affaires/volvo/import/import_immat.php?step=1',
+				'langs' => '',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->immat',
+				'perms' => '$user->rights->affaires->volvo->immat',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=imports',
+				'type' => 'left',
+				'titre' => 'Import OM',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'om',
+				'url' => '/affaires/volvo/import/import_om.php?step=1',
+				'langs' => '',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->om',
+				'perms' => '$user->rights->affaires->volvo->om',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo',
+				'type' => 'left',
+				'titre' => 'etats',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'etats',
+				'url' => '/affaires/volvo/business/list.php?search_run=1',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '1',
+				'perms' => '$user->rights->affaires->volvo->business',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=etats',
+				'type' => 'left',
+				'titre' => 'Suivis Business',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'business',
+				'url' => '/affaires/volvo/form/list.php?search_run=1',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->business',
+				'perms' => '$user->rights->affaires->volvo->business',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=etats',
+				'type' => 'left',
+				'titre' => 'Suivi Délai Cash',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'cash',
+				'url' => '/affaires/volvo/form/delaicash.php?search_run=1',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->delai_cash',
+				'perms' => '$user->rights->affaires->volvo->delai_cash',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=etats',
+				'type' => 'left',
+				'titre' => 'Suivi d\'activité',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'resume',
+				'url' => '/affaires/volvo/form/resume.php',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->activite',
+				'perms' => '$user->rights->affaires->volvo->activite',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=etats',
+				'type' => 'left',
+				'titre' => 'Portefeuille cmd',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'portefeuille',
+				'url' => '/affaires/volvo/form/portefeuille.php',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->port',
+				'perms' => '$user->rights->affaires->volvo->port',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=etats',
+				'type' => 'left',
+				'titre' => 'Affaires chaudes',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'chaudes',
+				'url' => '/mydoliboard/mydoliboard.php?idboard=5',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->chaudes',
+				'perms' => '$user->rights->affaires->volvo->chaudes',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo',
+				'type' => 'left',
+				'titre' => 'Sol. TRS',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'soltrs',
+				'url' => '/mydoliboard/mydoliboard.php?idboard=6',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '1',
+				'perms' => '1',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=soltrs',
+				'type' => 'left',
+				'titre' => 'Tableau de bord Sol. Trs.',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'tdbsoltrs',
+				'url' => '/mydoliboard/mydoliboard.php?idboard=6',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->soltrs',
+				'perms' => '$user->rights->affaires->volvo->soltrs',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=soltrs',
+				'type' => 'left',
+				'titre' => 'Liste des contrats',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'contrat',
+				'url' => '/affaires/volvo/form/listcontrat.php',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->contrat',
+				'perms' => '$user->rights->affaires->volvo->contrat',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=soltrs',
+				'type' => 'left',
+				'titre' => 'portefeuille contrats',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'contratport',
+				'url' => '/affaires/volvo/form/contratprt.php',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->contrat',
+				'perms' => '$user->rights->affaires->volvo->contrat',
 				'target' => '',
 				'user' => 0
 		);
