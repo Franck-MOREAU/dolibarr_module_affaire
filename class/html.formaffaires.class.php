@@ -355,4 +355,55 @@ class FormAffaires extends Form
 		}
 		return $out;
 	}
+
+	/**
+	 * Show a combo list with contracts qualified for a third party
+	 *
+	 * @param int $socid Id third party (-1=all, 0=only contracts not linked to a third party, id=contracts not linked or linked to third party id)
+	 * @param int $selected Id contract preselected
+	 * @param string $htmlname Nom de la zone html
+	 * @param int $maxlength Maximum length of label
+	 * @param int $showempty Show empty line
+	 * @return int Nbr of project if OK, <0 if KO
+	 */
+	public function select_withcheckbox($htmlname = '', $values = array(), $selectedvalues = array(), $moreparam = '') {
+		$nb = ceil(count($values)/35);
+
+		$out = '<div align="left"><table class="nobordernopadding"><tr>';
+		$i = 0;
+		foreach ( $values as $key => $label ) {
+			$out .= '<td><input class="flat" type="checkbox" align="left" name="' . $htmlname . '[]" ' . ($moreparam ? $moreparam : '');
+			$out .= ' value="' . $key . '"';
+			if (in_array($key, $selectedvalues)) {
+				$out .= 'checked';
+			}
+			$out .= '/>' . $label . '</td>';
+			$i++;
+			if ($i == $nb){
+				$out .= '</tr><tr>';
+				$i = 0;
+			}
+		}
+
+		$out .= '</tr></table></div>';
+
+		return $out;
+	}
+
+	public function select_withcheckbox_flat($htmlname = '', $values = array(), $selectedvalues = array(), $moreparam = '') {
+		$out = '<div align="left"><table class="nobordernopadding"><tr>';
+		$i = 0;
+		foreach ( $values as $key => $label ) {
+			$out .= '<td><input class="flat" type="checkbox" align="left" name="' . $htmlname . '[]" ' . ($moreparam ? $moreparam : '');
+			$out .= ' value="' . $key . '"';
+			if (in_array($key, $selectedvalues)) {
+				$out .= 'checked';
+			}
+			$out .= '/>' . $label . '</td>';
+		}
+
+		$out .= '</tr></table></div>';
+
+		return $out;
+	}
 }

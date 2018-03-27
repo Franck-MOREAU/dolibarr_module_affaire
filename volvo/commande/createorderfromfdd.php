@@ -116,13 +116,7 @@ if ($step == 6) {
 		$socctm->fetch($cmd->array_options['options_ctm']);
 		$cmd->note_public = 'Contremarque: ' . $socctm->name . "\n";
 	}
-	if ($objectdet->fk_genre == 1) {
-		$cmd->cond_reglement_id = 11;
-	} elseif ($objectdet->fk_genre == 2) {
-		$cmd->cond_reglement_id = 9;
-	} else {
-		$cmd->cond_reglement_id = 10;
-	}
+	$cmd->cond_reglement_id=$objectdet->getReglementid();
 	$rang = 1;
 	$line = new OrderLine($db);
 	$line->subprice = $targetInfoArray['VNAC']['value'];
@@ -353,8 +347,7 @@ if ($step == 6) {
 	$line->rang = $rang;
 	$rang ++;
 	$cmd->lines[] = $line;
-	//var_dump($cmd);
-	//exit;
+
 	$idcommande = $cmd->create($user);
 	if ($idcommande < 0) {
 		setEventMessages(null, array(
@@ -376,7 +369,7 @@ if ($step == 6) {
 		}
 
 		if ($res < 0) {
-			setEventMessage($objectdet->errors, 'errors');
+			setEventMessages(null,array($objectdet->errors), 'errors');
 		} else {
 			top_htmlhead('', '');
 			print '<script type="text/javascript">' . "\n";
@@ -472,6 +465,9 @@ if ($step == 1 || $step == 2) {
 		print $ret;
 	}
 	print_fiche_titre('Selection de la FDD a importer');
+	if ($objectdet->fk_status == 6){
+		print '<div class="inline-block divButAction"><a href="' . dol_buildpath('/affaires/volvo/commande/createorder.php?vehid='.$objectdet->id,1) . '" class="butAction">Passer une commande manuelle</a></div>';
+	}
 	print '<form name="userfile" action="' . $_SERVER["PHP_SELF"] . '" enctype="multipart/form-data" METHOD="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="max_file_size" value="' . $conf->maxfilesize . '">';
@@ -484,7 +480,7 @@ if ($step == 1 || $step == 2) {
 	$var = true;
 
 	print '<tr><td colspan="6">' . $langs->trans("ChooseFileToImport", img_picto('', 'filenew')) . '</td></tr>';
-	print '<tr><td colspan="6">' . $langs->trans("VolvoSampleFile") . ': <a href="sample/immat.xlsx">' . img_picto('', 'file') . '</a></td></tr>';
+	//print '<tr><td colspan="6">' . $langs->trans("VolvoSampleFile") . ': <a href="sample/immat.xlsx">' . img_picto('', 'file') . '</a></td></tr>';
 
 	print '<tr class="liste_titre"><td colspan="6">' . $langs->trans("FileWithDataToImport") . '</td></tr>';
 

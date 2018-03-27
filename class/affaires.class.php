@@ -1537,6 +1537,16 @@ class Affaires_det extends CommonObject
 		return 0;
 	}
 
+	public function getReglementid() {
+		if ($this->fk_genre == 1) {
+			return 11;
+		} elseif ($this->fk_genre == 2) {
+			return 9;
+		} else {
+			return 10;
+		}
+	}
+
 	/**
 	 *
 	 * @param int $vehid
@@ -1544,5 +1554,302 @@ class Affaires_det extends CommonObject
 	 */
 	public function getMarginReelDate($vehid=0) {
 		return 0;
+	}
+
+	public function calcvhprice($cmdnum, $prixtot) {
+		global  $conf;
+		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+
+		$cmd = new Commande($this->db);
+		$cmd->fetch($cmdnum);
+		$cmd->fetch_lines(1);
+
+		$cost = 0;
+		$costvnc = 0;
+		foreach ($cmd->lines as $line){
+			if($line->fk_product !=$conf->global->VOLVO_TRUCK){
+				if($line->fk_product == $conf->global->VOLVO_SURES){
+					if($line->total_ht>0) $costvnc+= $line->total_ht;
+					$cost+=$line->total_ht;
+				}elseif($line->fk_product == $conf->global->VOLVO_COM){
+					$cost+=$line->total_ht;
+				}else{
+					$cost+=$line->total_ht;
+					$costvnc+=$line->total_ht;
+				}
+
+			}
+		}
+		$ret=array();
+		$ret['prixvh'] = $prixtot-$cost;
+		$ret['vnc'] = $prixtot -$costvnc;
+		return $ret;
+	}
+
+	public function updatevhpriceandvnc($cmdnum,$prixtot=0) {
+		global $user,$conf;
+
+		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+		$cmd = new Commande($this->db);
+		$cmd->fetch($cmdnum);
+		$cmd->fetch_lines(1);
+		if($prixtot==0){
+			$prixtot = $cmd->total_ht;
+		}
+
+		$value = array();
+		$value = $this->calcvhprice($cmdnum,$prixtot);
+
+		foreach ($cmd->lines as $line){
+			if($line->fk_product ==$conf->global->VOLVO_TRUCK){
+				$res =$cmd->updateline($line->id, $line->label, $value['prixvh'], $line->qty, $line->remise_percent, $line->tva_tx,0,0,'HT',0,'','',0,0,0,0,$value['prixvh']);
+				if ($result<0) {
+					array_push($this->errors,$cmd->error);
+					return -1;
+				}
+			}
+		}
+
+		$cmd->id=$cmdnum;
+		$cmd->array_options['options_vnac']=$value['vnc'];
+		$result=$cmd->updateExtraField('vnac');
+		if ($result<0) {
+			array_push($this->errors,$cmd->error);
+			return -2;
+		}
+		$result=$cmd->update_price();
+		if ($result<0) {
+			array_push($this->errors,$cmd->error);
+			return -3;
+		}
+
+		return 1;
+	}
+
+
+	public function createcmd() {
+		global $conf;
+		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+		require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
+		require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
+
+		$object = new Affaires($this->db);
+		$ret = $object->fetch($this->fk_affaires);
+		if ($ret < 0) {
+			$this->errors=$object->errors;
+			return -1;
+		}
+		$object->fetch_thirdparty();
+
+		$user = new user($this->db);
+		$product = new product($this->db);
+
+		$user->fetch($object->fk_user_resp);
+
+		$cmd = new Commande($this->db);
+		$cmd->socid = $object->thirdparty->id;
+		$cmd->date = dol_now();
+		$cmd->ref_client = $object->ref;
+		$cmd->date_livraison = $this->datelivprev;
+		$cmd->array_options['options_vnac'] = 0;
+		$cmd->array_options['options_ctm'] = $object->fk_ctm;
+		if(!empty($cmd->array_options['options_ctm'])){
+			dol_include_once('/societe/class/societe.class.php');
+			$socctm = new Societe($this->db);
+			$socctm->fetch($cmd->array_options['options_ctm']);
+			$cmd->note_public = 'Contremarque: ' . $socctm->name . "\n";
+		}
+		$cmd->cond_reglement_id=$this->getReglementid();
+		$rang =1;
+		$line = New OrderLine($db);
+		$line->subprice = 0;
+		$line->qty = 1;
+		$line->tva_tx = 0;
+		$line->fk_product = 1;
+		$line->pa_ht = 0;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		if (count($this->obligatoire) > 0) {
+			foreach ( $this->obligatoire as $art ) {
+				$product->fetch($art);
+				$line = New OrderLine($db);
+				$line->subprice = $product->price;
+				$line->qty = 1;
+				$line->tva_tx = 0;
+				$line->fk_product = $product->id;
+				$line->pa_ht = $product->cost_price;
+				$line->rang=$rang;
+				$rang++;
+				$cmd->lines[] = $line;
+			}
+		}
+
+		$line = New OrderLine($db);
+		$line->desc = 'Sous-Total Véhicule';
+		$line->subprice = 0;
+		$line->qty = 99;
+		$line->product_type = 9;
+		$line->special_code = 104777;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		$line = New OrderLine($db);
+		$line->desc = 'Travaux Interne';
+		$line->subprice = 0;
+		$line->qty = 1;
+		$line->product_type = 9;
+		$line->special_code = 104777;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		if (count($this->interne) > 0) {
+			foreach ( $this->interne as $art ) {
+				$product->fetch($art);
+				$line = New OrderLine($db);
+				$line->subprice = $product->price;
+				$line->qty = 1;
+				$line->tva_tx = 0;
+				$line->fk_product = $product->id;
+				$line->pa_ht = $product->cost_price;
+				$line->rang=$rang;
+				$rang++;
+				$cmd->lines[] = $line;
+			}
+		}
+
+		$line = New OrderLine($db);
+		$line->desc = 'Sous-Total Travaux Interne';
+		$line->subprice = 0;
+		$line->qty = 99;
+		$line->product_type = 9;
+		$line->special_code = 104777;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		if (count($this->externe) > 0) {
+			$line = New OrderLine($db);
+			$line->desc = 'Travaux Externe';
+			$line->subprice = 0;
+			$line->qty = 1;
+			$line->product_type = 9;
+			$line->special_code = 104777;
+			$line->rang=$rang;
+			$rang++;
+			$cmd->lines[] = $line;
+
+			foreach ( $this->externe as $art ) {
+				$product->fetch($art);
+				$line = New OrderLine($db);
+				$line->subprice = $product->price;
+				$line->qty = 1;
+				$line->tva_tx = 0;
+				$line->fk_product = $product->id;
+				$line->pa_ht = $product->cost_price;
+				$line->rang=$rang;
+				$rang++;
+				$cmd->lines[] = $line;
+			}
+			$line = New OrderLine($db);
+			$line->desc = 'Sous-Total Travaux Externe';
+			$line->subprice = 0;
+			$line->qty = 99;
+			$line->product_type = 9;
+			$line->special_code = 104777;
+			$line->rang=$rang;
+			$rang++;
+			$cmd->lines[] = $line;
+		}
+
+		if (count($this->divers) > 0) {
+			$line = New OrderLine($db);
+			$line->desc = 'Divers';
+			$line->subprice = 0;
+			$line->qty = 1;
+			$line->product_type = 9;
+			$line->special_code = 104777;
+			$line->rang=$rang;
+			$rang++;
+			$cmd->lines[] = $line;
+
+			foreach ( $this->divers as $art ) {
+				$product->fetch($art);
+				$line = New OrderLine($db);
+				$line->subprice = $product->price;
+				$line->qty = 1;
+				$line->tva_tx = 0;
+				$line->fk_product = $product->id;
+				$line->pa_ht = $product->cost_price;
+				$line->rang=$rang;
+				$rang++;
+				$cmd->lines[] = $line;
+			}
+			$line = New OrderLine($db);
+			$line->desc = 'Sous-Total Divers';
+			$line->subprice = 0;
+			$line->qty = 99;
+			$line->product_type = 9;
+			$line->special_code = 104777;
+			$line->rang=$rang;
+			$rang++;
+			$cmd->lines[] = $line;
+		}
+
+		$line = New OrderLine($db);
+		$line->desc = 'Commission Volvo';
+		$line->subprice = 0;
+		$line->qty = 1;
+		$line->product_type = 9;
+		$line->special_code = 104777;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		$line = New OrderLine($db);
+		$line->subprice = $this->commission;
+		$line->qty = 1;
+		$line->tva_tx = 0;
+		$line->fk_product = $conf->global->VOLVO_COM;
+		$line->pa_ht = 0;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		$line = New OrderLine($db);
+		$line->desc = 'Sous-Total Commission Volvo';
+		$line->subprice = 0;
+		$line->qty = 99;
+		$line->product_type = 9;
+		$line->special_code = 104777;
+		$line->rang=$rang;
+		$rang++;
+		$cmd->lines[] = $line;
+
+		$idcommande = $cmd->create($user);
+		if ($idcommande < 0) {
+			$this->errors = array_push($this->errors,$cmd->error);
+			return -1;
+		}
+
+		$result = $this->updatevhpriceandvnc($idcommande,$this->prixvente);
+		if ($result < 0) {
+			return -2;
+		}
+		$result = $this->add_object_linked("commande", $idcommande);
+		if ($result == 0) {
+			return -3;
+		}
+
+		$this->fk_commande = $idcommande;
+		$res = $this->update($user);
+		if ($res < 0) {
+			return -4;
+		}
+
+		return $idcommande;
 	}
 }
