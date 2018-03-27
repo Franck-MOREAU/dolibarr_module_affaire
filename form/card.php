@@ -184,7 +184,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	print $langs->trans("affnum").': Nouvelle Affaire';
 	print '</td>';
 	print '<td width="65%">';
-	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 0);
+	print $langs->trans("client").': ' . $form->select_thirdparty_list($object->fk_soc, 'fk_soc', 's.client>0', 1);
 	print '</td>';
 	print '</tr>';
 
@@ -193,7 +193,7 @@ if ($action == 'create' && $user->rights->affaires->write) {
 	print $langs->trans("userresp").': '. $formAffaires->select_salesmans( empty($object->fk_user_resp) ? $user->id : $object->fk_user_resp,'fk_user_resp','Commerciaux');
 	print '</td>';
 	print '<td>';
-	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
+	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 1);
 	print '</td>';
 	print '</tr>';
 
@@ -255,7 +255,7 @@ elseif ($action == 'edit') {
 	print $langs->trans("userresp").': '.$user_resp->getNomUrl(1);
 	print '</td>';
 	print '<td>';
-	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 0);;
+	print $langs->trans("ctm").': '. $form->select_thirdparty_list($object->fk_ctm, 'fk_ctm', 's.client>0', 1);
 	print '</td>';
 	print '</tr>';
 
