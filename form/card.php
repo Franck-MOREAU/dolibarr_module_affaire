@@ -390,15 +390,24 @@ elseif ($action == 'edit') {
 	print '</div>';
 	?>
 	<script type="text/javascript">
-	function popCreateAffaireDet(vehid) {
-		$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?affaireid='.$object->id,1) ?>&vehid='+vehid+'"></iframe></div>');
-		$div.dialog({
-			modal:true
-			,width:"90%"
-					,height:$(window).height() - 200
-					,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/form/card.php',2).'?id='.$object->id;?>';}
-		});
-	}
+		function popCreateAffaireDet(vehid) {
+			$div = $('<div id="popCreateAffaireDet"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/form/createdet.php?affaireid='.$object->id,1) ?>&vehid='+vehid+'"></iframe></div>');
+			$div.dialog({
+				modal:true
+				,width:"90%"
+				,height:$(window).height() - 200
+				,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/form/card.php',2).'?id='.$object->id;?>';}
+			});
+		}
+		function popCreateOrder(vehid) {
+			$div = $('<div id="popCreateOrder"><iframe width="100%" height="100%" frameborder="0" src="<?php echo dol_buildpath('/affaires/volvo/commande/createorderfromfdd.php',2)?>?vehid='+vehid+'&step=1"></iframe></div>');
+			$div.dialog({
+				modal:true
+				,width:"90%"
+						,height:$(window).height() - 200
+						,close:function() {document.location.href='<?php echo dol_buildpath('/affaires/form/card.php',2).'?id='.$object->id;?>';}
+			});
+		}
 	</script>
 	<?php
 }

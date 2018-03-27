@@ -23,11 +23,8 @@
  */
 class FormAffaires extends Form
 {
-
 	public $db;
-
 	public $error;
-
 	public $num;
 
 	/**
@@ -39,44 +36,43 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select list of element
 	 */
-	public function select_element($tablename, $affaires, $htmlname = 'elementselect')
-	{
+	public function select_element($tablename, $affaires, $htmlname = 'elementselect') {
 		global $langs, $conf;
 
 		switch ($tablename) {
-			case "facture":
+			case "facture" :
 				$sql = "SELECT rowid, facnumber as ref, total as total_ht, date_valid as date_element";
 				break;
-			case "contrat":
-					$sql = "SELECT rowid, ref as ref, 0 as total_ht, date_contrat as date_element";
-					break;
-			case "commande":
+			case "contrat" :
+				$sql = "SELECT rowid, ref as ref, 0 as total_ht, date_contrat as date_element";
+				break;
+			case "commande" :
 				$sql = "SELECT rowid, ref as ref, total_ht as total_ht, date_commande as date_element";
 				break;
-			default:
+			default :
 				$sql = "SELECT rowid, ref, total_ht, datep as date_element";
 				break;
 		}
 
 		$sql .= " FROM " . MAIN_DB_PREFIX . $tablename;
-		//TODO Fix sourcetype can be different from tablename (exemple project/projet)
-		$sqlwhere=array();
-		//if ($tablename!='contrat' || empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT)) {
-			$sql_inner='  rowid NOT IN (SELECT fk_source FROM ' . MAIN_DB_PREFIX . 'element_element WHERE targettype=\'' . $this->db->escape($affaires->element) . '\'';
-			$sql_inner.=' AND sourcetype=\''.$this->db->escape($tablename).'\')';
-			$sqlwhere[]= $sql_inner;
-		//}
+		// TODO Fix sourcetype can be different from tablename (exemple project/projet)
+		$sqlwhere = array();
+		// if ($tablename!='contrat' || empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT)) {
+		$sql_inner = '  rowid NOT IN (SELECT fk_source FROM ' . MAIN_DB_PREFIX . 'element_element WHERE targettype=\'' . $this->db->escape($affaires->element) . '\'';
+		$sql_inner .= ' AND sourcetype=\'' . $this->db->escape($tablename) . '\')';
+		$sqlwhere[] = $sql_inner;
+		// }
 
 		// Manage filter
-		$sqlwhere[]= ' fk_soc=' . $this->db->escape($affaires->fk_soc);
-		$sqlwhere[]= ' entity IN ('.getEntity($tablename,1).')';
+		$sqlwhere[] = ' fk_soc=' . $this->db->escape($affaires->fk_soc);
+		$sqlwhere[] = ' entity IN (' . getEntity($tablename, 1) . ')';
 
-		if (count($sqlwhere)>0) {
+		if (count($sqlwhere) > 0) {
 			$sql .= ' WHERE ' . implode(' AND ', $sqlwhere);
 		}
-		$sql .= $this->db->order('ref','DESC');
+		$sql .= $this->db->order('ref', 'DESC');
 
-		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
+		dol_syslog(get_class($this) . "::" . __METHOD__, LOG_DEBUG);
 
 		$resql = $this->db->query($sql);
 		if ($resql) {
@@ -84,10 +80,10 @@ class FormAffaires extends Form
 			$i = 0;
 			if ($num > 0) {
 				$sellist = '<select class="flat" name="' . $htmlname . '">';
-				while ($i < $num) {
+				while ( $i < $num ) {
 					$obj = $this->db->fetch_object($resql);
-					$sellist .= '<option value="' . $obj->rowid . '">' . $obj->ref . ' (' . dol_print_date($this->db->jdate ($obj->date_element), 'daytextshort') . ')';
-					$sellist .= (empty($obj->total_ht)?'':'-'.price($obj->total_ht). $langs->getCurrencySymbol($conf->currency))  . '</option>';
+					$sellist .= '<option value="' . $obj->rowid . '">' . $obj->ref . ' (' . dol_print_date($this->db->jdate($obj->date_element), 'daytextshort') . ')';
+					$sellist .= (empty($obj->total_ht) ? '' : '-' . price($obj->total_ht) . $langs->getCurrencySymbol($conf->currency)) . '</option>';
 					$i ++;
 				}
 				$sellist .= '</select>';
@@ -114,8 +110,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string Portion HTML avec ref + boutons nav
 	 */
-	public function showrefnav($object, $paramid, $morehtml = '', $shownav = 1, $fieldid = 'rowid', $fieldref = 'ref', $morehtmlref = '', $moreparam = '', $nodbprefix = 0, $morehtmlleft = '', $morehtmlstatus = '', $morehtmlright = '')
-	{
+	public function showrefnav($object, $paramid, $morehtml = '', $shownav = 1, $fieldid = 'rowid', $fieldref = 'ref', $morehtmlref = '', $moreparam = '', $nodbprefix = 0, $morehtmlleft = '', $morehtmlstatus = '', $morehtmlright = '') {
 		global $langs, $conf;
 
 		$ret = '';
@@ -124,9 +119,10 @@ class FormAffaires extends Form
 		if (empty($fieldref))
 			$fieldref = 'ref';
 
-			// print "paramid=$paramid,morehtml=$morehtml,shownav=$shownav,$fieldid,$fieldref,$morehtmlref,$moreparam";
+		// print "paramid=$paramid,morehtml=$morehtml,shownav=$shownav,$fieldid,$fieldref,$morehtmlref,$moreparam";
 		$object->load_previous_next_ref_custom((isset($object->next_prev_filter) ? $object->next_prev_filter : ''), $fieldid);
-		$previous_ref = $object->ref_previous ? '<a data-role="button" data-icon="arrow-l" data-iconpos="left" href="' . $_SERVER["PHP_SELF"] . '?' . $paramid . '=' . urlencode($object->ref_previous) . $moreparam . '">' . (empty($conf->dol_use_jmobile) ? img_picto($langs->trans("Previous"), 'previous.png') : '&nbsp;') . '</a>' : '';
+		$previous_ref = $object->ref_previous ? '<a data-role="button" data-icon="arrow-l" data-iconpos="left" href="' . $_SERVER["PHP_SELF"] . '?' . $paramid . '=' . urlencode($object->ref_previous) . $moreparam . '">' . (empty($conf->dol_use_jmobile) ? img_picto($langs->trans("Previous"),
+				'previous.png') : '&nbsp;') . '</a>' : '';
 		$next_ref = $object->ref_next ? '<a data-role="button" data-icon="arrow-r" data-iconpos="right" href="' . $_SERVER["PHP_SELF"] . '?' . $paramid . '=' . urlencode($object->ref_next) . $moreparam . '">' . (empty($conf->dol_use_jmobile) ? img_picto($langs->trans("Next"), 'next.png') : '&nbsp;') . '</a>' : '';
 
 		// print "xx".$previous_ref."x".$next_ref;
@@ -161,8 +157,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	public function select_affaires_status($selected = '', $htmlname = 'affairesstatus', $showempty = 1)
-	{
+	public function select_affaires_status($selected = '', $htmlname = 'affairesstatus', $showempty = 1) {
 		require_once 'affaires.class.php';
 		$affaires = new Affaires($this->db);
 
@@ -178,8 +173,7 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	public function select_affaires_type($selected = '', $htmlname = 'affairestype', $showempty = 1)
-	{
+	public function select_affaires_type($selected = '', $htmlname = 'affairestype', $showempty = 1) {
 		require_once 'affaires.class.php';
 		$affaires = new Affaires($this->db);
 
@@ -196,25 +190,24 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	public function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type='',$filter=array())
-	{
+	public function select_affairesdet_fromdict($selected = '', $htmlname = 'dict_name', $showempty = 1, $type = '', $filter = array()) {
 		if (empty($type)) {
-			$type=$htmlname;
+			$type = $htmlname;
 		}
 		require_once 'affaires.class.php';
 		$affaires = new Affaires_det($this->db);
-		if (count($filter)>0) {
-			foreach($affaires->$htmlname as $key=>$obj) {
-				foreach($filter as $keyfilter=>$valfilter) {
+		if (count($filter) > 0) {
+			foreach ( $affaires->$htmlname as $key => $obj ) {
+				foreach ( $filter as $keyfilter => $valfilter ) {
 					if (property_exists($obj, $keyfilter)) {
-						if ($obj->$keyfilter!==$valfilter) {
+						if ($obj->$keyfilter !== $valfilter) {
 							unset($affaires->$type[$key]);
 						}
 					}
 				}
 			}
 		}
-		//var_dump($type,$affaires->$type);
+		// var_dump($type,$affaires->$type);
 		return $this->selectarray($htmlname, $affaires->$type, $selected, $showempty);
 	}
 
@@ -228,18 +221,17 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	public function select_affairesdet_motifs($selected = array(), $htmlname = 'motifs', $filter=array())
-	{
+	public function select_affairesdet_motifs($selected = array(), $htmlname = 'motifs', $filter = array()) {
 		if (empty($type)) {
-			$type=$htmlname;
+			$type = $htmlname;
 		}
 		require_once 'affaires.class.php';
 		$affaires = new Affaires_det($this->db);
-		if (count($filter)>0) {
-			foreach($affaires->motifs_dict as $key=>$obj) {
-				foreach($filter as $keyfilter=>$valfilter) {
+		if (count($filter) > 0) {
+			foreach ( $affaires->motifs_dict as $key => $obj ) {
+				foreach ( $filter as $keyfilter => $valfilter ) {
 					if (property_exists($obj, $keyfilter)) {
-						if ($obj->$keyfilter!==$valfilter) {
+						if ($obj->$keyfilter !== $valfilter) {
 							unset($affaires->motifs_dict[$key]);
 						}
 					}
@@ -247,7 +239,7 @@ class FormAffaires extends Form
 			}
 		}
 
-		return $this->multiselectarray($htmlname, $affaires->motifs_dict, $selected, 0,0,'',0,'100%','','');
+		return $this->multiselectarray($htmlname, $affaires->motifs_dict, $selected, 0, 0, '', 0, '100%', '', '');
 	}
 
 	/**
@@ -260,21 +252,20 @@ class FormAffaires extends Form
 	 *
 	 * @return string HTML select
 	 */
-	public function select_affaires($selected = '', $htmlname = 'affairesid', $showempty = 1, $filter=array())
-	{
-		$affaires_array=array();
+	public function select_affaires($selected = '', $htmlname = 'affairesid', $showempty = 1, $filter = array()) {
+		$affaires_array = array();
 		require_once 'affaires.class.php';
 
 		$affaires = new Affaires($this->db);
 
 		$result = $affaires->fetch_all('DESC', 't.ref', 0, 0, $filter);
-		if ($result<0) {
+		if ($result < 0) {
 			setEventMessages(null, $affaires->errors, 'errors');
 		}
-		foreach($affaires->lines as $line) {
-			$affaires_array[$line->id] = $line->ref . '-'.$line->ref_int.' ('.$line->status_label.'-'.$line->type_label.')';
+		foreach ( $affaires->lines as $line ) {
+			$affaires_array[$line->id] = $line->ref . '-' . $line->ref_int . ' (' . $line->status_label . '-' . $line->type_label . ')';
 		}
-		if (count($affaires_array)>0) {
+		if (count($affaires_array) > 0) {
 			return $this->selectarray($htmlname, $affaires_array, $selected, $showempty);
 		}
 		return null;
@@ -286,27 +277,82 @@ class FormAffaires extends Form
 	 * @param string $htmlname
 	 * @param string $filterbygroup
 	 */
-	public function select_salesmans($selected=0,$htmlname='fk_user_resp',$filterbygroup='Commerciaux',$showempty=1) {
-
-		require_once DOL_DOCUMENT_ROOT.'/user/class/usergroup.class.php';
+	public function select_salesmans($selected = 0, $htmlname = 'fk_user_resp', $filterbygroup = 'Commerciaux', $showempty = 1) {
+		require_once DOL_DOCUMENT_ROOT . '/user/class/usergroup.class.php';
 
 		$includeuserlist = array();
 		$usergroup = new UserGroup($this->db);
-		$result = $usergroup->fetch('',$filterbygroup);
+		$result = $usergroup->fetch('', $filterbygroup);
 
 		if ($result < 0) {
 			setEventMessages(null, $usergroup->errors, 'errors');
 		}
 
-			$includeuserlisttmp = $usergroup->listUsersForGroup();
+		$includeuserlisttmp = $usergroup->listUsersForGroup();
 
-			if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
-				foreach ( $includeuserlisttmp as $usertmp ) {
-					$includeuserlist[] = $usertmp->id;
-				}
+		if (is_array($includeuserlisttmp) && count($includeuserlisttmp) > 0) {
+			foreach ( $includeuserlisttmp as $usertmp ) {
+				$includeuserlist[] = $usertmp->id;
 			}
+		}
 
-			return $this->select_dolusers($selected, 'fk_user_resp', $showempty, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
+		return $this->select_dolusers($selected, 'fk_user_resp', $showempty, array(), 0, $includeuserlist, '', 0, 0, 0, '', 0, '', '', 1);
 	}
 
+	/**
+	 *
+	 * @param unknown $file
+	 * @return string
+	 */
+	public function select_tabs($filesource, $htmlname = '', $selectlabel = '', $outputformat = 'html', $outputlabel = 'code') {
+		global $langs;
+
+		require_once '../class/volvoimport.class.php';
+
+		$object = new VolvoImport($this->db);
+		$object->initFile($filesource, 'port');
+		$result = $object->loadFile();
+		if ($result < 0) {
+			setEventMessages(null, $object->errors, 'errors');
+		}
+
+		if (is_array($object->sheetArray) && count($object->sheetArray) > 0) {
+			if ($outputformat == 'html') {
+				$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+			}
+			foreach ( $object->sheetArray as $key => $sheet ) {
+				if (! empty($selectlabel) && $selectlabel == $sheet) {
+					$out .= '<option value="' . $key . '" selected="selected">' . $sheet . '</option>';
+				} else {
+					$out .= '<option value="' . $key . '">' . $sheet . '</option>';
+				}
+			}
+			if ($outputformat == 'html') {
+				$out .= '</select>';
+			}
+		}
+
+		return $out;
+	}
+	public function select_model($htmlname = '', $selectlabel = '') {
+		$sql = 'SELECT rowid, modele FROM ' . MAIN_DB_PREFIX . 'volvo_modele_fdd WHERE active = 1';
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			while ( $object = $this->db->fetch_object($resql) ) {
+				$arrayresult[$object->rowid] = $object->modele;
+			}
+		}
+		if (is_array($arrayresult)) {
+			$out .= '<select id="' . $htmlname . '" class="flat" name="' . $htmlname . '">';
+			foreach ( $arrayresult as $key => $label ) {
+				if (! empty($selectlabel) && $selectlabel == $key) {
+					$out .= '<option value="' . $key . '" selected="selected">' . $label . '</option>';
+				} else {
+					$out .= '<option value="' . $key . '">' . $label . '</option>';
+				}
+			}
+			$out .= '</select>';
+		}
+		return $out;
+	}
 }

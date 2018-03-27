@@ -107,10 +107,12 @@ class modAffaires extends DolibarrModules
 		$this->dirs = array(
 			'/affaires',
 			'/affaires/stats',
-			'/volvo',
-			'/volvo/import',
-			'/volvo/import/immat',
-			'/volvo/modelpdf'
+			'/affaires/volvo',
+			'/affaires/volvo/import',
+			'/affaires/volvo/import/fdd',
+			'/affaires/volvo/import/immat',
+			'/affaires/volvo/modelpdf',
+
 		);
 
 		// Config pages. Put here list of php pages
@@ -1261,6 +1263,8 @@ class modAffaires extends DolibarrModules
 	 */
 	public function init($options = '')
 	{
+		global $conf;
+
 		$sql = array();
 
 		dol_include_once('/core/class/extrafields.class.php');

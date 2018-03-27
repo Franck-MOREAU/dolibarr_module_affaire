@@ -288,9 +288,9 @@ class ActionsAffaires // extends CommonObject
 		$current_context = explode(':', $parameters['context']);
 
 		if (in_array('ordercard', $current_context)) {
-			$dest = dol_buildpath('/affaires/volvo/commande/card.php',2). '?id=' . $object->id;
-			header("Location: ".$dest);
-			exit;
+			//$dest = dol_buildpath('/affaires/volvo/commande/card.php',2). '?id=' . $object->id;
+		//	header("Location: ".$dest);
+			//exit;
 
 		} elseif (in_array('ordersuppliercard', $current_context)) {
 			$dest = dol_buildpath('/affaires/volvo/fourn/commande/card.php',2). '?id=' . $object->id;

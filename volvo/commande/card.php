@@ -36,6 +36,7 @@
 require '../../../main.inc.php';
 dol_include_once('/core/class/html.formfile.class.php');
 dol_include_once('/core/class/html.formorder.class.php');
+dol_include_once('/core/lib/order.lib.php');
 dol_include_once('/core/class/html.formmargin.class.php');
 dol_include_once('/core/modules/commande/modules_commande.php');
 dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
@@ -96,7 +97,6 @@ $permissionnote = $user->rights->commande->creer; 		// Used by the include of ac
 $permissiondellink = $user->rights->commande->creer; 	// Used by the include of actions_dellink.inc.php
 $permissionedit = $user->rights->commande->creer; 		// Used by the include of actions_lineupdown.inc.php
 
-$leadext = new Leadext($db);
 
 /*
  * Actions
@@ -1632,8 +1632,6 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 	if ($object->id > 0) {
 
-		$leadext= new Leadext($db);
-		$leadext->calc_prime($id);
 
 		$totalcom = $object->array_options['options_comm_newclient'];
 		$totalcom+= $object->array_options['options_comm'];
@@ -1809,7 +1807,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 		 * Confirmation de la cloture
 		*/
 		$ok =0;
-		$ok = $leadext->find_dt_ship($object->id);
+		//$ok = $leadext->find_dt_ship($object->id);
 		if ($action == 'shipped' && empty($ok)) {
 			$form = new Form($db);
 			$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('CloseOrder'), $langs->trans('ConfirmCloseOrder'), 'confirm_shipped', array(array(

@@ -1312,10 +1312,14 @@ class Affaires_det extends CommonObject
 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
 		}
 
-		if (!empty($this->fk_commande)) {
+		$objstatic = new self($this->db);
+		$objstatic->fetch($this->id);
+		if (!empty($objstatic->fk_commande)) {
 			$error ++;
 			$this->errors[] = "un chassis commandé ne peut etre modifié";
 		}
+		unset($objstatic);
+
 		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
 			$this->fk_motifs=implode(',',$this->fk_motifs_array);
 		}

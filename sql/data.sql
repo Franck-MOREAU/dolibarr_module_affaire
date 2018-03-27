@@ -135,6 +135,3 @@ INSERT INTO `llx_c_affaires_silhouette` (`rowid`, `silhouette`, `cv`, `rep`) VAL
 
 
 
-
-
-
