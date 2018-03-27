@@ -22,10 +22,10 @@
  *		\brief      Page des informations d'une commande
  */
 
-require '../../main.inc.php';
+require '../../../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
-require_once DOL_DOCUMENT_ROOT.'/volvo/lib/volvo.lib.php';
+dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 
 if (!$user->rights->commande->lire)	accessforbidden();
 

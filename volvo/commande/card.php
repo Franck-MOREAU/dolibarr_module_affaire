@@ -36,12 +36,11 @@
 require '../../../main.inc.php';
 dol_include_once('/core/class/html.formfile.class.php');
 dol_include_once('/core/class/html.formorder.class.php');
-dol_include_once('/core/lib/order.lib.php');
 dol_include_once('/core/class/html.formmargin.class.php');
 dol_include_once('/core/modules/commande/modules_commande.php');
 dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 dol_include_once('/comm/action/class/actioncomm.class.php');
-//dol_include_once('/volvo/lib/volvo.lib.php');
+dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 dol_include_once('/core/lib/functions2.lib.php');
 dol_include_once('/core/class/extrafields.class.php');
 dol_include_once('/core/class/doleditor.class.php');
@@ -97,6 +96,7 @@ $permissionnote = $user->rights->commande->creer; 		// Used by the include of ac
 $permissiondellink = $user->rights->commande->creer; 	// Used by the include of actions_dellink.inc.php
 $permissionedit = $user->rights->commande->creer; 		// Used by the include of actions_lineupdown.inc.php
 
+//$leadext = new Leadext($db);
 
 /*
  * Actions
@@ -1632,6 +1632,8 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 	if ($object->id > 0) {
 
+		//$leadext= new Leadext($db);
+		//$leadext->calc_prime($id);
 
 		$totalcom = $object->array_options['options_comm_newclient'];
 		$totalcom+= $object->array_options['options_comm'];
@@ -1664,38 +1666,6 @@ if ($action == 'create' && $user->rights->commande->creer)
 		if (! empty($conf->global->DISPLAY_MARK_RATES)) {
 			$html .= '<td align="right"></td>';
 		}
-
-		$html .= '</tr>';
-		$html .= '<tr class="liste_titre">';
-		$html .= '<td class="liste_titre" align="right"></td>';
-		$html .= '<td class="liste_titre" align="right">Total a date</td>';
-		$html .= '<td class="liste_titre" align="right">Déja payé</td>';
-		$html .= '<td class="liste_titre" align="right">écart</td>';
-		if (! empty($conf->global->DISPLAY_MARGIN_RATES)) {
-			$html .= '<td class="liste_titre"></td>';
-		}
-
-		if (! empty($conf->global->DISPLAY_MARK_RATES)) {
-			$html .= '<td class="liste_titre"></td>';
-		}
-		$html .= '</tr>';
-		$html.= '<tr class="pair">';
-
-		$html .= '<td>Commission Vendeur </td>';
-		$html .= '<td align="right">' . price(round($totalcom,2)) . '</td>';
-		$html .= '<td align="right">' . price(round($object->array_options['options_payed'],2)) . '</td>';
-		$html .= '<td align="right">' . price(round($totalcom - $object->array_options['options_payed'],2)) . '</td>';
-
-		if (! empty($conf->global->DISPLAY_MARGIN_RATES)) {
-			$html .= '<td align="right"></td>';
-		}
-
-		if (! empty($conf->global->DISPLAY_MARK_RATES)) {
-			$html .= '<td align="right"></td>';
-		}
-
-		$html .= '</tr>';
-
 
 		$out = '<script type="text/javascript">' . "\n";
 		$out .= '  	$(document).ready(function() {' . "\n";
@@ -1792,11 +1762,6 @@ if ($action == 'create' && $user->rights->commande->creer)
 				require_once DOL_DOCUMENT_ROOT . '/product/class/html.formproduct.class.php';
 				$formproduct = new FormProduct($db);
 				$formquestion = array(
-									// 'text' => $langs->trans("ConfirmClone"),
-									// array('type' => 'checkbox', 'name' => 'clone_content', 'label' => $langs->trans("CloneMainAttributes"), 'value'
-									// => 1),
-									// array('type' => 'checkbox', 'name' => 'update_prices', 'label' => $langs->trans("PuttingPricesUpToDate"),
-									// 'value' => 1),
 									array('type' => 'other','name' => 'idwarehouse','label' => $langs->trans("SelectWarehouseForStockIncrease"),'value' => $formproduct->selectWarehouses(GETPOST('idwarehouse')?GETPOST('idwarehouse'):'ifone', 'idwarehouse', '', 1)));
 			}
 
@@ -1818,7 +1783,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 		}
 
 		$ok =0;
-		$ok = $leadext->find_dt_bill($object->id);
+		//$ok = $leadext->find_dt_bill($object->id);
 		if ($action == 'classifybilled'&& empty($ok)) {
 			$form = new Form($db);
 			$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('BilledOrder'), $langs->trans('ConfirmBilledOrder'), 'confirm_billed', array(array(
@@ -1829,7 +1794,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 		}
 
 		$ok =0;
-		$ok = $leadext->find_dt_pay($object->id);
+		//$ok = $leadext->find_dt_pay($object->id);
 		if ($action == 'setpayed'&& empty($ok)) {
 			$form = new Form($db);
 			$formconfirm = $form->formconfirm($_SERVER["PHP_SELF"] . '?id=' . $object->id, $langs->trans('ClassifyPayed'), $langs->trans('ConfirmPayedOrder'), 'confirm_payed', array(array(
@@ -1881,11 +1846,6 @@ if ($action == 'create' && $user->rights->commande->creer)
 				require_once DOL_DOCUMENT_ROOT . '/product/class/html.formproduct.class.php';
 				$formproduct = new FormProduct($db);
 				$formquestion = array(
-						// 'text' => $langs->trans("ConfirmClone"),
-						// array('type' => 'checkbox', 'name' => 'clone_content', 'label' => $langs->trans("CloneMainAttributes"), 'value'
-						// => 1),
-						// array('type' => 'checkbox', 'name' => 'update_prices', 'label' => $langs->trans("PuttingPricesUpToDate"),
-						// 'value' => 1),
 						array('type' => 'other','name' => 'idwarehouse','label' => $langs->trans("SelectWarehouseForStockIncrease"),'value' => $formproduct->selectWarehouses(GETPOST('idwarehouse')?GETPOST('idwarehouse'):'ifone', 'idwarehouse', '', 1)));
 			}
 
@@ -1921,10 +1881,11 @@ if ($action == 'create' && $user->rights->commande->creer)
 		// Numero affaire
 		print '<td><table width="100%" class="nobordernopadding"><tr><td align ="lefr">' . "Numéro d'affaire: ";
 		print $object->ref_client ."</td></tr></table></td>";
+
 		// Numéro D'OM
 		$key = 'numom';
 		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
 
 		// Third party
@@ -1933,7 +1894,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 		$key = 'ctm';
 		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
 		print '</tr>';
 		print '<tr  style="height:25px">';
@@ -1989,37 +1950,16 @@ if ($action == 'create' && $user->rights->commande->creer)
 		print '</td>';
 
 		print '</tr>';
+
+		$rowspan = 3;
 		print '<tr style="height:25px">';
-
-
-
-		$key = 'vnac';
-		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
-
 		$key = 'vin';
 		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
 		$key = 'immat';
 		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
-
-		print '<td><table width="100%" class="nobordernopadding"><tr><td align ="left">';
-		print $object->getLibStatut(4) ."</td></tr></table></td>";
-
-		print '</tr>';
-
-
-		$rowspan = 4;
-		print '<tr style="height:25px">';
-		$key = 'comm';
-		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
-
-		$key = 'comm_newclient';
-		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
 		// Margin Infos
 		if (! empty($conf->margin->enabled)) {
@@ -2032,30 +1972,19 @@ if ($action == 'create' && $user->rights->commande->creer)
 		print '</tr>';
 
 		print '<tr style="height:25px">';
-		$key = 'comm_pack';
+		$key = 'vnac';
 		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
-		$key = 'comm_vcm';
-		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
-		print '</tr>';
-
-		print '<tr style="height:25px">';
-		$key = 'comm_cash';
-		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
-
-		$key = 'comm_div';
-		$label = $extrafields->attribute_label[$key];
-		include DOL_DOCUMENT_ROOT . '/volvo/template/extra_inline.php';
+		print '<td>Délai Cash: ' . $object->get_cash() . ' Jour(s)</td>';
 		print '</tr>';
 
         // Total HT
 		print '<tr style="height:25px"><td>' . $langs->trans('AmountHT') . ': ';
 		print price($object->total_ht, 1, '', 1, - 1, - 1, $conf->currency) . '</td>';
 
-		print '<td>Délai Cash: ' . $object->get_cash() . ' Jour(s)</td>';
+		print '<td><table width="100%" class="nobordernopadding"><tr><td align ="left">';
+		print $object->getLibStatut(4) ."</td></tr></table></td>";
 		print '</tr>';
 
 		print '</table>';
@@ -2126,7 +2055,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 				// Send
 				$langs->load("volvo@volvo");
-				$dt_ship = $leadext->find_dt_ship($object->id);
+				//$dt_ship = $leadext->find_dt_ship($object->id);
 				if(!empty($dt_ship)){
 					$blocdate = new DateTime($db->idate($dt_ship));
 				}else{
@@ -2188,7 +2117,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 				// Set to shipped
 				$ok =0;
-				$ok = $leadext->find_dt_ship($object->id);
+				//$ok = $leadext->find_dt_ship($object->id);
 				if ($object->statut > Commande::STATUS_DRAFT && $user->rights->commande->cloturer && empty($ok)) {
 					print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=shipped">' . $langs->trans('ClassifyShipped') . '</a></div>';
 				}
@@ -2207,7 +2136,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 				}
 				// Set to payed
 				$ok =0;
-				$ok = $leadext->find_dt_pay($object->id);
+				//$ok = $leadext->find_dt_pay($object->id);
 				if ($object->statut > Commande::STATUS_DRAFT && $user->rights->commande->cloturer && empty($ok)) {
 					print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=setpayed"> Classée Payée</a></div>';
 				}
@@ -2229,7 +2158,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 				// Create contract
 				$ok = 0;
-				$ok = $leadext->contrat_needed($object->id);
+				//$ok = $leadext->contrat_needed($object->id);
 				if ($conf->contrat->enabled && $ok>0 && ($object->statut == Commande::STATUS_VALIDATED || $object->statut == Commande::STATUS_ACCEPTED || $object->statut == Commande::STATUS_CLOSED)) {
 				    $langs->load("contracts");
 
