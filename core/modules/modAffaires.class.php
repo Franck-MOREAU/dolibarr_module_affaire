@@ -80,8 +80,6 @@ class modAffaires extends DolibarrModules
 		                            // for specific path of parts (eg: /affaires/core/modules/barcode)
 		                            // for specific css file (eg: /affaires/css/affaires.css.php)
 		$this->module_parts = array(
-			// Set this to 1 if module has its own trigger directory
-			// 'triggers' => 1,
 			// Set this to 1 if module has its own login method directory
 			// 'login' => 0,
 			// Set this to 1 if module has its own substitution function file
@@ -91,6 +89,7 @@ class modAffaires extends DolibarrModules
 			// Set this to 1 if module has its own barcode directory
 			// 'barcode' => 0,
 			// Set this to 1 if module has its own models directory
+			'triggers' => 1,
 			'models' => 1,
 			'tpl' => 1,
 			'js'=>'/volvo/js/jquery.flot.orderBars.js',

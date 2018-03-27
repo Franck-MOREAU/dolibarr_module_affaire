@@ -301,7 +301,7 @@ class FormAffaires extends Form
 
 	/**
 	 *
-	 * @param unknown $file
+	 * @param string $file
 	 * @return string
 	 */
 	public function select_tabs($filesource, $htmlname = '', $selectlabel = '', $outputformat = 'html', $outputlabel = 'code') {
