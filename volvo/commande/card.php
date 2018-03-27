@@ -33,24 +33,18 @@
  * \brief Page to show customer order
  */
 
-require '../../main.inc.php';
-require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/class/html.formorder.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/class/html.formmargin.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/modules/commande/modules_commande.php';
-require_once DOL_DOCUMENT_ROOT . '/volvo/class/commandevolvo.class.php';
-require_once DOL_DOCUMENT_ROOT . '/comm/action/class/actioncomm.class.php';
-require_once DOL_DOCUMENT_ROOT . '/volvo/lib/volvo.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-if (! empty($conf->propal->enabled))
-	require DOL_DOCUMENT_ROOT . '/comm/propal/class/propal.class.php';
-if (! empty($conf->projet->enabled)) {
-	require DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
-}
-require_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
-dol_include_once('/volvo/class/lead.extend.class.php');
+require '../../../main.inc.php';
+dol_include_once('/core/class/html.formfile.class.php');
+dol_include_once('/core/class/html.formorder.class.php');
+dol_include_once('/core/class/html.formmargin.class.php');
+dol_include_once('/core/modules/commande/modules_commande.php');
+dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
+dol_include_once('/comm/action/class/actioncomm.class.php');
+//dol_include_once('/volvo/lib/volvo.lib.php');
+dol_include_once('/core/lib/functions2.lib.php');
+dol_include_once('/core/class/extrafields.class.php');
+dol_include_once('/core/class/doleditor.class.php');
+//dol_include_once('/volvo/class/lead.extend.class.php');
 
 $langs->load('orders');
 $langs->load('sendings');

@@ -97,7 +97,7 @@ class modAffaires extends DolibarrModules
 		// Set this to relative path of css if module has its own css file
 		// 'css' => '/affaires/css/mycss.css.php',
 		// Set here all hooks context managed by module
-				'hooks' => array('commonobject','searchform','ordercard','ordersuppliercard','thirdpartycard'),
+			'hooks' => array('commonobject','searchform','ordercard','ordersuppliercard','thirdpartycard'),
 		// Set here all workflow context managed by module
 		// 'workflow' => array('order' => array('WORKFLOW_ORDER_AUTOCREATE_INVOICE'))
 				);
@@ -613,6 +613,7 @@ class modAffaires extends DolibarrModules
 		// 'categories_x' to add a tab in category view
 		// (replace 'x' by type of category (0=product, 1=supplier, 2=customer, 3=member)
 		// Dictionnaries
+
 		if (! isset($conf->affaires->enabled)) {
 			$conf->affaires = (object) array();
 			$conf->affaires->enabled = 0;
@@ -717,16 +718,16 @@ class modAffaires extends DolibarrModules
 		$this->boxes = array(); // Boxes list
 		$r = 0;
 
-		$this->boxes[$r][1] = "box_pdmsoltrs_indiv@volvo";
+		$this->boxes[$r][1] = "box_pdmsoltrs_indiv@affaires";
 		$r ++;
 
-		$this->boxes[$r][1] = "box_pdmsoltrs_global@volvo";
+		$this->boxes[$r][1] = "box_pdmsoltrs_global@affaires";
 		$r ++;
 
-		$this->boxes[$r][1] = "box_delaicash_indiv@volvo";
+		$this->boxes[$r][1] = "box_delaicash_indiv@affaires";
 		$r ++;
 
-		$this->boxes[$r][1] = "box_delaicash_global@volvo";
+		$this->boxes[$r][1] = "box_delaicash_global@affaires";
 		$r ++;
 
 
@@ -827,7 +828,7 @@ class modAffaires extends DolibarrModules
 		$this->rights[$r][5] = 'port';
 		$r ++;
 
-		// $r++;
+
 		// Main menu entries
 		$this->menus = array(); // List of menus to add
 		$r = 0;
@@ -1261,6 +1262,113 @@ class modAffaires extends DolibarrModules
 	public function init($options = '')
 	{
 		$sql = array();
+
+		dol_include_once('/core/class/extrafields.class.php');
+		$extrafields=new ExtraFields($this->db);
+
+		//extrafields societe
+		$res = $extrafields->addExtraField('canton', 'Canton', 'varchar', 0, 255, 'societe',0, 0,'', array('options'=>''),0,1,3);
+		$res = $extrafields->addExtraField('debranch', 'Client Débranché', 'boolean', 1, '', 'societe',0, 0,'', array('options'=>''),1,1,1);
+
+		//extrafields contacts
+		$res = $extrafields->addExtraField('codecm', 'Code Contact CM', 'varchar', 0, 255, 'socpeople',0, 0,'', array('options'=>''),0,1,3);
+
+		//extrafields Commande
+		$res = $extrafields->addExtraField('numom', 'Numéro D\'O.M.', 'varchar', 0, 10, 'commande',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('ctm', 'Contremarque', 'sellist', 1, 10, 'commande',0, 0,'', array('options'=>array('societe:nom:rowid::status=1 and client=1'=>null)),1,1,1);
+		$res = $extrafields->addExtraField('dt_invoice', 'Date de facturation', 'date', 2, '', 'commande',0, 0,'', array('options'=>''),0,1,1);
+		$res = $extrafields->addExtraField('vnac', 'VNC', 'price', 3, '', 'commande',0, 0,'', array('options'=>''),0,1,1);
+		$res = $extrafields->addExtraField('vcm_km', 'Kilometrage annuel:', 'double', 4,'24,8','commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vin', 'VIN', 'varchar', 5, 18, 'commande',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('immat', 'Immat', 'varchar', 6, 10, 'commande',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('vcm_deja', 'Client déja sous contrat de service Volvo ?', 'boolean', 7 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_deport', 'Véhicule Déporté ?', 'boolean', 8 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_site', 'Point de service Volvo Trucks', 'sellist', 9 , '', 'commande',0, 0,'', array('options'=>array('c_volvo_sites:nom:rowid::active=1'=>null)),1,1,3);
+		$res = $extrafields->addExtraField('vcm_atel', 'Client Ayant:', 'checkbox', 10 , '', 'commande',0, 0,'', array('options'=>array(1=>'Atelier Mécanique',2=>'Atelier Carrosserie',3=>'Sans Atelier')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_maint', 'Interventions réalisées:', 'checkbox', 11 , '', 'commande',0, 0,'', array('options'=>array(1=>'Entretien et Maintenance Légère',2=>'Maintenance Lourde')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_trf_gds', 'Transfert du calendrier vers GDS ?', 'boolean', 12 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_trf_dfol', 'Transfert du calendrier vers Dynafleet ?', 'boolean', 13 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_dt_dem', 'Date éventuelle de démarrage du contrat:', 'date', 14 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_ppc', 'ppc', 'boolean', 15 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_pc', 'pc', 'boolean', 16 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_pvc', 'pvc', 'boolean', 17 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_blue', 'blue', 'boolean', 18 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_silver', 'silver', 'boolean', 19 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_silverp', 'silver+', 'boolean', 20 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_gold', 'gold', 'boolean', 21 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_duree', 'Durée du contrat:', 'checkbox', 22 , '', 'commande',0, 0,'', array('options'=>array(1=>'24 Mois',2=>'36 Mois',3=>'48 Mois',4=>'60 Mois',5=>'72 Mois',6=>'84 Mois',7=>'96 Mois')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_conso', 'Consommation estimée du véhicule:', 'double', 23 , '24,8', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_km_dep', 'Kilometrage de départ:', 'int', 24 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_ptra', 'Poids total roulant constaté:', 'int', 25 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_pto', 'Type de prise de force:', 'checkbox', 26 , '', 'commande',0, 0,'', array('options'=>array(1=>'Moteur',2=>'Boite de vitesse')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_pto_nbh', 'Nombre d\'heure annuel de prise de force:', 'int', 27 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_pto_hdep', 'Heures PTO de départ:', 'int', 28 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_hydro', 'Equipement Hydraulique:', 'checkbox', 29 , '', 'commande',0, 0,'', array('options'=>array(1=>'Hydraulique VOAC monté sur chaine de montage',2=>'Autre type monté chez le réparateur agréé Volvo trucks')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_carr', 'carrosserie et équipements:', 'text', 30 , '2000', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_amp_heb', 'Amplitude Hebdomadaire d\'utilisation du véhicule :', 'checkbox', 31 , '', 'commande',0, 0,'', array('options'=>array(1=>'5jours/semaine',2=>'6jours/semaine',3=>'7jours/semaine')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_amp_jour', 'Amplitude journalière d\'utilisation du véhicule:', 'checkbox', 32 , '', 'commande',0, 0,'', array('options'=>array(1=>'8 heures/jour maximum',2=>'> à 8 heures /jour',3=>'> à 16 Heure /jour')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_nbpos', 'Nombre de position de livraison ou chargement journalier:', 'int', 33 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_sais', 'Véhicule ayant une activité saisonnière ?', 'boolean', 34 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_chant', 'Superstructure typique pour les chantiers ?', 'boolean', 35 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_ville', 'Le véhicule circule t il principalement en ville ?', 'boolean', 36 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_50km', 'La distance moyenne entre le chargement et le déchargement est-elle inférieure à 50 km ?', 'boolean', 37 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_ld', 'Le kilométrage annuel est il égal ou supérieur à 100 000 kms ?', 'boolean', 38 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_zone', 'Zone géographique', 'select', 39 , '', 'commande',0, 0,'', array('options'=>array(1=>'Communauté Européenne',2=>'Autre')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_typ_trans', 'Type de transport', 'select', 40 , '', 'commande',0, 0,'', array('options'=>array(1=>'Transport traditionnel',2=>'Transport frigorifique',3=>'Container (caisse amovible)',4=>'Benne PTO < 1 H par jour',5=>'Benne PTO > 1 H par jour',
+		6=>'Benne à ordures ménagères',7=>'Bras de relevage (ampliroll)',8=>'Bras de relevage (ampliroll) + Grue',9=>'Citerne PTO < 1 H par jour',10=>',Citerne PTO > 1 H par jour',
+		11 => 'Collecte laitière', 12=>'Transport d\'Animaux Vivants',13=>'Convoi Exceptionnel',14=>'Porte Engins',15=>'Plateau + Grue',16=>'Transport de voitures',17=>'Dépanneuse (porte voitures)',
+		18=>'Véhicule de Remorquage ( poids lourds)',19=>'Grumier PTO < 2h/jour', 20 =>'Grumier PTO > 2H/jour',21=>'Hydrocureuse',22=>'Malaxeur',23=>'Balayeuse')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_roul', 'Conditions de roulage', 'select', 41 , '', 'commande',0, 0,'', array('options'=>array(1=>'Lisse',2=>'Difficile',3=>'Très Difficile')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_topo', 'Topographie', 'select', 42 , '', 'commande',0, 0,'', array('options'=>array(1=>'Lisse',2=>'Difficile',3=>'Très Difficile')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_pack', 'pack vcm', 'checkbox', 43 , '', 'commande',0, 0,'', array('options'=>array(1=>'Assistance remorquage VAS',2=>'Pack Sécurité Vision',3=>'Pack Appoint')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_option', 'option VCM', 'checkbox', 44 , '', 'commande',0, 0,'', array('options'=>array(1=>'Traitement Protéactive GO',2=>'Maintenance des Pneumatiques',3=>'Maintenance de la sellette',4=>'Réparation de la prise de force PTO',5=>'Remplacement annuel du filtre à air du moteur')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_sup', 'Entretiens sup', 'checkbox', 45 , '', 'commande',0, 0,'', array('options'=>array(1=>'Entretien et Réparation RETARDER',2=>'Entretien et Réparation Embrayage Dual Clutch',3=>'Entretien et Réparation Essieu X-Track',4=>'Entretien et Réparation Crochet de remorquage',
+		5=>'Entretien et Réparation Equipement Hydraulique',6=>'Entretien et Réparation Hayon 1500kg',7=>'Entretien et Réparation Hayon 2500kg',8=>'Entretien et Réparation Bras de relevage',
+		9=>'Entretien et Réparation Grue',10=>'Entretien et Réparation Chauffage de nuit')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_legal', 'legal', 'checkbox', 46 , '', 'commande',0, 0,'', array('options'=>array(1=>'Passage annuel au Contrôle technique (Porteur)',2=>'Passage annuel au Contrôle technique (Tracteur)',
+		3=>'Passage au Contrôle technique (Matières Dangereuses)',4=>'Attestation de conformité annuelle du limiteur de vitesse',5=>'Attestation tous les deux ans de conformité du chrono tachygraphe',
+		6=>'Attestation de conformité annuelle de l\'extincteur',7=>'Attestation de conformité semestrielle du hayon',8=>'Attestation de conformité semestrielle du bras de relevage',8=>'Attestation de conformité semestrielle de la grue')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_frigo', 'Maintenance du groupe Frigorifique ?', 'boolean', 47 , '', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('vcm_marque', 'Marque du groupe froid', 'select', 48 , '', 'commande',0, 0,'', array('options'=>array(1=>'Carrier',2=>'Thermoking')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_model', 'Modèle du groupe', 'varchar', 49, 255, 'commande',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('vcm_fonct', 'Fonctionnement du groupe', 'select', 50 , '', 'commande',0, 0,'', array('options'=>array(1=>'Diesel',2=>'Diesel + Electrique')),1,1,3);
+		$res = $extrafields->addExtraField('vcm_frigo_nbh', 'Nombre d\'heure de fonctionnement:', 'int', 51 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+
+		//extrafields contrat
+		$res = $extrafields->addExtraField('dt_env_cli', 'Date d\'envoi Au client', 'date', 0 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_ret_cli', 'Date de Retour Client', 'date', 1 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_sig_the', 'Date De Signature Théobald', 'date', 2 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_env_vtf', 'Date d\'envoi a VTF', 'date', 3 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_ret_vtf', 'Date de retour VTF', 'date', 4 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_trait', 'Date Traitement', 'date', 5 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_enr', 'Date d\'enregistrement', 'date', 6 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
+
+		//extrafields commande fournisseur
+		$res = $extrafields->addExtraField('dt_liv_maj', 'Date de livraison mise a jour', 'date', 0, '', 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('numom', 'Numéro D\'O.M.', 'varchar', 1, 10, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('ctm', 'Contremarque', 'sellist', 2, 10, 'commande_fournisseur',0, 0,'', array('options'=>array('societe:nom:rowid::status=1 and client=1'=>null)),1,1,1);
+		$res = $extrafields->addExtraField('dt_blockupdate', 'Date blocage modification', 'date', 3, '', 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_lim_annul', 'Date limite d\'annulation', 'date', 4, '', 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('vin', 'VIN', 'varchar', 5, 18, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('immat', 'Immat', 'varchar', 6, 10, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+
+		//extrafields produits
+		$res = $extrafields->addExtraField('notupdatecost', 'Cout non modifiable (MAJ prix commande)', 'boolean', 0, '', 'product',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('notupdatecostreal', 'Pas de maj du prix de reviens automatique (MAJ prix commande)', 'boolean', 1, '', 'product',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('supplierorderable', 'Disponible pour la commande fournisseur', 'boolean', 2, '', 'product',0, 0,'', array('options'=>''),1,1,3);
+
+		//extrafields agenda
+		$res = $extrafields->addExtraField('affaire', 'Affaire', 'sellist', 0, '', 'actioncomm',0, 0,'', array('options'=>array('lead:ref|ref_int:rowid:socid|fk_soc:fk_c_status IN (4,8,9,12)'=>null)),1,1,1);
+
+
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+		$result=dol_copy(dol_buildpath('/volvo/core/doctemplate/ANALYSE CDE VOLVO.pdf'),DOL_DATA_ROOT.'/volvo/modelpdf/ficheanalyse.pdf',0,0);
+		$result=dol_copy(dol_buildpath('/volvo/core/doctemplate/ANALYSE CDE VOLVO LG.pdf'),DOL_DATA_ROOT.'/volvo/modelpdf/ficheanalyselg.pdf',0,0);
+		$result=dol_copy(dol_buildpath('/volvo/core/doctemplate/VCM.pdf'),DOL_DATA_ROOT.'/volvo/modelpdf/vcm.pdf',0,0);
+
+
+		$res = dolibarr_del_const($this->db,'MAIN_AGENDA_ACTIONAUTO_ORDER_VALIDATE',$conf->entity);
+		$res = dolibarr_del_const($this->db,'MAIN_AGENDA_ACTIONAUTO_ORDER_CLASSIFY_BILLED',$conf->entity);
 
 		$result = $this->loadTables();
 
