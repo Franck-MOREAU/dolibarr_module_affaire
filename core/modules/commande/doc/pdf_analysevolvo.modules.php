@@ -272,8 +272,8 @@ class pdf_analysevolvo extends ModelePDFContract
 
 				$pdf->SetFont('','', $default_font_size);
 				$pdf->SetXY($x[2], $yt[3]);
-				$out = $outputlangs->convToOutputCharset($object->thirdparty->address . '-' . $object->thirdparty->zip . ' '. $object->thirdparty->town);
-				$pdf->MultiCell($z[2]+$z[3]+$z[4]+$z[5]+$z[6]+$z[7], 0, $out,0,'L');
+				$out = $outputlangs->convToOutputCharset(substr(str_replace("\n",' ',$object->thirdparty->address) . ' - ' . $object->thirdparty->zip . ' '. $object->thirdparty->town,0,74));
+				$pdf->MultiCell($z[2]+$z[3]+$z[4]+$z[5]+$z[6]+$z[7]+50, 0, $out,0,'L');
 
 				$pdf->SetFont('','', $default_font_size);
 				$pdf->SetXY($x[1], $yt[5]);
@@ -320,15 +320,6 @@ class pdf_analysevolvo extends ModelePDFContract
 				$filter=array();
 				$filter['com.rowid'] = $object->id;
 				$lead2 = new Affaires_det($this->db);
-				//TODO intitialy from fetchAllfolow now ?
-				/*$lead2->fetchAllfolow('','', 1, 0, $filter,'AND');
-				if(!empty($lead2->business[1]->dt_pay)){
-					$cash = $lead2->business[1]->delai_cash;
-					$pdf->SetFont('','', $default_font_size);
-					$pdf->SetXY($x[4], $yt[7]);
-					$out = $outputlangs->convToOutputCharset($cash . ' Jours');
-					$pdf->MultiCell($z[4], 0, $out,0,'L');
-				}*/
 
 				$pdf->SetFont('','', $default_font_size);
 				$pdf->SetXY($x[7], $yt[7]);
@@ -375,7 +366,6 @@ class pdf_analysevolvo extends ModelePDFContract
 				$golds=0;
 
 				foreach($object->lines as $line){
-
 					$extrafieldsline = new ExtraFields($this->db);
 					$extralabelsline = $extrafieldsline->fetch_name_optionals_label($line->table_element, true);
 					$line->fetch_optionals($line->id, $extralabelsline);
@@ -470,7 +460,16 @@ class pdf_analysevolvo extends ModelePDFContract
 
 					}else{
 
-						$listcateg = $this->containing($line->fk_product);
+						$listcateg = product_all_categ($line->fk_product,'array');
+
+						if(in_array($conf->global->VOLVO_VEHICULE, $listcateg)){
+
+							$pdf->SetFont('','', $default_font_size);
+							$pdf->SetXY($x[3], $yt[5]);
+							$out = $outputlangs->convToOutputCharset(substr($line->desc,0,46));
+							$pdf->MultiCell($z[3]+$z[4]+$z[5]+$z[6]+$z[7], 0, $out,0,'L');
+						}
+
 
 						if(in_array($conf->global->VOLVO_INTERNE, $listcateg)){
 
@@ -736,44 +735,9 @@ class pdf_analysevolvo extends ModelePDFContract
 				$out = $outputlangs->convToOutputCharset($rep);
 				$pdf->MultiCell($z[2]+$z[3], 0, $out,0,'L');
 
-				$pdf->SetFont('','', $default_font_size);
-				$pdf->SetXY($x[7], $yp[3]);
-				$out = $outputlangs->convToOutputCharset(price(round($object->array_options['options_comm'],2)) . ' €');
-				$pdf->MultiCell($z[7], 0, $out,0,'R');
-
-				$pdf->SetFont('','', $default_font_size);
-				$pdf->SetXY($x[7], $yp[4]);
-				$out = $outputlangs->convToOutputCharset(price(round($object->array_options['options_comm_vcm'] + $object->array_options['options_comm_pack'],2)) . ' €');
-				$pdf->MultiCell($z[7], 0, $out,0,'R');
-
-				$pdf->SetFont('','', $default_font_size);
-				$pdf->SetXY($x[7], $yp[5]);
-				$out = $outputlangs->convToOutputCharset(price(round($object->array_options['options_comm_div'],2)) . ' €');
-				$pdf->MultiCell($z[7], 0, $out,0,'R');
-
-				$pdf->SetFont('','', $default_font_size);
-				$pdf->SetXY($x[7], $yp[6]);
-				$out = $outputlangs->convToOutputCharset(price(round($object->array_options['options_comm_newclient'],2)) . ' €');
-				$pdf->MultiCell($z[7], 0, $out,0,'R');
-
-				$totalcom = $object->array_options['options_comm_newclient'];
-				$totalcom+= $object->array_options['options_comm'];
-				$totalcom+= $object->array_options['options_comm _div'];
-				$totalcom+= $object->array_options['options_comm_vcm'];
-				$totalcom+= $object->array_options['options_comm_pack'];
-				$totalcom+= $object->array_options['options_comm_cash'];
-
-				$pdf->SetFont('','', $default_font_size);
-				$pdf->SetXY($x[7], $yp[7]);
-				$out = $outputlangs->convToOutputCharset(price(round($totalcom,2)) . ' €');
-				$pdf->MultiCell($z[7], 0, $out,0,'R');
-
-
-
 				$pdf->SetFont('','', $default_font_size-2);
 				$pdf->SetXY($x[0], $yp[8]);
 				$out = $outputlangs->convToOutputCharset($object->note_private);
-				//$pdf->MultiCell(25.5, 0, $object->note_private,0,'L');
 				$pdf->writeHTMLCell(194,35,8,254.5,$out);
 
 				$pdf->Close();
@@ -809,35 +773,6 @@ class pdf_analysevolvo extends ModelePDFContract
 		}
 		$this->error=$langs->trans("ErrorUnknown");
 		return 0;   // Erreur par defaut
-	}
-
-	function containing($id)
-	{
-		$cats = array();
-
-		$sql = "SELECT ct.fk_categorie, c.label, c.rowid, c.fk_parent";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "categorie_product as ct, " . MAIN_DB_PREFIX . "categorie as c";
-		$sql .= " WHERE ct.fk_categorie = c.rowid AND ct.fk_product = " . (int) $id . " AND c.type =0 ";
-		$sql .= " AND c.entity IN (" . getEntity( 'category', 1 ) . ")";
-
-		$res = $this->db->query($sql);
-		if ($res)
-		{
-			while ($obj = $this->db->fetch_object($res))
-			{
-				$cats[] = $obj->rowid;
-				if(!empty($obj->fk_parent)){
-					$cats[] = $obj->fk_parent;
-				}
-			}
-
-			return $cats;
-		}
-		else
-		{
-			dol_print_error($this->db);
-			return -1;
-		}
 	}
 }
 

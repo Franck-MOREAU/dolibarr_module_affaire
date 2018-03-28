@@ -449,7 +449,7 @@ class modAffaires extends DolibarrModules
 			34 => array(
 				'VOLVO_ANALYSELG_Y_ENTETE',
 				'chaine',
-				'157,21.7,27.7,33.7,40.7,55.7,61.7,67.7,73.7,86.7',
+				'15.7,21.7,27.7,33.7,40.7,55.7,61.7,67.7,73.7,86.7',
 				'',
 				0,
 				'current',
@@ -576,6 +576,24 @@ class modAffaires extends DolibarrModules
 				'VOLVO_ANALYSELG_Y_PIED',
 				'chaine',
 				'198.5,205.5,212.5,219,225,231,237,243,254.5',
+				'',
+				0,
+				'current',
+				1
+			),
+			49 => array(
+				'VOLVO_CAT_PROD',
+				'chaine',
+				'33',
+				'',
+				0,
+				'current',
+				1
+			),
+			50 => array(
+				'VOLVO_VEHICULE',
+				'chaine',
+				'34',
 				'',
 				0,
 				'current',

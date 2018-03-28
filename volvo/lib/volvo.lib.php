@@ -316,6 +316,14 @@ function show_picto_pdf($value) {
 	}
 }
 
+function show_picto_pdf($value) {
+	if ($value == 1) {
+		return dol_buildpath('/theme/eldy/img/statut6.png');
+	} else {
+		return dol_buildpath('/theme/eldy/img/statut0.png');
+	}
+}
+
 Function prepare_array($var,$mode){
 	global $conf;
 
@@ -330,4 +338,96 @@ Function prepare_array($var,$mode){
 	}
 	return $out;
 
+}
+
+function categchild($categ, $mode){
+	$cat=array($categ);
+
+	$retour = categ_child($cat);
+	while (is_array($retour)&&count($retour)>0){
+		$cat = array_merge($cat,$retour);
+		$retour = categ_child($retour);
+	}
+
+	if($mode=='sql'){
+		$txt = implode(',', $cat);
+		return $txt;
+	}else{
+		return $cat;
+	}
+}
+
+function categ_child($categ){
+	global $db;
+
+	dol_include_once('/categories/class/categorie.class.php');
+	$categorie = new Categorie($db);
+	$result = array();
+	foreach ($categ as $cat){
+		$res = $categorie->fetch($cat);
+		if($res <0) exit;
+		$ret= $categorie->get_filles();
+		foreach ($ret as $res){
+			$result[] = $res->id;
+		}
+	}
+	return $result;
+}
+
+function product_all_categ($id,$mode){
+	global $db;
+	dol_include_once('/categories/class/categorie.class.php');
+	$categorie = new Categorie($db);
+	$categ = $categorie->getListForItem($id,'product');
+	$result=array();
+	if (is_array ( $categ ) && count ( $categ ) > 0) {
+		foreach ( $categ as $cat ) {
+			if (count ( $cat ) > 0) {
+				$ret = array ();
+				$ret = categparent ( $cat ['id'], 'array' );
+			}
+			$result = array_merge ( $result, $ret );
+		}
+	}
+
+	if($mode=='sql'){
+		$txt = implode(',', $result);
+		return $txt;
+	}else{
+		return $result;
+	}
+}
+
+function categparent($categ, $mode){
+	$cat=array($categ);
+
+	$retour = categ_parent($cat);
+	while (is_array($retour)&&count($retour)>0){
+		$cat = array_merge($cat,$retour);
+		$retour = categ_parent($retour);
+	}
+
+	if($mode=='sql'){
+		$txt = implode(',', $cat);
+		return $txt;
+	}else{
+		return $cat;
+	}
+}
+
+function categ_parent($categ){
+	global $db;
+
+	dol_include_once('/categories/class/categorie.class.php');
+	$categorie = new Categorie($db);
+	$result = array();
+	foreach ($categ as $cat){
+		$res = $categorie->fetch($cat);
+		if($res <0) exit;
+		$ret= $categorie->get_meres();
+		foreach ($ret as $res){
+			$result[] = $res->id;
+		}
+	}
+	return $result;
 }
