@@ -204,7 +204,7 @@ class pdf_vcm extends ModelePDFContract
 				$pdf->SetMargins($this->marge_gauche, $this->marge_haute, $this->marge_droite);   // Left, Top, Right
 
 				// Add Pages from models
-				$infile=$conf->volvo->dir_output.'/modelpdf/vcm.pdf';
+				$infile=$conf->affaires->dir_output.'/volvo/modelpdf/vcm.pdf';
 				if (file_exists($infile) && is_readable($infile)) {
 					$pagecount = $pdf->setSourceFile($infile);
 					for($i = 1; $i <= $pagecount; $i ++) {

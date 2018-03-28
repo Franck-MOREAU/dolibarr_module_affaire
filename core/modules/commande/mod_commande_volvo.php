@@ -122,7 +122,7 @@ class mod_commande_volvo extends ModeleNumRefCommandes
 
 		if ($objectaff->id > 0)
 		{
-			$cnl = strtoupper($objectaff->type_label);
+			$cnl = strtoupper($objectaff->type_label[0]);
 		}
 
 		// D'abord on recupere la valeur max

@@ -204,7 +204,7 @@ class pdf_analysevolvolg extends ModelePDFContract
 				$pdf->SetMargins($this->marge_gauche, $this->marge_haute, $this->marge_droite);   // Left, Top, Right
 
 				// Add Pages from models
-				$infile=$conf->volvo->dir_output.'/modelpdf/ficheanalyselg.pdf';
+				$infile=$conf->affaires->dir_output.'/volvo/modelpdf/ficheanalyselg.pdf';
 				if (file_exists($infile) && is_readable($infile)) {
 					$pagecount = $pdf->setSourceFile($infile);
 					for($i = 1; $i <= $pagecount; $i ++) {
@@ -225,10 +225,10 @@ class pdf_analysevolvolg extends ModelePDFContract
 				$extralabels = $extrafields->fetch_name_optionals_label($object->table_element, true);
 
 				$sys = new Affaires_det($this->db);
-				$x = $sys->prepare_array('VOLVO_ANALYSELG_X', 'array');
+				/*$x = $sys->prepare_array('VOLVO_ANALYSELG_X', 'array');
 				$z = $sys->prepare_array('VOLVO_ANALYSELG_Z', 'array');
 				$yt = $sys->prepare_array('VOLVO_ANALYSELG_Y_ENTETE', 'array');
-				$yp = $sys->prepare_array('VOLVO_ANALYSELG_Y_PIED', 'array');
+				$yp = $sys->prepare_array('VOLVO_ANALYSELG_Y_PIED', 'array');*/
 
 				//Carac client
 				$pdf->SetFont('','', $default_font_size);
