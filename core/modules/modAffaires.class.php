@@ -147,7 +147,7 @@ class modAffaires extends DolibarrModules
 				'Numbering affaires rule',
 				0,
 				'current',
-				1
+				0
 			),
 			1 => array(
 				'MAIN_CAN_HIDE_EXTRAFIELDS',
@@ -1365,9 +1365,9 @@ class modAffaires extends DolibarrModules
 
 
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
-		$result=dol_copy(dol_buildpath('/volvo/core/doctemplate/ANALYSE CDE VOLVO.pdf'),DOL_DATA_ROOT.'/volvo/modelpdf/ficheanalyse.pdf',0,0);
-		$result=dol_copy(dol_buildpath('/volvo/core/doctemplate/ANALYSE CDE VOLVO LG.pdf'),DOL_DATA_ROOT.'/volvo/modelpdf/ficheanalyselg.pdf',0,0);
-		$result=dol_copy(dol_buildpath('/volvo/core/doctemplate/VCM.pdf'),DOL_DATA_ROOT.'/volvo/modelpdf/vcm.pdf',0,0);
+		$result=dol_copy(dol_buildpath('/affaires/core/doctemplate/ANALYSE CDE VOLVO.pdf'),DOL_DATA_ROOT.'/affaires/volvo/modelpdf/ficheanalyse.pdf',0,0);
+		$result=dol_copy(dol_buildpath('/affaires/core/doctemplate/ANALYSE CDE VOLVO LG.pdf'),DOL_DATA_ROOT.'/affaires/volvo/modelpdf/ficheanalyselg.pdf',0,0);
+		$result=dol_copy(dol_buildpath('/affaires/core/doctemplate/VCM.pdf'),DOL_DATA_ROOT.'/affaires/volvo/modelpdf/vcm.pdf',0,0);
 
 
 		$res = dolibarr_del_const($this->db,'MAIN_AGENDA_ACTIONAUTO_ORDER_VALIDATE',$conf->entity);

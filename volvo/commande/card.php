@@ -82,8 +82,6 @@ $result = restrictedArea($user, 'commande', $id);
 $object = new CommandeVolvo($db);
 $extrafields = new ExtraFields($db);
 
-$formAffairesProduct = new FormAffairesProduct($db);
-
 // fetch optionals attributes and labels
 $extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
 
@@ -1579,28 +1577,15 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 					$out = '<script type="text/javascript">' . "\n";
 					$out .= '  	$(document).ready(function() {' . "\n";
-					$out .= '		$a = $(\'<a href="javascript:popUpateCost()" class="butAction">' . $langs->trans('UpdateCost') . '</a>\');' . "\n";
 					$out .= '		$b = $(\'<a href="javascript:popSupplierOrder()" class="butAction">' . $langs->trans('CreateSupplierOrder') . '</a>\');' . "\n";
-					$out .= '		$c = $(\'<a class="javascript:popAddProducts()">Ajouter un produit</a>\');' . "\n";
-					$out .= '  		$(\'div.fiche div.tabsAction\').first().append($a);' . "\n";
+					$out .= '		$c = $(\'<a href="javascript:popAddProducts()" class="butAction">Ajouter un produit</a>\');' . "\n";
 					$out .= '  		$(\'div.fiche div.tabsAction\').first().append($b);' . "\n";
 					$out .= '  		$(\'div.fiche div.tabsAction\').first().append($c);' . "\n";
 					$out .= '  	});' . "\n";
 					$out .= '' . "\n";
-					$out .= '  	function popUpateCost() {' . "\n";
-					$out .= '  		$div = $(\'<div id="popUpateCost"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/updatecost/updatecost.php?orderid=' . $object->id, 1) . '"></iframe></div>\');' . "\n";
-					$out .= '' . "\n";
-					$out .= '  		$div.dialog({' . "\n";
-					$out .= '  			modal:true' . "\n";
-					$out .= '  			,width:"90%"' . "\n";
-					$out .= '  			,height:$(window).height() - 150' . "\n";
-					$out .= '  			,close:function() {document.location.reload(true);}' . "\n";
-					$out .= '  		});' . "\n";
-					$out .= '' . "\n";
-					$out .= '  	}' . "\n";
 					$out .= '' . "\n";
 					$out .= '  	function popSupplierOrder() {' . "\n";
-					$out .= '  		$divsupplier = $(\'<div id="popSupplierOrder"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/orders/createsupplierorder.php?orderid=' . $object->id, 1) . '"></iframe></div>\');' . "\n";
+					$out .= '  		$divsupplier = $(\'<div id="popSupplierOrder"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/orders/createsupplierorder.php',2).'?orderid=' . $object->id . '"></iframe></div>\');' . "\n";
 					$out .= '' . "\n";
 					$out .= '  		$divsupplier.dialog({' . "\n";
 					$out .= '  			modal:true' . "\n";
@@ -1611,12 +1596,12 @@ if ($action == 'create' && $user->rights->commande->creer)
 					$out .= '' . "\n";
 					$out .= '  	}' . "\n";
 					$out .= '  	function popAddProducts() {' . "\n";
-					$out .= '  		$divsupplier = $(\'<div id="popAddProducts"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/orders/createsupplierorder.php?orderid=' . $object->id, 1) . '"></iframe></div>\');' . "\n";
+					$out .= '  		$divsupplier = $(\'<div id="popAddProducts"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/affaires/form/addproduct.php',2).'?orderid=' . $object->id . '"></iframe></div>\');' . "\n";
 					$out .= '' . "\n";
 					$out .= '  		$divsupplier.dialog({' . "\n";
 					$out .= '  			modal:true' . "\n";
-					$out .= '  			,width:"90%"' . "\n";
-					$out .= '  			,height:$(window).height() - 150' . "\n";
+					$out .= '  			,width:500' . "\n";
+					$out .= '  			,height:200' . "\n";
 					$out .= '  			,close:function() {document.location.reload(true);}' . "\n";
 					$out .= '  		});' . "\n";
 					$out .= '' . "\n";
