@@ -46,8 +46,6 @@ class Affaires extends CommonObject
 
 	function __construct($db) {
 
-		global $conf;
-
 		$this->db = $db;
 
 		$result_type = $this->loadType();
@@ -1859,6 +1857,49 @@ class Affaires_det extends CommonObject
 			$this->error = "Error " . $this->db->lasterror();
 			dol_syslog(get_class($this) . "::fetchDocumentLink " . $this->error, LOG_ERR);
 
+			return - 1;
+		}
+	}
+
+
+
+	/**
+	 *	Load an object from its id and create a new one in database
+	 *
+	 *	@param		int			$socid			Id of thirdparty
+	 *	@return		int							New id of clone
+	 */
+	function createFromClone($socid = 0) {
+		global $user, $hookmanager;
+
+		$error = 0;
+
+		$this->context ['createfromclone'] = 'createfromclone';
+
+		$this->db->begin ();
+
+		// Load source object
+		$objFrom = clone $this;
+
+		$this->id = 0;
+
+		// Clear fields
+		$this->fk_user_author = $user->id;
+		$this->datec = dol_now ();
+		$this->fk_user_mod = $user->id;
+
+		// Create clone
+		$result = $this->create ( $user );
+		if ($result < 0)
+			$error ++;
+
+		// End
+		if (! $error) {
+			unset ( $this->context ['createfromclone'] );
+			$this->db->commit ();
+			return $this->id;
+		} else {
+			$this->db->rollback ();
 			return - 1;
 		}
 	}

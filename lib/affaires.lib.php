@@ -167,3 +167,5 @@ function affaires_stats_prepare_head()
 
 	return $head;
 }
+
+
