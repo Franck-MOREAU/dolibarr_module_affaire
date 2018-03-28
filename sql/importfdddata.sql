@@ -67,3 +67,10 @@ INSERT INTO `llx_volvo_modele_fdd_det` (`rowid`, `fk_modele_fdd`, `name`, `cell`
 (63, 1, 'surres', 'N67', 'calc', 0),
 (64, 1, 'transport', 'N69', 'calc', 1),
 (65, 1, 'pneu', 'N70', 'calc', 1);
+
+
+DELETE FROM llx_element_element WHERE targettype='lead';
+REPLACE INTO llx_element_element(fk_source,sourcetype,fk_target,targettype)
+SELECT det.fk_commande,'commande',det.rowid,'affaires_det'
+FROM llx_affaires_det as det
+WHERE det.fk_commande IS NOT NULL;
