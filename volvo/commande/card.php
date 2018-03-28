@@ -146,7 +146,6 @@ if ($action == 'confirm_clone' && $confirm == 'yes' && $user->rights->commande->
 	$res = $db->query ( $sql );
 	if ($res) {
 		$obj = $db->fetch_object ( $res );
-		$object->leadorigin = $obj->fk_target;
 
 		dol_include_once('/affaires/class/affaires.class.php');
 		$affaires = new Affaires_det($db);
@@ -169,11 +168,15 @@ if ($action == 'confirm_clone' && $confirm == 'yes' && $user->rights->commande->
 		$result = $object->createFromClone();
 		if ($result > 0) {
 			$object->ref_client = $orig->ref_client;
-			$object->update ( $user );
+			unset($object->user_valid);
+			$result=$object->update ( $user );
+			if ($result<0) {
+				setEventMessages(null,$object->errors,'errors');
+			}
 			$affaires->add_object_linked('commande',$object->id);
 			$affaires->fk_commande = $object->id;
 			$affaires->update($user);
-			header ( "Location: " . $_SERVER ['PHP_SELF'] . '?id=' . $result );
+			header ( "Location: " . $_SERVER ['PHP_SELF'] . '?id=' . $object->id );
 			exit ();
 		} else {
 			setEventMessages ( $object->error, $object->errors, 'errors' );

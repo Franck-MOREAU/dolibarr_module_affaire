@@ -1893,6 +1893,7 @@ class Affaires_det extends CommonObject
 		$this->fk_user_author = $user->id;
 		$this->datec = dol_now ();
 		$this->fk_user_mod = $user->id;
+		unset($this->fk_commande);
 
 		// Create clone
 		$result = $this->create ( $user );
