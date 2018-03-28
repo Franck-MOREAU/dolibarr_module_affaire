@@ -471,7 +471,7 @@ if ($resql != - 1) {
 			$list .= '<option value="1" selected>Editer</option>';
 			foreach($objectdet->status as $keystatus=>$labelstatus) {
 				if ($line->fk_status != $keystatus) {
-					if (($keystatus==7 || $keystatus==11) && !empty($line->fk_commande)) {
+					if (($keystatus==7 || $keystatus==11 || $keystatus==5) && !empty($line->fk_commande)) {
 						//$list .= '<option value="'.$keystatus.'">'.$labelstatus.'</option>';
 					} else {
 						$list .= '<option value="'.$keystatus.'">'.$labelstatus.'</option>';

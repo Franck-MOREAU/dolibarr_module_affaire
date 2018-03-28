@@ -1179,10 +1179,10 @@ class Affaires_det extends CommonObject
 						|| ($key == 'det.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 'det.fk_marque_trt')
 						|| ($key == 'det.fk_commande') || $key == 't.fk_c_type' || $key == 't.year') {
 					$sql .= ' AND ' . $key . ' = ' . $value;
-				} elseif ($key == 't.fk_status !IN') {
-					$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
-				} elseif ($key == 't.rowid !IN') {
-					$sql .= ' AND t.rowid NOT IN (' . $value . ')';
+				} elseif ($key == 'det.fk_status !IN') {
+					$sql .= ' AND det.fk_status NOT IN (' . $value . ')';
+				} elseif ($key == 'det.rowid !IN') {
+					$sql .= ' AND det.rowid NOT IN (' . $value . ')';
 				}else {
 					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
 				}
