@@ -1139,7 +1139,7 @@ class Affaires_det extends CommonObject
 		require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
 
 		global $langs;
-		$sql = "SELECT";
+		$sql = "SELECT DISTINCT ";
 		$sql .= " det.rowid,";
 		$sql .= " det.fk_affaires,";
 		$sql .= " det.fk_gamme,";
@@ -1163,7 +1163,7 @@ class Affaires_det extends CommonObject
 		$sql .= " FROM " . MAIN_DB_PREFIX . $this->table_element . " as det";
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'affaires as t ON t.rowid=det.fk_affaires';
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'societe as soc ON soc.rowid=t.fk_soc';
-		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'societe as ctm ON ctm.rowid=t.fk_ctm';
+		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . 'societe as ctm ON ctm.rowid=t.fk_ctm';
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'user as usr ON usr.rowid=t.fk_user_resp';
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_type as cv ON cv.rowid=t.fk_c_type';
 		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . 'c_affaires_genre as genre ON genre.rowid=det.fk_genre';
