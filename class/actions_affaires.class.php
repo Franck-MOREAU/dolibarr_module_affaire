@@ -193,7 +193,7 @@ class ActionsAffaires // extends CommonObject
 			}
 		}
 		if (in_array('propalcard', $current_context)) {
-			require_once 'affaires.class.php';
+			dol_include_once('/affaires/class/affaires.class.php');
 			$affaires = new Affaires($db);
 
 			$ret = $affaires->fetchAffairesLink(($object->rowid ? $id = $object->rowid : $object->id), $object->table_element);
@@ -205,7 +205,7 @@ class ActionsAffaires // extends CommonObject
 				$langs->load("affaires@affaires");
 
 				if ($user->rights->affaires->write) {
-					$html = '<div class="inline-block divButAction"><a class="butAction" href="' . dol_buildpath('/affaires/affaires/card.php', 1) . '?action=create&amp;socid=' . $object->socid . '&amp;amount_guess=' . $object->total_ht . '&amp;propalid=' . $object->id . '">' . $langs->trans('AffairesCreate') . '</a></div>';
+					$html = '<div class="inline-block divButAction"><a class="butAction" href="' . dol_buildpath('/affaires/form/card.php', 1) . '?action=create&amp;socid=' . $object->socid . '&amp;amount_guess=' . $object->total_ht . '&amp;propalid=' . $object->id . '">' . $langs->trans('AffairesCreate') . '</a></div>';
 				} else {
 					$html = '<div class="inline-block divButAction"><a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotAllowed")) . '">' . $langs->trans('AffairesCreate') . '</a></div>';
 				}
@@ -229,6 +229,7 @@ class ActionsAffaires // extends CommonObject
 			$out .= '  	});' . "\n";
 			$out .= '' . "\n";
 			$out .= '  	function popCalendar() {' . "\n";
+			//TODO : fix vo/event/createc
 			$out .= '  		$div = $(\'<div id="popCalendar"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/event/createcustcalendar.php?socid=' . $object->id, 1) . '"></iframe></div>\');' . "\n";
 			$out .= '' . "\n";
 			$out .= '  		$div.dialog({' . "\n";
@@ -284,7 +285,7 @@ class ActionsAffaires // extends CommonObject
 		$current_context = explode(':', $parameters['context']);
 
 		if (in_array('ordercard', $current_context)) {
-			dol_include_once('\affaires\class\affaires.class.php');
+			dol_include_once('/affaires/class/affaires.class.php');
 			$affaire = new Affaires($db);
 			$filter=array('t.ref'=>$object->ref_client);
 			$affaire->fetch_all('ASC', 't.ref', 1, 0,$filter);
