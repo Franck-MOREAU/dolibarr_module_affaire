@@ -224,10 +224,10 @@ class pdf_analysevolvo extends ModelePDFContract
  				$extrafields = new ExtraFields($this->db);
 				$extralabels = $extrafields->fetch_name_optionals_label($object->table_element, true);
 
-				$x = $sys->prepare_array('VOLVO_ANALYSE_X', 'array');
-				$z = $sys->prepare_array('VOLVO_ANALYSE_Z', 'array');
-				$yt = $sys->prepare_array('VOLVO_ANALYSE_Y_ENTETE', 'array');
-				$yp = $sys->prepare_array('VOLVO_ANALYSE_Y_PIED', 'array');
+				$x = prepare_array('VOLVO_ANALYSE_X', 'array');
+				$z = prepare_array('VOLVO_ANALYSE_Z', 'array');
+				$yt = prepare_array('VOLVO_ANALYSE_Y_ENTETE', 'array');
+				$yp = prepare_array('VOLVO_ANALYSE_Y_PIED', 'array');
 
 				//Carac client
 				$pdf->SetFont('','', $default_font_size);
