@@ -120,11 +120,15 @@ if ($step == 6) {
 	}
 	$cmd->cond_reglement_id = $objectdet->getReglementid();
 	$rang = 1;
+	$gamme = explode(' ', $targetInfoArray['modele']['value']);
+	$produit = new Product($db);
+	$produit->fetch('',$gamme[0]);
+
 	$line = new OrderLine($db);
 	$line->subprice = $targetInfoArray['VNAC']['value'];
 	$line->qty = 1;
 	$line->tva_tx = 0;
-	$line->fk_product = 1;
+	$line->fk_product = $produit->id;
 	$line->pa_ht = $targetInfoArray['VNAC']['value'];
 	$line->rang = $rang;
 	$line->desc = $targetInfoArray['modele']['value'];

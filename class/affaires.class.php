@@ -1645,11 +1645,15 @@ class Affaires_det extends CommonObject
 		}
 		$cmd->cond_reglement_id=$this->getReglementid();
 		$rang =1;
+		$gamme = $this->gamme_label;
+		$produit = new Product($this->db);
+		$produit->fetch('',$gamme);
+
 		$line = New OrderLine($db);
 		$line->subprice = 0;
 		$line->qty = 1;
 		$line->tva_tx = 0;
-		$line->fk_product = 1;
+		$line->fk_product = $produit->id;
 		$line->pa_ht = 0;
 		$line->rang=$rang;
 		$rang++;
