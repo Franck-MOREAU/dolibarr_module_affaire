@@ -393,15 +393,15 @@ class CommandeVolvo extends Commande
 				foreach ( $fourn_array as $fournid => $detailorder ) {
 					//Find already exist supplier order for the same supplier on customer client
 					$sql = 'SELECT DISTINCT so.rowid as supplierorderid ';
-					$sql .= ' FROM '.MAIN_DB_PREFIX.'llx_societe as supplier';
-					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commande_fourn as so ON so.fk_soc=supplier.rowid AND supplier.rowid='.$fournid;
-					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commandedet_extrafeilds as cdetextra ON cdetextra.fk_supplierorder=so.rowid';
-					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commandedet as cdet ON cdet.rowid=cdetextra.fk_object';
-					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commande as c ON c.rowid=cdet.fk_commande AND c.rowid='.$orderid;
+					$sql .= ' FROM '.MAIN_DB_PREFIX.'societe as supplier';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commande_fournisseur as so ON so.fk_soc=supplier.rowid AND supplier.rowid='.$fournid;
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commandedet_extrafields as cdetextra ON cdetextra.fk_supplierorder=so.rowid';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commandedet as cdet ON cdet.rowid=cdetextra.fk_object';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commande as c ON c.rowid=cdet.fk_commande AND c.rowid='.$orderid;
 
 					$resql = $this->db->query($sql);
-					if (!$resql < 0) {
-						$this->errors[] =$this->db->error();
+					if (!$resql) {
+						$this->errors[] =$this->db->lasterror();
 						$error ++;
 					}
 
@@ -409,15 +409,18 @@ class CommandeVolvo extends Commande
 						while($obj = $this->db->fetch_object($resql)) {
 							if (!empty($obj->supplierorderid)) {
 								foreach ( $detailorder as $exiintgsupplierorderid => $prodinfo ) {
-
+									if ($exiintgsupplierorderid==0) {
+										foreach ( $prodinfo as $keydt=>$data ) {
+											//On reaffecte les bons éléments dans le tableau
+											$fourn_array[$fournid][$obj->supplierorderid][]=$data;
+											unset($fourn_array[$fournid][0][$keydt]);
+										}
+									}
 								}
-
 							}
 						}
 					}
-
 				}
-
 				foreach ( $fourn_array as $fournid => $detailorder ) {
 
 					if (is_array($detailorder) && count($detailorder) > 0) {
@@ -441,7 +444,28 @@ class CommandeVolvo extends Commande
 											$this->errors[] = $cmdsup->error;
 											$error ++;
 										}
+
+										$commande_origin_line = new OrderLine($this->db);
+										$result = $commande_origin_line->fetch($data['origorderlineid']);
+										if ($result < 0) {
+											$error ++;
+											$this->errors[] = $commande_origin_line->error;
+										} else {
+											$commande_origin_line->fetch_optionals($data['origorderlineid']);
+											if (empty($commande_origin_line->array_options['options_fk_supplierorder'])) {
+												$commande_origin_line->array_options['options_fk_supplierorder'] = $cmdsup->id;
+												$result = $commande_origin_line->update($user);
+												if ($result < 0) {
+													$error ++;
+													$this->errors[] = $commande_origin_line->error;
+												}
+											}
+										}
 									}
+
+
+
+
 								} else {
 									$cmdsup->ref_supplier = $this->ref;
 									$cmdsup->socid = $fournid;
@@ -503,7 +527,6 @@ class CommandeVolvo extends Commande
 				}
 			}
 		}
-
 		if (! $error) {
 			$this->db->commit();
 			return 1;
