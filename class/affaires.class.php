@@ -1869,7 +1869,7 @@ class Affaires_det extends CommonObject
 	 *	@param		int			$socid			Id of thirdparty
 	 *	@return		int							New id of clone
 	 */
-	function createFromClone($socid = 0) {
+	function createFromClone() {
 		global $user, $hookmanager;
 
 		$error = 0;

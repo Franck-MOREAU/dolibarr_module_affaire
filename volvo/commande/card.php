@@ -141,8 +141,6 @@ if($action=='recalc') {
 // }
 
 // Action clone object
-
-//TODO : cloner affaire det en meme temps que commande
 if ($action == 'confirm_clone' && $confirm == 'yes' && $user->rights->commande->creer) {
 	$sql = "SELECT fk_target FROM " . MAIN_DB_PREFIX . "element_element WHERE sourcetype = 'commande' AND targettype = 'affaires_det' AND fk_source = " . $object->id;
 	$res = $db->query ( $sql );
@@ -151,21 +149,28 @@ if ($action == 'confirm_clone' && $confirm == 'yes' && $user->rights->commande->
 		$object->leadorigin = $obj->fk_target;
 
 		dol_include_once('/affaires/class/affaires.class.php');
-		$affaires = new Affaires($db);
+		$affaires = new Affaires_det($db);
 		$res = $affaires->fetch($obj->fk_target);
 		if($res>0){
-
+			$res = $affaires->createFromClone();
+			if($res<0){
+				$error++;
+			}else{
+				$affnum=$res;
+			}
+		}else{
+			$error++;
 		}
 	}
 
-	if ($object->id > 0) {
+	if ($object->id > 0 && empty($error)) {
 		// Because createFromClone modifies the object, we must clone it so that we can restore it later
 		$orig = clone $object;
 		$result = $object->createFromClone();
 		if ($result > 0) {
 			$object->ref_client = $orig->ref_client;
 			$object->update ( $user );
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "element_element (fk_source, sourcetype, fk_target, targettype) VALUE (" . $result . ", 'commande'," . $orig->leadorigin . ",'lead')";
+			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "element_element (fk_source, sourcetype, fk_target, targettype) VALUE (" . $result . ", 'commande'," . $affnum . ",'affaires_det')";
 			$db->query ( $sql );
 			header ( "Location: " . $_SERVER ['PHP_SELF'] . '?id=' . $result );
 			exit ();
