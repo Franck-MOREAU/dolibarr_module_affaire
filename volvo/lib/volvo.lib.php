@@ -308,7 +308,7 @@ Function print_extra($key,$type,$action,$extrafields,$object,$label=1,$lenght = 
 	return $out;
 }
 
-function show_picto_pdf($value) {
+function show_picto($value) {
 	if ($value == 1) {
 		return img_picto('non', 'statut6');
 	} else {
