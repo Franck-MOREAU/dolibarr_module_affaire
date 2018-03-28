@@ -1106,11 +1106,32 @@ class Affaires_det extends CommonObject
 				$this->tms = $this->db->jdate($obj->tms);
 
 				$this->gamme_label = $this->gamme[$this->fk_gamme]->gamme;
-				$this->silhouette_label = $this->silhouette[$this->fk_silhouette]->silouhette;
+				$this->silhouette_label = $this->silhouette[$this->fk_silhouette]->silhouette;
 				$this->genre_label = $this->genre[$this->fk_genre]->genre;
 				$this->carrosserie_label = $this->carrosserie[$this->fk_carrosserie]->carrosserie;
 				$this->status_label = $this->status[$this->fk_c_status];
 				$this->marque_trt_label = $this->marque_trt[$this->fk_marque_trt]->marque;
+
+				$this->soc_url='';
+				if (!empty($obj->socid)) {
+					$socstatic= new Societe($this->db);
+					$socstatic->fetch($obj->socid);
+					$this->soc_url=$socstatic->getNomUrl();
+				}
+				$this->ctm_url='';
+				if (!empty($obj->ctmid)) {
+					$socstatic= new Societe($this->db);
+					$socstatic->fetch($obj->ctmid);
+					$this->ctm_url=$socstatic->getNomUrl();
+				}
+
+				$affstatic= new Affaires($this->db);
+				$affstatic->fetch($obj->fk_affaires,1);
+				$this->ref_url=$affstatic->getNomUrl();
+				$this->cv_type_label = $affstatic->type_label;
+
+				$this->year=$affstatic->year;
+				$this->usrname=$obj->usrname;
 			}
 			$this->db->free($resql);
 
@@ -1506,6 +1527,7 @@ class Affaires_det extends CommonObject
  				$return.=$objectstaaff->getNomUrl(). ' - ';
  			}
  		}
+ 		//var_dump($this->silhouette_label);
  		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
  		if($this->fk_status==6){
  			$return.= ' - Spécification: ' . $this->spec;
