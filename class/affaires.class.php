@@ -46,6 +46,8 @@ class Affaires extends CommonObject
 
 	function __construct($db) {
 
+		global $conf;
+
 		$this->db = $db;
 
 		$result_type = $this->loadType();
@@ -699,7 +701,11 @@ class Affaires_det extends CommonObject
 	public $usrname='';
 	public $cv_type_label='';
 
+	public $listofreferent=array();
+
 	function __construct($db) {
+
+		global $conf;
 
 		$this->db = $db;
 
@@ -710,6 +716,23 @@ class Affaires_det extends CommonObject
 		$result_silhouette = $this->loadSilhouette();
 		$result_marques = $this->loadMarques();
 		$result_motifs = $this->loadMotifs();
+
+		if (! empty($conf->contrat->enabled)) {
+			$this->listofreferent['contract'] = array (
+					'title' => "Contrat",
+					'class' => 'Contrat',
+					'table' => 'contrat',
+					'test' => $conf->contrat->enabled && $user->rights->contrat->lire
+			);
+		}
+		if (! empty($conf->commande->enabled)) {
+			$this->listofreferent['orders'] = array (
+					'title' => "Commande",
+					'class' => 'Commande',
+					'table' => 'commande',
+					'test' => $conf->commande->enabled && $user->rights->commande->lire
+			);
+		}
 
 		return ($result_status&&$result_carrosserie&&$result_gamme&&$result_genre&&$result_marques&&$result_motifs&&$result_silhouette);
 	}
@@ -1440,7 +1463,9 @@ class Affaires_det extends CommonObject
 		}
 	}
 
-	function vh_tile($whithcustomerdetails=0){
+	public function vh_tile($whithcustomerdetails=0){
+
+
 		global $user;
 
 		if($this->fk_genre==1){
@@ -1478,7 +1503,7 @@ class Affaires_det extends CommonObject
  		if($this->fk_status==6){
  			$return.= ' - Spécification: ' . $this->spec;
  			if($this->fk_commande > 0){
- 				dol_include_once('/affaires/class/commandevolvo.class.php');
+ 				require_once dol_buildpath('/affaires/volvo/class/commandevolvo.class.php');
  				$cmd = new CommandeVolvo($this->db);
  				$cmd->fetch($this->fk_commande);
  				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
@@ -1518,7 +1543,7 @@ class Affaires_det extends CommonObject
 		$staticself=new self($this->db);
 		$staticself->fetch($vehid);
 		if($staticself->fk_commande > 0){
-			dol_include_once('/affaires/class/commandevolvo.class.php');
+			dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 			$cmd = new CommandeVolvo($this->db);
 			$cmd->fetch($staticself->fk_commande);
 			return $cmd->total_ht;
@@ -1851,5 +1876,50 @@ class Affaires_det extends CommonObject
 		}
 
 		return $idcommande;
+	}
+
+	/**
+	 * Load object in memory from database
+	 *
+	 * @param int $id ID
+	 * @param string $tablename Name of the table
+	 *
+	 * @return int if KO, >0 if OK
+	 */
+	public function  fetchAffairesDetLink($id, $tablename) {
+		global $langs;
+
+		$this->doclines = array ();
+
+		$sql = "SELECT";
+		$sql .= " t.rowid,";
+		$sql .= " t.fk_source,";
+		$sql .= " t.sourcetype,";
+		$sql .= " t.fk_target,";
+		$sql .= " t.targettype";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "element_element as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . $this->table_element . " as l ON l.rowid=t.fk_target";
+		$sql .= " WHERE t.fk_source = " . $id;
+		$sql .= " AND t.targettype='affaires_det'";
+		if (! empty($tablename)) {
+			$sql .= " AND t.sourcetype='" . $tablename . "'";
+		}
+
+		dol_syslog(get_class($this) . "::fetchDocumentLink sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			while ( $obj = $this->db->fetch_object($resql) ) {
+				$line = new self($this->db);
+				$line->fetch($obj->fk_target);
+				$this->doclines[] = $line;
+			}
+			$this->db->free($resql);
+			return 1;
+		} else {
+			$this->error = "Error " . $this->db->lasterror();
+			dol_syslog(get_class($this) . "::fetchDocumentLink " . $this->error, LOG_ERR);
+
+			return - 1;
+		}
 	}
 }
