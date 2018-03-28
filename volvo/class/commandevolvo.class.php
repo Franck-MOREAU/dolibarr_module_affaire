@@ -26,7 +26,8 @@ include_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
 /**
  * Class to manage customers orders
  */
-class CommandeVolvo extends Commande {
+class CommandeVolvo extends Commande
+{
 	public $date_cloture;
 	public $actiontypecode;
 	public $sendtoid;
@@ -42,8 +43,7 @@ class CommandeVolvo extends Commande {
 	/**
 	 * Close order
 	 *
-	 * @param User $user
-	 *        	Objet user that close
+	 * @param User $user Objet user that close
 	 * @return int <0 if KO, >0 if OK
 	 */
 	function cloture($user, $notrigger = 0) {
@@ -51,26 +51,26 @@ class CommandeVolvo extends Commande {
 
 		$error = 0;
 
-		if ((empty ( $conf->global->MAIN_USE_ADVANCED_PERMS ) && ! empty ( $user->rights->commande->creer )) || (! empty ( $conf->global->MAIN_USE_ADVANCED_PERMS ) && ! empty ( $user->rights->commande->order_advance->validate ))) {
-			$this->db->begin ();
+		if ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->commande->creer)) || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->commande->order_advance->validate))) {
+			$this->db->begin();
 
-			$now = dol_now ();
+			$now = dol_now();
 
 			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commande';
 			$sql .= ' SET fk_statut = ' . self::STATUS_CLOSED . ',';
 			$sql .= ' fk_user_cloture = ' . $user->id . ',';
-			$sql .= " date_cloture = '" . $this->db->idate ( $this->date_cloture ) . "'";
+			$sql .= " date_cloture = '" . $this->db->idate($this->date_cloture) . "'";
 			$sql .= ' WHERE rowid = ' . $this->id . ' AND fk_statut > ' . self::STATUS_DRAFT;
 
-			if ($this->db->query ( $sql )) {
+			if ($this->db->query($sql)) {
 				// Call trigger
-				$result = $this->call_trigger ( 'ORDER_CLOSE', $user );
+				$result = $this->call_trigger('ORDER_CLOSE', $user);
 				if ($result < 0)
 					$error ++;
 				// End call triggers
 
 				if (! $error) {
-					$this->createEvent ( 'ORDER_CLOSE' );
+					$this->createEvent('ORDER_CLOSE');
 					if ($result < 0) {
 						$error ++;
 					}
@@ -79,16 +79,16 @@ class CommandeVolvo extends Commande {
 				if (! $error) {
 					$this->statut = self::STATUS_CLOSED;
 
-					$this->db->commit ();
+					$this->db->commit();
 					return 1;
 				} else {
-					$this->db->rollback ();
+					$this->db->rollback();
 					return - 1;
 				}
 			} else {
-				$this->error = $this->db->lasterror ();
-				$this->errors [] = $this->error;
-				$this->db->rollback ();
+				$this->error = $this->db->lasterror();
+				$this->errors[] = $this->error;
+				$this->db->rollback();
 				return - 1;
 			}
 		}
@@ -97,29 +97,28 @@ class CommandeVolvo extends Commande {
 	/**
 	 * Classify the order as invoiced
 	 *
-	 * @param User $user
-	 *        	Object user making the change
+	 * @param User $user Object user making the change
 	 * @return int <0 if KO, >0 if OK
 	 */
 	function classifyBilled(User $user, $notrigger = 0) {
 		global $user;
 		$error = 0;
 
-		$this->db->begin ();
+		$this->db->begin();
 
 		$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commande SET facture = 1';
 		$sql .= ' WHERE rowid = ' . $this->id . ' AND fk_statut > ' . self::STATUS_DRAFT;
 
-		dol_syslog ( get_class ( $this ) . "::classifyBilled", LOG_DEBUG );
-		if ($this->db->query ( $sql )) {
+		dol_syslog(get_class($this) . "::classifyBilled", LOG_DEBUG);
+		if ($this->db->query($sql)) {
 			// Call trigger
-			$result = $this->call_trigger ( 'ORDER_CLASSIFY_BILLED', $user );
+			$result = $this->call_trigger('ORDER_CLASSIFY_BILLED', $user);
 			if ($result < 0)
 				$error ++;
 			// End call triggers
 
 			if (! $error) {
-				$result = $this->createEvent ( 'ORDER_CLASSIFY_BILLED' );
+				$result = $this->createEvent('ORDER_CLASSIFY_BILLED');
 				if ($result < 0) {
 					$error ++;
 				}
@@ -127,12 +126,12 @@ class CommandeVolvo extends Commande {
 
 			if (! $error) {
 				require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-				$extrafields = new ExtraFields ( $this->db );
-				$extralabels = $extrafields->fetch_name_optionals_label ( $this->table_element, true );
-				$this->fetch_optionals ( $this->id, $extralabels );
+				$extrafields = new ExtraFields($this->db);
+				$extralabels = $extrafields->fetch_name_optionals_label($this->table_element, true);
+				$this->fetch_optionals($this->id, $extralabels);
 
-				$this->array_options ['options_dt_invoice'] = $this->date_billed;
-				$result = $this->insertExtraFields ();
+				$this->array_options['options_dt_invoice'] = $this->date_billed;
+				$result = $this->insertExtraFields();
 				if ($result < 0) {
 					$error ++;
 				}
@@ -142,19 +141,19 @@ class CommandeVolvo extends Commande {
 				$this->facturee = 1; // deprecated
 				$this->billed = 1;
 
-				$this->db->commit ();
+				$this->db->commit();
 				return 1;
 			} else {
 				foreach ( $this->errors as $errmsg ) {
-					dol_syslog ( get_class ( $this ) . "::classifyBilled " . $errmsg, LOG_ERR );
+					dol_syslog(get_class($this) . "::classifyBilled " . $errmsg, LOG_ERR);
 					$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
 				}
-				$this->db->rollback ();
+				$this->db->rollback();
 				return - 1 * $error;
 			}
 		} else {
-			$this->error = $this->db->error ();
-			$this->db->rollback ();
+			$this->error = $this->db->error();
+			$this->db->rollback();
 			return - 1;
 		}
 	}
@@ -162,41 +161,41 @@ class CommandeVolvo extends Commande {
 		global $langs, $user;
 
 		if ($typeevent == 'ORDER_CLOSE') {
-			$langs->load ( "other" );
-			$langs->load ( "orders" );
+			$langs->load("other");
+			$langs->load("orders");
 
 			$this->actiontypecode = 'AC_OTH_AUTO';
-			if (empty ( $object->actionmsg2 ))
-				$this->actionmsg2 = $langs->transnoentities ( "OrderDeliveredInDolibarr", $this->ref );
-			$this->actionmsg = $langs->transnoentities ( "OrderDeliveredInDolibarr", $this->ref );
-			$this->actionmsg .= "\n" . $langs->transnoentities ( "Author" ) . ': ' . $user->login;
+			if (empty($object->actionmsg2))
+				$this->actionmsg2 = $langs->transnoentities("OrderDeliveredInDolibarr", $this->ref);
+			$this->actionmsg = $langs->transnoentities("OrderDeliveredInDolibarr", $this->ref);
+			$this->actionmsg .= "\n" . $langs->transnoentities("Author") . ': ' . $user->login;
 
 			$this->sendtoid = 0;
 
 			$dateaction = $this->date_cloture;
 		} elseif ($typeevent == 'ORDER_CLASSIFY_BILLED') {
-			$langs->load ( "other" );
-			$langs->load ( "orders" );
+			$langs->load("other");
+			$langs->load("orders");
 
 			$this->actiontypecode = 'AC_OTH_AUTO';
-			if (empty ( $object->actionmsg2 ))
-				$this->actionmsg2 = $langs->transnoentities ( "OrderBilledInDolibarr", $this->ref );
-			$this->actionmsg = $langs->transnoentities ( "OrderBilledInDolibarr", $this->ref );
-			$this->actionmsg .= "\n" . $langs->transnoentities ( "Author" ) . ': ' . $user->login;
+			if (empty($object->actionmsg2))
+				$this->actionmsg2 = $langs->transnoentities("OrderBilledInDolibarr", $this->ref);
+			$this->actionmsg = $langs->transnoentities("OrderBilledInDolibarr", $this->ref);
+			$this->actionmsg .= "\n" . $langs->transnoentities("Author") . ': ' . $user->login;
 
 			$this->sendtoid = 0;
 
 			$dateaction = $this->date_billed;
 		} elseif ($typeevent == 'ORDER_PAYED') {
-			$langs->load ( "other" );
-			$langs->load ( "orders" );
-			$langs->load ( "volvo@volvo" );
+			$langs->load("other");
+			$langs->load("orders");
+			$langs->load("volvo@volvo");
 
 			$this->actiontypecode = 'AC_OTH_AUTO';
-			if (empty ( $object->actionmsg2 ))
-				$this->actionmsg2 = $langs->transnoentities ( "OrderPayedInDolibarr", $this->ref );
-			$this->actionmsg = $langs->transnoentities ( "OrderPayedInDolibarr", $this->ref );
-			$this->actionmsg .= "\n" . $langs->transnoentities ( "Author" ) . ': ' . $user->login;
+			if (empty($object->actionmsg2))
+				$this->actionmsg2 = $langs->transnoentities("OrderPayedInDolibarr", $this->ref);
+			$this->actionmsg = $langs->transnoentities("OrderPayedInDolibarr", $this->ref);
+			$this->actionmsg .= "\n" . $langs->transnoentities("Author") . ': ' . $user->login;
 
 			$this->sendtoid = 0;
 
@@ -205,16 +204,16 @@ class CommandeVolvo extends Commande {
 
 		require_once DOL_DOCUMENT_ROOT . '/contact/class/contact.class.php';
 		require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
-		$contactforaction = new Contact ( $this->db );
-		$societeforaction = new Societe ( $this->db );
+		$contactforaction = new Contact($this->db);
+		$societeforaction = new Societe($this->db);
 		if ($object->sendtoid > 0)
-			$contactforaction->fetch ( $this->sendtoid );
+			$contactforaction->fetch($this->sendtoid);
 		if ($object->socid > 0)
-			$societeforaction->fetch ( $this->socid );
+			$societeforaction->fetch($this->socid);
 
 		// Insertion action
 		require_once DOL_DOCUMENT_ROOT . '/comm/action/class/actioncomm.class.php';
-		$actioncomm = new ActionComm ( $this->db );
+		$actioncomm = new ActionComm($this->db);
 		$actioncomm->type_code = $this->actiontypecode; // code of parent table llx_c_actioncomm (will be deprecated)
 		$actioncomm->code = 'AC_' . $typeevent;
 		$actioncomm->label = $this->actionmsg2;
@@ -234,16 +233,16 @@ class CommandeVolvo extends Commande {
 		$actioncomm->fk_element = $this->id;
 		$actioncomm->elementtype = $this->element;
 
-		$ret = $actioncomm->create ( $user ); // User creating action
+		$ret = $actioncomm->create($user); // User creating action
 
-		unset ( $object->actionmsg );
-		unset ( $object->actionmsg2 );
-		unset ( $object->actiontypecode ); // When several action are called on same object, we must be sure to not reuse value of first action.
+		unset($object->actionmsg);
+		unset($object->actionmsg2);
+		unset($object->actiontypecode); // When several action are called on same object, we must be sure to not reuse value of first action.
 
 		if ($ret < 0) {
 			$this->errors = $actioncomm->errors;
-			if (! empty ( $actioncomm->error )) {
-				$this->errors [] = $actioncomm->error;
+			if (! empty($actioncomm->error)) {
+				$this->errors[] = $actioncomm->error;
 			}
 			return - 1;
 		} else {
@@ -260,29 +259,29 @@ class CommandeVolvo extends Commande {
 	public function getCostPriceReal($orderid, $type = 'real') {
 		require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 
-		$extrafieldslines = new Extrafields ( $this->db );
-		$extralabelslines = $extrafieldslines->fetch_name_optionals_label ( $this->table_element_line );
+		$extrafieldslines = new Extrafields($this->db);
+		$extralabelslines = $extrafieldslines->fetch_name_optionals_label($this->table_element_line);
 
-		$result = $this->fetch ( $orderid );
+		$result = $this->fetch($orderid);
 		if ($result < 0) {
 			return - 1;
 		}
 
 		$this->total_real_paht = 0;
 		// Calc other margin
-		if (is_array ( $this->lines ) && count ( $this->lines )) {
+		if (is_array($this->lines) && count($this->lines)) {
 			foreach ( $this->lines as $line ) {
-				$line->fetch_optionals ( $line->id, $extralabelslines );
+				$line->fetch_optionals($line->id, $extralabelslines);
 
-				$realpa = price2num ( $line->array_options ['options_buyingprice_real'] );
+				$realpa = price2num($line->array_options['options_buyingprice_real']);
 				if ($type == 'real') {
-					if (! empty ( $line->array_options ['options_fk_supplier'] ) || ! empty ( $line->array_options ['options_dt_invoice'] )) {
+					if (! empty($line->array_options['options_fk_supplier']) || ! empty($line->array_options['options_dt_invoice'])) {
 						$this->total_real_paht += $realpa;
-					} elseif (! empty ( $line->pa_ht )) {
+					} elseif (! empty($line->pa_ht)) {
 						$this->total_real_paht += $line->pa_ht * $line->qty;
 					}
 				} elseif ($type == 'theo') {
-					if (! empty ( $line->pa_ht )) {
+					if (! empty($line->pa_ht)) {
 						$this->total_real_paht += $line->pa_ht * $line->qty;
 					}
 				}
@@ -295,8 +294,7 @@ class CommandeVolvo extends Commande {
 	/**
 	 * Payed order
 	 *
-	 * @param User $user
-	 *        	Objet user that close
+	 * @param User $user Objet user that close
 	 * @return int <0 if KO, >0 if OK
 	 */
 	public function setpayed($user) {
@@ -304,25 +302,25 @@ class CommandeVolvo extends Commande {
 
 		$error = 0;
 
-		dol_syslog ( __METHOD__, LOG_DEBUG );
+		dol_syslog(__METHOD__, LOG_DEBUG);
 
-		if ((empty ( $conf->global->MAIN_USE_ADVANCED_PERMS ) && ! empty ( $user->rights->commande->creer )) || (! empty ( $conf->global->MAIN_USE_ADVANCED_PERMS ) && ! empty ( $user->rights->commande->order_advance->validate ))) {
-			$this->db->begin ();
+		if ((empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->commande->creer)) || (! empty($conf->global->MAIN_USE_ADVANCED_PERMS) && ! empty($user->rights->commande->order_advance->validate))) {
+			$this->db->begin();
 
 			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commande';
 			$sql .= ' SET fk_statut = ' . self::STATUS_PAYED;
 			$sql .= ' WHERE rowid = ' . $this->id;
 
-			dol_syslog ( __METHOD__, LOG_DEBUG );
-			if ($this->db->query ( $sql )) {
+			dol_syslog(__METHOD__, LOG_DEBUG);
+			if ($this->db->query($sql)) {
 				// Call trigger
-				$result = $this->call_trigger ( 'ORDER_PAYED', $user );
+				$result = $this->call_trigger('ORDER_PAYED', $user);
 				if ($result < 0)
 					$error ++;
 				// End call triggers
 
 				if (! $error) {
-					$result = $this->createEvent ( 'ORDER_PAYED' );
+					$result = $this->createEvent('ORDER_PAYED');
 					if ($result < 0) {
 						$error ++;
 					}
@@ -331,16 +329,16 @@ class CommandeVolvo extends Commande {
 				if (! $error) {
 					$this->statut = self::STATUS_PAYED;
 
-					$this->db->commit ();
+					$this->db->commit();
 					return 1;
 				} else {
-					$this->db->rollback ();
+					$this->db->rollback();
 					return - 1;
 				}
 			} else {
-				$this->errors [] = $this->db->lasterror ();
+				$this->errors[] = $this->db->lasterror();
 
-				$this->db->rollback ();
+				$this->db->rollback();
 				return - 1;
 			}
 		}
@@ -357,68 +355,88 @@ class CommandeVolvo extends Commande {
 
 		$error = 0;
 
-		dol_syslog ( __METHOD__, LOG_DEBUG );
+		dol_syslog(__METHOD__, LOG_DEBUG);
 
 		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
 		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
 
-		$sp = new ProductFournisseur ( $this->db );
+		$sp = new ProductFournisseur($this->db);
 
-		$result = $this->fetch ( $orderid );
+		$result = $this->fetch($orderid);
 		if ($result < 0) {
 			return - 1;
 		}
 
-		$this->db->begin ();
-		if (is_array ( $pricefourn_qty_array ) && count ( $pricefourn_qty_array ) > 0) {
+		$this->db->begin();
+		if (is_array($pricefourn_qty_array) && count($pricefourn_qty_array) > 0) {
 
-			$fourn_array = array ();
+			$fourn_array = array();
 			foreach ( $pricefourn_qty_array as $priceid => $qty ) {
-				$result = $sp->fetch_product_fournisseur_price ( $priceid );
+				$result = $sp->fetch_product_fournisseur_price($priceid);
 				if ($result < 0) {
-					$this->errors [] = 'Error fetch price fourn';
+					$this->errors[] = 'Error fetch price fourn';
 					$error ++;
 				}
 
-				$fourn_array [$sp->fourn_id] [] = array (
+				$fourn_array[$sp->fourn_id][] = array(
 						'productid' => $sp->fk_product,
-						'qty' => $qty ['qty'],
+						'qty' => $qty['qty'],
 						'price' => $sp->fourn_price,
 						'ref_supplier' => $sp->ref_supplier,
 						'tva_tx' => $sp->fourn_tva_tx,
-						'desc' => $qty ['desc'],
-						'px' => $qty ['px']
+						'desc' => $qty['desc'],
+						'px' => $qty['px']
+
 				);
+				$fourn_command_lineid[$sp->fourn_id]=$qty['lineid'];
 			}
-			if (count ( $fourn_array ) > 0 && empty ( $error )) {
+			if (count($fourn_array) > 0 && empty($error)) {
 				foreach ( $fourn_array as $fournid => $prodinfo ) {
 
-					if (is_array ( $prodinfo ) && count ( $prodinfo ) > 0) {
-						$cmdsup = new CommandeFournisseur ( $this->db );
+					if (is_array($prodinfo) && count($prodinfo) > 0) {
+						$cmdsup = new CommandeFournisseur($this->db);
 						$cmdsup->ref_supplier = $this->ref;
 						$cmdsup->socid = $fournid;
 						$cmdsup->source = $this->id;
-						$cmdsup->array_options ['options_ctm'] = $this->array_options ['options_ctm'];
+						$cmdsup->array_options['options_ctm'] = $this->array_options['options_ctm'];
 
 						foreach ( $prodinfo as $data ) {
-							$line = new CommandeFournisseurLigne ( $this->db );
-							$line->desc = $data ['desc'];
-							$line->subprice = $data ['px'];
-							$line->qty = $data ['qty'];
-							$line->tva_tx = $data ['tva_tx'];
-							$line->fk_product = $data ['productid'];
-							$line->ref_supplier = $data ['ref_supplier'];
-							$line->ref_fourn = $data ['ref_supplier'];
+							$line = new CommandeFournisseurLigne($this->db);
+							$line->desc = $data['desc'];
+							$line->subprice = $data['px'];
+							$line->qty = $data['qty'];
+							$line->tva_tx = $data['tva_tx'];
+							$line->fk_product = $data['productid'];
+							$line->ref_supplier = $data['ref_supplier'];
+							$line->ref_fourn = $data['ref_supplier'];
 
-							$cmdsup->lines [] = $line;
+							$cmdsup->lines[] = $line;
 						}
 
-						$cmdsup->linked_objects ["commande"] = $this->id;
+						$cmdsup->linked_objects["commande"] = $this->id;
 
-						$result = $cmdsup->create ( $user );
+						$result = $cmdsup->create($user);
 						if ($result < 0) {
 							$error ++;
-							$this->errors [] = $cmdsup->error;
+							$this->errors[] = $cmdsup->error;
+						} else {
+							$commande_origin_line=new OrderLine($this->db);
+							$result=$commande_origin_line->fetch($fourn_command_lineid[$sp->fourn_id]);
+							if ($result < 0) {
+								$error ++;
+								$this->errors[] = $commande_origin_line->error;
+							} else {
+								$commande_origin_line->fetch_optionals($commande_origin_line->rowid);
+								$commande_origin_line->array_options['options_fk_supplierorder']=$cmdsup->id;
+								$result=$commande_origin_line->update($user);
+								if ($result < 0) {
+									$error ++;
+									$this->errors[] = $commande_origin_line->error;
+								} else {
+									$result = $cmdsup->update_price($user);
+								}
+
+							}
 						}
 					}
 				}
@@ -426,10 +444,10 @@ class CommandeVolvo extends Commande {
 		}
 
 		if (! $error) {
-			$this->db->commit ();
+			$this->db->commit();
 			return 1;
 		} else {
-			$this->db->rollback ();
+			$this->db->rollback();
 			return - 1;
 		}
 	}
@@ -441,22 +459,22 @@ class CommandeVolvo extends Commande {
 		print '<tr class="liste_titre nodrag nodrop">';
 
 		// Description
-		print '<td class="linecoldescription" colspan="2">' . $langs->trans ( 'Description' ) . '</td>';
+		print '<td class="linecoldescription" colspan="2">' . $langs->trans('Description') . '</td>';
 
 		// Qty
-		print '<td class="linecolqty" align="right">' . $langs->trans ( 'Qty' ) . '</td>';
+		print '<td class="linecolqty" align="right">' . $langs->trans('Qty') . '</td>';
 
 		// Price HT
-		print '<td class="linecoluht" align="right" width="80">' . $langs->trans ( 'PriceUHT' ) . '</td>';
+		print '<td class="linecoluht" align="right" width="80">' . $langs->trans('PriceUHT') . '</td>';
 
 		// Prix d'achat
-		print '<td class="linecolht" align="right">' . $langs->trans ( 'Prix achat' ) . '</td>';
+		print '<td class="linecolht" align="right">' . $langs->trans('Prix achat') . '</td>';
 
 		// Cout réel
-		print '<td class="linecolht" align="right">' . $langs->trans ( 'Cout Réel' ) . '</td>';
+		print '<td class="linecolht" align="right">' . $langs->trans('Cout Réel') . '</td>';
 
 		// Ecart
-		print '<td class="linecolht" align="right">' . $langs->trans ( 'Ecart' ) . '</td>';
+		print '<td class="linecolht" align="right">' . $langs->trans('Ecart') . '</td>';
 
 		print '<td class="linecoledit"></td>'; // No width to allow autodim
 
@@ -468,35 +486,35 @@ class CommandeVolvo extends Commande {
 		print '<tr class="liste_titre nodrag nodrop">';
 
 		// fournisseur
-		print '<td class="linecolqty" align="left">' . $langs->trans ( 'Fournisseur' ) . '</td>';
+		print '<td class="linecolqty" align="left">' . $langs->trans('Fournisseur') . '</td>';
 
 		// date
-		print '<td class="linecolqty" align="left" colspan="2">' . $langs->trans ( 'Date de facture' ) . '</td>';
+		print '<td class="linecolqty" align="left" colspan="2">' . $langs->trans('Date de facture') . '</td>';
 
 		print '<td colspan="7"></td>';
 
 		print "</tr>";
 
-		$num = count ( $this->lines );
+		$num = count($this->lines);
 		$var = true;
 		$i = 0;
 
 		// Line extrafield
 		require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-		$extrafieldsline = new ExtraFields ( $this->db );
-		$extralabelslines = $extrafieldsline->fetch_name_optionals_label ( $this->table_element_line );
+		$extrafieldsline = new ExtraFields($this->db);
+		$extralabelslines = $extrafieldsline->fetch_name_optionals_label($this->table_element_line);
 
 		foreach ( $this->lines as $line ) {
 			// Line extrafield
-			$line->fetch_optionals ( $line->id, $extralabelslines );
+			$line->fetch_optionals($line->id, $extralabelslines);
 
 			$var = ! $var;
 
 			// if (is_object($hookmanager) && (($line->product_type == 9 && ! empty($line->special_code)) || ! empty($line->fk_parent_line)))
-			if (is_object ( $hookmanager )) // Old code is commented on preceding line.
-{
-				if (empty ( $line->fk_parent_line )) {
-					$parameters = array (
+			if (is_object($hookmanager)) // Old code is commented on preceding line.
+			{
+				if (empty($line->fk_parent_line)) {
+					$parameters = array(
 							'line' => $line,
 							'var' => $var,
 							'num' => $num,
@@ -507,9 +525,9 @@ class CommandeVolvo extends Commande {
 							'selected' => $selected,
 							'extrafieldsline' => $extrafieldsline
 					);
-					$reshook = $hookmanager->executeHooks ( 'printObjectLine', $parameters, $this, $action ); // Note that $action and $object may have been modified by some hooks
+					$reshook = $hookmanager->executeHooks('printObjectLine', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 				} else {
-					$parameters = array (
+					$parameters = array(
 							'line' => $line,
 							'var' => $var,
 							'num' => $num,
@@ -520,11 +538,11 @@ class CommandeVolvo extends Commande {
 							'selected' => $selected,
 							'extrafieldsline' => $extrafieldsline
 					);
-					$reshook = $hookmanager->executeHooks ( 'printObjectSubLine', $parameters, $this, $action ); // Note that $action and $object may have been modified by some hooks
+					$reshook = $hookmanager->executeHooks('printObjectSubLine', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 				}
 			}
-			if (empty ( $reshook )) {
-				$this->printObjectLine_perso ( $action, $line, $var, $num, $i, $dateSelector, $seller, $buyer, $selected, $extrafieldsline );
+			if (empty($reshook)) {
+				$this->printObjectLine_perso($action, $line, $var, $num, $i, $dateSelector, $seller, $buyer, $selected, $extrafieldsline);
 			}
 
 			$i ++;
@@ -535,26 +553,16 @@ class CommandeVolvo extends Commande {
 	 * Return HTML content of a detail line
 	 * TODO Move this into an output class file (htmlline.class.php)
 	 *
-	 * @param string $action
-	 *        	GET/POST action
-	 * @param CommonObjectLine $line
-	 *        	Selected object line to output
-	 * @param string $var
-	 *        	Is it a an odd line (true)
-	 * @param int $num
-	 *        	Number of line (0)
-	 * @param int $i
-	 *        	I
-	 * @param int $dateSelector
-	 *        	1=Show also date range input fields
-	 * @param string $seller
-	 *        	Object of seller third party
-	 * @param string $buyer
-	 *        	Object of buyer third party
-	 * @param int $selected
-	 *        	Object line selected
-	 * @param int $extrafieldsline
-	 *        	Object of extrafield line attribute
+	 * @param string $action GET/POST action
+	 * @param CommonObjectLine $line Selected object line to output
+	 * @param string $var Is it a an odd line (true)
+	 * @param int $num Number of line (0)
+	 * @param int $i I
+	 * @param int $dateSelector 1=Show also date range input fields
+	 * @param string $seller Object of seller third party
+	 * @param string $buyer Object of buyer third party
+	 * @param int $selected Object line selected
+	 * @param int $extrafieldsline Object of extrafield line attribute
 	 * @return void
 	 */
 	function printObjectLine_perso($action, $line, $var, $num, $i, $dateSelector, $seller, $buyer, $selected = 0, $extrafieldsline = 0) {
@@ -562,7 +570,7 @@ class CommandeVolvo extends Commande {
 		global $form, $bc, $bcdd;
 		global $object_rights, $disableedit, $disablemove; // TODO We should not use global var for this !
 
-		$object_rights = $this->getRights ();
+		$object_rights = $this->getRights();
 
 		$element = $this->element;
 
@@ -571,64 +579,64 @@ class CommandeVolvo extends Commande {
 		$type = 0;
 
 		// Show product and description
-		$type = (! empty ( $line->product_type ) ? $line->product_type : $line->fk_product_type);
+		$type = (! empty($line->product_type) ? $line->product_type : $line->fk_product_type);
 		// Try to enhance type detection using date_start and date_end for free lines where type was not saved.
-		if (! empty ( $line->date_start ))
+		if (! empty($line->date_start))
 			$type = 1; // deprecated
-		if (! empty ( $line->date_end ))
+		if (! empty($line->date_end))
 			$type = 1; // deprecated
 
 		// Ligne en mode visu
 		if ($action != 'editline' || $selected != $line->id) {
 			// Product
 			if ($line->fk_product > 0) {
-				$product_static = new Product ( $this->db );
-				$product_static->fetch ( $line->fk_product );
+				$product_static = new Product($this->db);
+				$product_static->fetch($line->fk_product);
 
 				$product_static->ref = $line->ref; // can change ref in hook
 				$product_static->label = $line->label; // can change label in hook
-				$text = $product_static->getNomUrl ( 1 );
+				$text = $product_static->getNomUrl(1);
 
 				// Define output language and label
-				if (! empty ( $conf->global->MAIN_MULTILANGS )) {
-					if (! is_object ( $this->thirdparty )) {
-						dol_print_error ( '', 'Error: Method printObjectLine was called on an object and object->fetch_thirdparty was not done before' );
+				if (! empty($conf->global->MAIN_MULTILANGS)) {
+					if (! is_object($this->thirdparty)) {
+						dol_print_error('', 'Error: Method printObjectLine was called on an object and object->fetch_thirdparty was not done before');
 						return;
 					}
 
-					$prod = new Product ( $this->db );
-					$prod->fetch ( $line->fk_product );
+					$prod = new Product($this->db);
+					$prod->fetch($line->fk_product);
 
 					$outputlangs = $langs;
 					$newlang = '';
-					if (empty ( $newlang ) && GETPOST ( 'lang_id' ))
-						$newlang = GETPOST ( 'lang_id' );
-					if (! empty ( $conf->global->PRODUIT_TEXTS_IN_THIRDPARTY_LANGUAGE ) && empty ( $newlang ))
+					if (empty($newlang) && GETPOST('lang_id'))
+						$newlang = GETPOST('lang_id');
+					if (! empty($conf->global->PRODUIT_TEXTS_IN_THIRDPARTY_LANGUAGE) && empty($newlang))
 						$newlang = $this->thirdparty->default_lang; // For language to language of customer
-					if (! empty ( $newlang )) {
-						$outputlangs = new Translate ( "", $conf );
-						$outputlangs->setDefaultLang ( $newlang );
+					if (! empty($newlang)) {
+						$outputlangs = new Translate("", $conf);
+						$outputlangs->setDefaultLang($newlang);
 					}
 
-					$label = (! empty ( $prod->multilangs [$outputlangs->defaultlang] ["label"] )) ? $prod->multilangs [$outputlangs->defaultlang] ["label"] : $line->product_label;
+					$label = (! empty($prod->multilangs[$outputlangs->defaultlang]["label"])) ? $prod->multilangs[$outputlangs->defaultlang]["label"] : $line->product_label;
 				} else {
 					$label = $line->product_label;
 				}
 
-				$text .= ' - ' . (! empty ( $line->label ) ? $line->label : $label);
-				$description .= (! empty ( $conf->global->PRODUIT_DESC_IN_FORM ) ? '' : dol_htmlentitiesbr ( $line->description )); // Description is what to show on popup. We shown nothing if already into desc.
+				$text .= ' - ' . (! empty($line->label) ? $line->label : $label);
+				$description .= (! empty($conf->global->PRODUIT_DESC_IN_FORM) ? '' : dol_htmlentitiesbr($line->description)); // Description is what to show on popup. We shown nothing if already into desc.
 			}
 
-			$line->pu_ttc = price2num ( $line->subprice * (1 + ($line->tva_tx / 100)), 'MU' );
+			$line->pu_ttc = price2num($line->subprice * (1 + ($line->tva_tx / 100)), 'MU');
 
 			// Output template part (modules that overwrite templates must declare this into descriptor)
 			// Use global variables + $dateSelector + $seller and $buyer
-			$dirtpls = array_merge ( $conf->modules_parts ['tpl'], array (
+			$dirtpls = array_merge($conf->modules_parts['tpl'], array(
 					'/core/tpl'
-			) );
+			));
 			foreach ( $dirtpls as $reldir ) {
-				$tpl = dol_buildpath ( $reldir . '/objectline_view.tpl.php' );
-				if (empty ( $conf->file->strict_mode )) {
+				$tpl = dol_buildpath($reldir . '/objectline_view.tpl.php');
+				if (empty($conf->file->strict_mode)) {
 					$res = @include $tpl;
 				} else {
 					$res = include $tpl; // for debug
@@ -640,22 +648,22 @@ class CommandeVolvo extends Commande {
 
 		// Ligne en mode update
 		if ($action == 'editline' && $selected == $line->id) {
-			$label = (! empty ( $line->label ) ? $line->label : (($line->fk_product > 0) ? $line->product_label : ''));
-			if (! empty ( $conf->global->MAIN_HTML5_PLACEHOLDER ))
-				$placeholder = ' placeholder="' . $langs->trans ( "Label" ) . '"';
+			$label = (! empty($line->label) ? $line->label : (($line->fk_product > 0) ? $line->product_label : ''));
+			if (! empty($conf->global->MAIN_HTML5_PLACEHOLDER))
+				$placeholder = ' placeholder="' . $langs->trans("Label") . '"';
 			else
-				$placeholder = ' title="' . $langs->trans ( "Label" ) . '"';
+				$placeholder = ' title="' . $langs->trans("Label") . '"';
 
-			$line->pu_ttc = price2num ( $line->subprice * (1 + ($line->tva_tx / 100)), 'MU' );
+			$line->pu_ttc = price2num($line->subprice * (1 + ($line->tva_tx / 100)), 'MU');
 
 			// Output template part (modules that overwrite templates must declare this into descriptor)
 			// Use global variables + $dateSelector + $seller and $buyer
-			$dirtpls = array_merge ( $conf->modules_parts ['tpl'], array (
+			$dirtpls = array_merge($conf->modules_parts['tpl'], array(
 					'/core/tpl'
-			) );
+			));
 			foreach ( $dirtpls as $reldir ) {
-				$tpl = dol_buildpath ( $reldir . '/objectline_edit.tpl.php' );
-				if (empty ( $conf->file->strict_mode )) {
+				$tpl = dol_buildpath($reldir . '/objectline_edit.tpl.php');
+				if (empty($conf->file->strict_mode)) {
 					$res = @include $tpl;
 				} else {
 					$res = include $tpl; // for debug
@@ -669,174 +677,173 @@ class CommandeVolvo extends Commande {
 		global $langs, $conf;
 
 		$billedtext = '';
-		if (empty ( $donotshowbilled ))
-			$billedtext .= ($billed ? ' - ' . $langs->trans ( "Billed" ) : '');
+		if (empty($donotshowbilled))
+			$billedtext .= ($billed ? ' - ' . $langs->trans("Billed") : '');
 
 		// print 'x'.$statut.'-'.$billed;
 		if ($mode == 0) {
 			if ($statut == self::STATUS_CANCELED)
-				return $langs->trans ( 'StatusOrderCanceled' );
+				return $langs->trans('StatusOrderCanceled');
 			if ($statut == self::STATUS_DRAFT)
-				return $langs->trans ( 'StatusOrderDraft' );
+				return $langs->trans('StatusOrderDraft');
 			if ($statut == self::STATUS_VALIDATED)
-				return $langs->trans ( 'StatusOrderValidated' ) . $billedtext;
+				return $langs->trans('StatusOrderValidated') . $billedtext;
 			if ($statut == self::STATUS_ACCEPTED)
-				return $langs->trans ( 'StatusOrderSentShort' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! $billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return $langs->trans ( 'StatusOrderToBill' );
-			if ($statut == self::STATUS_CLOSED && ($billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return $langs->trans ( 'StatusOrderProcessed' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return $langs->trans ( 'StatusOrderDelivered' );
+				return $langs->trans('StatusOrderSentShort') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return $langs->trans('StatusOrderToBill');
+			if ($statut == self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return $langs->trans('StatusOrderProcessed') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return $langs->trans('StatusOrderDelivered');
 			if ($statut == self::STATUS_PAYED)
-				return $langs->trans ( 'StatusOrderPayed' );
+				return $langs->trans('StatusOrderPayed');
 		} elseif ($mode == 1) {
 			if ($statut == self::STATUS_CANCELED)
-				return $langs->trans ( 'StatusOrderCanceledShort' );
+				return $langs->trans('StatusOrderCanceledShort');
 			if ($statut == self::STATUS_DRAFT)
-				return $langs->trans ( 'StatusOrderDraftShort' );
+				return $langs->trans('StatusOrderDraftShort');
 			if ($statut == self::STATUS_VALIDATED)
-				return $langs->trans ( 'StatusOrderValidatedShort' ) . $billedtext;
+				return $langs->trans('StatusOrderValidatedShort') . $billedtext;
 			if ($statut == self::STATUS_ACCEPTED)
-				return $langs->trans ( 'StatusOrderSentShort' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! $billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return $langs->trans ( 'StatusOrderToBillShort' );
-			if ($statut == self::STATUS_CLOSED && ($billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return $langs->trans ( 'StatusOrderProcessed' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return $langs->trans ( 'StatusOrderDelivered' );
+				return $langs->trans('StatusOrderSentShort') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return $langs->trans('StatusOrderToBillShort');
+			if ($statut == self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return $langs->trans('StatusOrderProcessed') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return $langs->trans('StatusOrderDelivered');
 			if ($statut == self::STATUS_PAYED)
-				return $langs->trans ( 'StatusOrderPayed' );
+				return $langs->trans('StatusOrderPayed');
 		} elseif ($mode == 2) {
 			if ($statut == self::STATUS_CANCELED)
-				return img_picto ( $langs->trans ( 'StatusOrderCanceled' ), 'statut5' ) . ' ' . $langs->trans ( 'StatusOrderCanceledShort' );
+				return img_picto($langs->trans('StatusOrderCanceled'), 'statut5') . ' ' . $langs->trans('StatusOrderCanceledShort');
 			if ($statut == self::STATUS_DRAFT)
-				return img_picto ( $langs->trans ( 'StatusOrderDraft' ), 'statut0' ) . ' ' . $langs->trans ( 'StatusOrderDraftShort' );
+				return img_picto($langs->trans('StatusOrderDraft'), 'statut0') . ' ' . $langs->trans('StatusOrderDraftShort');
 			if ($statut == self::STATUS_VALIDATED)
-				return img_picto ( $langs->trans ( 'StatusOrderValidated' ), 'statut1' ) . ' ' . $langs->trans ( 'StatusOrderValidatedShort' ) . $billedtext;
+				return img_picto($langs->trans('StatusOrderValidated'), 'statut1') . ' ' . $langs->trans('StatusOrderValidatedShort') . $billedtext;
 			if ($statut == self::STATUS_ACCEPTED)
-				return img_picto ( $langs->trans ( 'StatusOrderSent' ), 'statut3' ) . ' ' . $langs->trans ( 'StatusOrderSentShort' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! $billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderToBill' ), 'statut7' ) . ' ' . $langs->trans ( 'StatusOrderToBillShort' );
-			if ($statut == self::STATUS_CLOSED && ($billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderProcessed' ) . $billedtext, 'statut6' ) . ' ' . $langs->trans ( 'StatusOrderProcessed' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderDelivered' ), 'statut6' ) . ' ' . $langs->trans ( 'StatusOrderDeliveredShort' );
+				return img_picto($langs->trans('StatusOrderSent'), 'statut3') . ' ' . $langs->trans('StatusOrderSentShort') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderToBill'), 'statut7') . ' ' . $langs->trans('StatusOrderToBillShort');
+			if ($statut == self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderProcessed') . $billedtext, 'statut6') . ' ' . $langs->trans('StatusOrderProcessed') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderDelivered'), 'statut6') . ' ' . $langs->trans('StatusOrderDeliveredShort');
 			if ($statut == self::STATUS_PAYED)
-				return img_picto ( $langs->trans ( 'StatusOrderPayed' ), 'statut6' ) . ' ' . $langs->trans ( 'StatusOrderPayed' );
+				return img_picto($langs->trans('StatusOrderPayed'), 'statut6') . ' ' . $langs->trans('StatusOrderPayed');
 		} elseif ($mode == 3) {
 			if ($statut == self::STATUS_CANCELED)
-				return img_picto ( $langs->trans ( 'StatusOrderCanceled' ), 'statut5' );
+				return img_picto($langs->trans('StatusOrderCanceled'), 'statut5');
 			if ($statut == self::STATUS_DRAFT)
-				return img_picto ( $langs->trans ( 'StatusOrderDraft' ), 'statut0' );
+				return img_picto($langs->trans('StatusOrderDraft'), 'statut0');
 			if ($statut == self::STATUS_VALIDATED)
-				return img_picto ( $langs->trans ( 'StatusOrderValidated' ) . $billedtext, 'statut1' );
+				return img_picto($langs->trans('StatusOrderValidated') . $billedtext, 'statut1');
 			if ($statut == self::STATUS_ACCEPTED)
-				return img_picto ( $langs->trans ( 'StatusOrderSentShort' ) . $billedtext, 'statut3' );
-			if ($statut == self::STATUS_CLOSED && (! $billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderToBill' ), 'statut7' );
-			if ($statut == self::STATUS_CLOSED && ($billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderProcessed' ) . $billedtext, 'statut6' );
-			if ($statut == self::STATUS_CLOSED && (! empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderDelivered' ), 'statut6' );
+				return img_picto($langs->trans('StatusOrderSentShort') . $billedtext, 'statut3');
+			if ($statut == self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderToBill'), 'statut7');
+			if ($statut == self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderProcessed') . $billedtext, 'statut6');
+			if ($statut == self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderDelivered'), 'statut6');
 			if ($statut == self::STATUS_PAYED)
-				return img_picto ( $langs->trans ( 'StatusOrderPayed' ), 'statut6' );
+				return img_picto($langs->trans('StatusOrderPayed'), 'statut6');
 		} elseif ($mode == 4) {
 			if ($statut == self::STATUS_CANCELED)
-				return img_picto ( $langs->trans ( 'StatusOrderCanceled' ), 'statut5' ) . ' ' . $langs->trans ( 'StatusOrderCanceled' );
+				return img_picto($langs->trans('StatusOrderCanceled'), 'statut5') . ' ' . $langs->trans('StatusOrderCanceled');
 			if ($statut == self::STATUS_DRAFT)
-				return img_picto ( $langs->trans ( 'StatusOrderDraft' ), 'statut0' ) . ' ' . $langs->trans ( 'StatusOrderDraft' );
+				return img_picto($langs->trans('StatusOrderDraft'), 'statut0') . ' ' . $langs->trans('StatusOrderDraft');
 			if ($statut == self::STATUS_VALIDATED)
-				return img_picto ( $langs->trans ( 'StatusOrderValidated' ) . $billedtext, 'statut1' ) . ' ' . $langs->trans ( 'StatusOrderValidated' ) . $billedtext;
+				return img_picto($langs->trans('StatusOrderValidated') . $billedtext, 'statut1') . ' ' . $langs->trans('StatusOrderValidated') . $billedtext;
 			if ($statut == self::STATUS_ACCEPTED)
-				return img_picto ( $langs->trans ( 'StatusOrderSentShort' ) . $billedtext, 'statut3' ) . ' ' . $langs->trans ( 'StatusOrderSent' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! $billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderToBill' ), 'statut7' ) . ' ' . $langs->trans ( 'StatusOrderToBill' );
-			if ($statut == self::STATUS_CLOSED && ($billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderProcessedShort' ) . $billedtext, 'statut6' ) . ' ' . $langs->trans ( 'StatusOrderProcessed' ) . $billedtext;
-			if ($statut == self::STATUS_CLOSED && (! empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return img_picto ( $langs->trans ( 'StatusOrderDelivered' ), 'statut6' ) . ' ' . $langs->trans ( 'StatusOrderDelivered' );
+				return img_picto($langs->trans('StatusOrderSentShort') . $billedtext, 'statut3') . ' ' . $langs->trans('StatusOrderSent') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderToBill'), 'statut7') . ' ' . $langs->trans('StatusOrderToBill');
+			if ($statut == self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderProcessedShort') . $billedtext, 'statut6') . ' ' . $langs->trans('StatusOrderProcessed') . $billedtext;
+			if ($statut == self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return img_picto($langs->trans('StatusOrderDelivered'), 'statut6') . ' ' . $langs->trans('StatusOrderDelivered');
 			if ($statut == self::STATUS_PAYED)
-				return img_picto ( $langs->trans ( 'StatusOrderPayed' ), 'statut6' ) . ' ' . $langs->trans ( 'StatusOrderPayed' );
+				return img_picto($langs->trans('StatusOrderPayed'), 'statut6') . ' ' . $langs->trans('StatusOrderPayed');
 		} elseif ($mode == 5) {
 			if ($statut == self::STATUS_CANCELED)
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderCanceledShort' ) . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderCanceled' ), 'statut5' );
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderCanceledShort') . ' </span>' . img_picto($langs->trans('StatusOrderCanceled'), 'statut5');
 			if ($statut == self::STATUS_DRAFT)
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderDraftShort' ) . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderDraft' ), 'statut0' );
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderDraftShort') . ' </span>' . img_picto($langs->trans('StatusOrderDraft'), 'statut0');
 			if ($statut == self::STATUS_VALIDATED)
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderValidatedShort' ) . $billedtext . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderValidated' ) . $billedtext, 'statut1' );
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderValidatedShort') . $billedtext . ' </span>' . img_picto($langs->trans('StatusOrderValidated') . $billedtext, 'statut1');
 			if ($statut == self::STATUS_ACCEPTED)
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderSentShort' ) . $billedtext . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderSent' ) . $billedtext, 'statut3' );
-			if ($statut == self::STATUS_CLOSED && (! $billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderToBillShort' ) . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderToBill' ), 'statut7' );
-			if ($statut == self::STATUS_CLOSED && ($billed && empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderProcessedShort' ) . $billedtext . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderProcessed' ) . $billedtext, 'statut6' );
-			if ($statut == self::STATUS_CLOSED && (! empty ( $conf->global->WORKFLOW_BILL_ON_SHIPMENT )))
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderDeliveredShort' ) . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderDelivered' ), 'statut6' );
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderSentShort') . $billedtext . ' </span>' . img_picto($langs->trans('StatusOrderSent') . $billedtext, 'statut3');
+			if ($statut == self::STATUS_CLOSED && (! $billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderToBillShort') . ' </span>' . img_picto($langs->trans('StatusOrderToBill'), 'statut7');
+			if ($statut == self::STATUS_CLOSED && ($billed && empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderProcessedShort') . $billedtext . ' </span>' . img_picto($langs->trans('StatusOrderProcessed') . $billedtext, 'statut6');
+			if ($statut == self::STATUS_CLOSED && (! empty($conf->global->WORKFLOW_BILL_ON_SHIPMENT)))
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderDeliveredShort') . ' </span>' . img_picto($langs->trans('StatusOrderDelivered'), 'statut6');
 			if ($statut == self::STATUS_PAYED)
-				return '<span class="hideonsmartphone">' . $langs->trans ( 'StatusOrderPayed' ) . ' </span>' . img_picto ( $langs->trans ( 'StatusOrderPayed' ), 'statut6' );
+				return '<span class="hideonsmartphone">' . $langs->trans('StatusOrderPayed') . ' </span>' . img_picto($langs->trans('StatusOrderPayed'), 'statut6');
 		}
 	}
-	function deleteline($user = NULL, $lineid = 0)
-	{
+	function deleteline($user = NULL, $lineid = 0) {
 		global $user, $conf, $lang;
 		// if ($this->statut == self::STATUS_DRAFT)
 		// {
-		$this->db->begin ();
+		$this->db->begin();
 
 		$sql = "SELECT fk_product, qty";
 		$sql .= " FROM " . MAIN_DB_PREFIX . "commandedet";
 		$sql .= " WHERE rowid = " . $lineid;
 
-		$result = $this->db->query ( $sql );
+		$result = $this->db->query($sql);
 		if ($result) {
-			$obj = $this->db->fetch_object ( $result );
+			$obj = $this->db->fetch_object($result);
 
 			if ($obj) {
-				$product = new Product ( $this->db );
+				$product = new Product($this->db);
 				$product->id = $obj->fk_product;
 
 				// Delete line
-				$line = new OrderLine ( $this->db );
+				$line = new OrderLine($this->db);
 
 				// For triggers
-				$line->fetch ( $lineid );
+				$line->fetch($lineid);
 
-				if ($line->delete () > 0) {
-					$result = $this->update_price ( 1 );
+				if ($line->delete() > 0) {
+					$result = $this->update_price(1);
 
 					if ($result > 0) {
 						if (! $error && ! $notrigger) {
 							// Call trigger
-							$result = $this->call_trigger ( 'ORDER_LINE_DELETE', $user );
+							$result = $this->call_trigger('ORDER_LINE_DELETE', $user);
 							if ($result < 0)
 								$error ++;
 							// End call triggers
 						}
-						$this->db->commit ();
+						$this->db->commit();
 						// Call trigger
-						$result = $this->call_trigger ( 'ORDER_DELETE_LINE', $user );
+						$result = $this->call_trigger('ORDER_DELETE_LINE', $user);
 						if ($result < 0)
 							$error ++;
 						// End call triggers
 						return 1;
 					} else {
-						$this->db->rollback ();
-						$this->error = $this->db->lasterror ();
+						$this->db->rollback();
+						$this->error = $this->db->lasterror();
 						return - 2;
 					}
 				} else {
-					$this->db->rollback ();
+					$this->db->rollback();
 					$this->error = $line->error;
 					return - 1;
 				}
 			} else {
-				$this->db->rollback ();
+				$this->db->rollback();
 				return 0;
 			}
 		} else {
-			$this->db->rollback ();
-			$this->error = $this->db->lasterror ();
+			$this->db->rollback();
+			$this->error = $this->db->lasterror();
 			return - 3;
 		}
 		// }
@@ -848,92 +855,93 @@ class CommandeVolvo extends Commande {
 	function updateline($rowid, $desc, $pu, $qty, $remise_percent, $txtva, $txlocaltax1 = 0.0, $txlocaltax2 = 0.0, $price_base_type = 'HT', $info_bits = 0, $date_start = '', $date_end = '', $type = 0, $fk_parent_line = 0, $skip_update_total = 0, $fk_fournprice = null, $pa_ht = 0, $label = '', $special_code = 0, $array_options = 0, $fk_unit = null, $pu_ht_devise = 0, $notrigger = 0) {
 		global $conf, $mysoc, $langs, $user;
 
-		dol_syslog ( get_class ( $this ) . "::updateline id=$rowid, desc=$desc, pu=$pu, qty=$qty, remise_percent=$remise_percent, txtva=$txtva, txlocaltax1=$txlocaltax1, txlocaltax2=$txlocaltax2, price_base_type=$price_base_type, info_bits=$info_bits, date_start=$date_start, date_end=$date_end, type=$type, fk_parent_line=$fk_parent_line, pa_ht=$pa_ht, special_code=$special_code" );
+		dol_syslog(
+				get_class($this) . "::updateline id=$rowid, desc=$desc, pu=$pu, qty=$qty, remise_percent=$remise_percent, txtva=$txtva, txlocaltax1=$txlocaltax1, txlocaltax2=$txlocaltax2, price_base_type=$price_base_type, info_bits=$info_bits, date_start=$date_start, date_end=$date_end, type=$type, fk_parent_line=$fk_parent_line, pa_ht=$pa_ht, special_code=$special_code");
 		include_once DOL_DOCUMENT_ROOT . '/core/lib/price.lib.php';
 
 		// if (! empty($this->brouillon))
 		// {
-		$this->db->begin ();
+		$this->db->begin();
 
 		// Clean parameters
-		if (empty ( $qty ))
+		if (empty($qty))
 			$qty = 0;
-		if (empty ( $info_bits ))
+		if (empty($info_bits))
 			$info_bits = 0;
-		if (empty ( $txtva ))
+		if (empty($txtva))
 			$txtva = 0;
-		if (empty ( $txlocaltax1 ))
+		if (empty($txlocaltax1))
 			$txlocaltax1 = 0;
-		if (empty ( $txlocaltax2 ))
+		if (empty($txlocaltax2))
 			$txlocaltax2 = 0;
-		if (empty ( $remise ))
+		if (empty($remise))
 			$remise = 0;
-		if (empty ( $remise_percent ))
+		if (empty($remise_percent))
 			$remise_percent = 0;
-		if (empty ( $special_code ) || $special_code == 3)
+		if (empty($special_code) || $special_code == 3)
 			$special_code = 0;
 
-		$remise_percent = price2num ( $remise_percent );
-		$qty = price2num ( $qty );
-		$pu = price2num ( $pu );
-		$pa_ht = price2num ( $pa_ht );
-		$txtva = price2num ( $txtva );
-		$txlocaltax1 = price2num ( $txlocaltax1 );
-		$txlocaltax2 = price2num ( $txlocaltax2 );
+		$remise_percent = price2num($remise_percent);
+		$qty = price2num($qty);
+		$pu = price2num($pu);
+		$pa_ht = price2num($pa_ht);
+		$txtva = price2num($txtva);
+		$txlocaltax1 = price2num($txlocaltax1);
+		$txlocaltax2 = price2num($txlocaltax2);
 
 		// Calcul du total TTC et de la TVA pour la ligne a partir de
 		// qty, pu, remise_percent et txtva
 		// TRES IMPORTANT: C'est au moment de l'insertion ligne qu'on doit stocker
 		// la part ht, tva et ttc, et ce au niveau de la ligne qui a son propre taux tva.
 
-		$localtaxes_type = getLocalTaxesFromRate ( $txtva, 0, $this->thirdparty, $mysoc );
-		$txtva = preg_replace ( '/\s*\(.*\)/', '', $txtva ); // Remove code into vatrate.
+		$localtaxes_type = getLocalTaxesFromRate($txtva, 0, $this->thirdparty, $mysoc);
+		$txtva = preg_replace('/\s*\(.*\)/', '', $txtva); // Remove code into vatrate.
 
-		$tabprice = calcul_price_total ( $qty, $pu, $remise_percent, $txtva, $txlocaltax1, $txlocaltax2, 0, $price_base_type, $info_bits, $type, $mysoc, $localtaxes_type, 100, $this->multicurrency_tx );
+		$tabprice = calcul_price_total($qty, $pu, $remise_percent, $txtva, $txlocaltax1, $txlocaltax2, 0, $price_base_type, $info_bits, $type, $mysoc, $localtaxes_type, 100, $this->multicurrency_tx);
 
-		$total_ht = $tabprice [0];
-		$total_tva = $tabprice [1];
-		$total_ttc = $tabprice [2];
-		$total_localtax1 = $tabprice [9];
-		$total_localtax2 = $tabprice [10];
+		$total_ht = $tabprice[0];
+		$total_tva = $tabprice[1];
+		$total_ttc = $tabprice[2];
+		$total_localtax1 = $tabprice[9];
+		$total_localtax2 = $tabprice[10];
 
 		// MultiCurrency
-		$multicurrency_total_ht = $tabprice [16];
-		$multicurrency_total_tva = $tabprice [17];
-		$multicurrency_total_ttc = $tabprice [18];
+		$multicurrency_total_ht = $tabprice[16];
+		$multicurrency_total_tva = $tabprice[17];
+		$multicurrency_total_ttc = $tabprice[18];
 
 		// Anciens indicateurs: $price, $subprice, $remise (a ne plus utiliser)
 		$price = $pu;
 		if ($price_base_type == 'TTC') {
-			$subprice = $tabprice [5];
+			$subprice = $tabprice[5];
 		} else {
 			$subprice = $pu;
 		}
 		$remise = 0;
 		if ($remise_percent > 0) {
-			$remise = round ( ($pu * $remise_percent / 100), 2 );
+			$remise = round(($pu * $remise_percent / 100), 2);
 			$price = ($pu - $remise);
 		}
 
 		// Fetch current line from the database and then clone the object and set it in $oldline property
-		$line = new OrderLine ( $this->db );
-		$line->fetch ( $rowid );
+		$line = new OrderLine($this->db);
+		$line->fetch($rowid);
 
-		if (! empty ( $line->fk_product )) {
-			$product = new Product ( $this->db );
-			$result = $product->fetch ( $line->fk_product );
+		if (! empty($line->fk_product)) {
+			$product = new Product($this->db);
+			$result = $product->fetch($line->fk_product);
 			$product_type = $product->type;
 
-			if (! empty ( $conf->global->STOCK_MUST_BE_ENOUGH_FOR_ORDER ) && $product_type == 0 && $product->stock_reel < $qty) {
-				$langs->load ( "errors" );
-				$this->error = $langs->trans ( 'ErrorStockIsNotEnoughToAddProductOnOrder', $product->ref );
-				dol_syslog ( get_class ( $this ) . "::addline error=Product " . $product->ref . ": " . $this->error, LOG_ERR );
-				$this->db->rollback ();
-				unset ( $_POST ['productid'] );
-				unset ( $_POST ['tva_tx'] );
-				unset ( $_POST ['price_ht'] );
-				unset ( $_POST ['qty'] );
-				unset ( $_POST ['buying_price'] );
+			if (! empty($conf->global->STOCK_MUST_BE_ENOUGH_FOR_ORDER) && $product_type == 0 && $product->stock_reel < $qty) {
+				$langs->load("errors");
+				$this->error = $langs->trans('ErrorStockIsNotEnoughToAddProductOnOrder', $product->ref);
+				dol_syslog(get_class($this) . "::addline error=Product " . $product->ref . ": " . $this->error, LOG_ERR);
+				$this->db->rollback();
+				unset($_POST['productid']);
+				unset($_POST['tva_tx']);
+				unset($_POST['price_ht']);
+				unset($_POST['qty']);
+				unset($_POST['buying_price']);
 				return self::STOCK_NOT_ENOUGH_FOR_ORDER;
 			}
 		}
@@ -945,8 +953,8 @@ class CommandeVolvo extends Commande {
 		$this->line->context = $this->context;
 
 		// Reorder if fk_parent_line change
-		if (! empty ( $fk_parent_line ) && ! empty ( $staticline->fk_parent_line ) && $fk_parent_line != $staticline->fk_parent_line) {
-			$rangmax = $this->line_max ( $fk_parent_line );
+		if (! empty($fk_parent_line) && ! empty($staticline->fk_parent_line) && $fk_parent_line != $staticline->fk_parent_line) {
+			$rangmax = $this->line_max($fk_parent_line);
 			$this->line->rang = $rangmax + 1;
 		}
 
@@ -957,8 +965,8 @@ class CommandeVolvo extends Commande {
 		$this->line->tva_tx = $txtva;
 		$this->line->localtax1_tx = $txlocaltax1;
 		$this->line->localtax2_tx = $txlocaltax2;
-		$this->line->localtax1_type = $localtaxes_type [0];
-		$this->line->localtax2_type = $localtaxes_type [2];
+		$this->line->localtax1_type = $localtaxes_type[0];
+		$this->line->localtax2_type = $localtaxes_type[2];
 		$this->line->remise_percent = $remise_percent;
 		$this->line->subprice = $subprice;
 		$this->line->info_bits = $info_bits;
@@ -979,7 +987,7 @@ class CommandeVolvo extends Commande {
 		$this->line->pa_ht = $pa_ht;
 
 		// Multicurrency
-		$this->line->multicurrency_subprice = price2num ( $subprice * $this->multicurrency_tx );
+		$this->line->multicurrency_subprice = price2num($subprice * $this->multicurrency_tx);
 		$this->line->multicurrency_total_ht = $multicurrency_total_ht;
 		$this->line->multicurrency_total_tva = $multicurrency_total_tva;
 		$this->line->multicurrency_total_ttc = $multicurrency_total_ttc;
@@ -988,22 +996,22 @@ class CommandeVolvo extends Commande {
 		$this->line->price = $price;
 		$this->line->remise = $remise;
 
-		if (is_array ( $array_options ) && count ( $array_options ) > 0) {
+		if (is_array($array_options) && count($array_options) > 0) {
 			$this->line->array_options = $array_options;
 		}
 
-		$result = $this->line->update ();
+		$result = $this->line->update();
 		if ($result > 0) {
 			// Reorder if child line
-			if (! empty ( $fk_parent_line ))
-				$this->line_order ( true, 'DESC' );
+			if (! empty($fk_parent_line))
+				$this->line_order(true, 'DESC');
 
 			// Mise a jour info denormalisees
-			$this->update_price ( 1 );
+			$this->update_price(1);
 
-			$this->db->commit ();
+			$this->db->commit();
 			// Call trigger
-			$result = $this->call_trigger ( 'ORDER_CLASSIFY_UNBILLED', $user );
+			$result = $this->call_trigger('ORDER_CLASSIFY_UNBILLED', $user);
 			if ($result < 0)
 				$error ++;
 			// End call triggers
@@ -1011,7 +1019,7 @@ class CommandeVolvo extends Commande {
 		} else {
 			$this->error = $this->line->error;
 
-			$this->db->rollback ();
+			$this->db->rollback();
 			return - 1;
 		}
 		// }
@@ -1035,48 +1043,47 @@ class CommandeVolvo extends Commande {
 		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "actioncomm as event6 on event6.fk_element = cf.rowid AND event6.elementtype = 'order_supplier' AND event6.label LIKE '%reçue%'";
 		$sql .= " WHERE c.rowid = " . $this->id . " AND cf.fk_soc = 32553";
 
-		$resql = $this->db->query ( $sql );
+		$resql = $this->db->query($sql);
 		if ($resql) {
-			$res = $this->db->fetch_object ( $resql );
+			$res = $this->db->fetch_object($resql);
 			return $res->delai_cash;
 		} else {
 			return null;
 		}
 	}
-
-	public function find_dt_cmd($type){
-		switch ($type){
-			case 'dt_pay':
+	public function find_dt_cmd($type) {
+		switch ($type) {
+			case 'dt_pay' :
 				$sql = "SELECT MAX(datep) as dt ";
-				$sql.= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
-				$sql.= "WHERE fk_element =" . $this->id . " ";
-				$sql.= "AND elementtype = 'order' ";
-				$sql.= "AND label LIKE '%Commande V% classée Payée%'";
+				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
+				$sql .= "WHERE fk_element =" . $this->id . " ";
+				$sql .= "AND elementtype = 'order' ";
+				$sql .= "AND label LIKE '%Commande V% classée Payée%'";
 				break;
 
-			case 'dt_liv':
+			case 'dt_liv' :
 				$sql = "SELECT MAX(ac.datep) as dt ";
-				$sql.= "FROM " . MAIN_DB_PREFIX . "actioncomm AS ac ";
-				$sql.= "INNER JOIN " . MAIN_DB_PREFIX . "commande_fournisseur as c ON c.rowid=ac.fk_element AND elementtype = 'order_supplier' ";
-				$sql.= "WHERE c.source =" . $this->id. " ";
-				$sql.= "AND c.ref LIKE '%VTFRA%' ";
-				$sql.= "AND ac.label LIKE '%Commande fournisseur VTFRA-% reçue%'";
+				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm AS ac ";
+				$sql .= "INNER JOIN " . MAIN_DB_PREFIX . "commande_fournisseur as c ON c.rowid=ac.fk_element AND elementtype = 'order_supplier' ";
+				$sql .= "WHERE c.source =" . $this->id . " ";
+				$sql .= "AND c.ref LIKE '%VTFRA%' ";
+				$sql .= "AND ac.label LIKE '%Commande fournisseur VTFRA-% reçue%'";
 				break;
 
-			case 'dt_ship':
+			case 'dt_ship' :
 				$sql = "SELECT MAX(datep) as dt ";
-				$sql.= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
-				$sql.= "WHERE fk_element =" . $this->id. " ";
-				$sql.= "AND elementtype = 'order' ";
-				$sql.= "AND label LIKE '%Commande V% classée Livrée%'";
+				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
+				$sql .= "WHERE fk_element =" . $this->id . " ";
+				$sql .= "AND elementtype = 'order' ";
+				$sql .= "AND label LIKE '%Commande V% classée Livrée%'";
 				break;
 
-			case 'dt_bill':
+			case 'dt_bill' :
 				$sql = "SELECT MAX(datep) as dt_bill ";
-				$sql.= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
-				$sql.= "WHERE fk_element =" . $this->id. " ";
-				$sql.= "AND elementtype = 'order' ";
-				$sql.= "AND label LIKE '%Commande V% classée Payée%'";
+				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
+				$sql .= "WHERE fk_element =" . $this->id . " ";
+				$sql .= "AND elementtype = 'order' ";
+				$sql .= "AND label LIKE '%Commande V% classée Payée%'";
 				break;
 		}
 
@@ -1084,70 +1091,67 @@ class CommandeVolvo extends Commande {
 		if ($resql) {
 			$obj = $this->db->fetch_object($resql);
 			return $obj->dt;
-		}else{
+		} else {
 			return 0;
 		}
 	}
-
 	public function calcvhprice($prixtot) {
-		global  $conf;
+		global $conf;
 
 		$this->fetch_lines(1);
 
 		$cost = 0;
 		$costvnc = 0;
-		foreach ($this->lines as $line){
-			if($line->fk_product !=$conf->global->VOLVO_TRUCK){
-				if($line->fk_product == $conf->global->VOLVO_SURES){
-					if($line->total_ht>0) $costvnc+= $line->total_ht;
-					$cost+=$line->total_ht;
-				}elseif($line->fk_product == $conf->global->VOLVO_COM){
-					$cost+=$line->total_ht;
-				}else{
-					$cost+=$line->total_ht;
-					$costvnc+=$line->total_ht;
+		foreach ( $this->lines as $line ) {
+			if ($line->fk_product != $conf->global->VOLVO_TRUCK) {
+				if ($line->fk_product == $conf->global->VOLVO_SURES) {
+					if ($line->total_ht > 0)
+						$costvnc += $line->total_ht;
+					$cost += $line->total_ht;
+				} elseif ($line->fk_product == $conf->global->VOLVO_COM) {
+					$cost += $line->total_ht;
+				} else {
+					$cost += $line->total_ht;
+					$costvnc += $line->total_ht;
 				}
-
 			}
 		}
-		$ret=array();
-		$ret['prixvh'] = $prixtot-$cost;
-		$ret['vnc'] = $prixtot -$costvnc;
+		$ret = array();
+		$ret['prixvh'] = $prixtot - $cost;
+		$ret['vnc'] = $prixtot - $costvnc;
 		return $ret;
 	}
-
-	public function updatevhpriceandvnc($prixtot=0) {
-		global $user,$conf;
+	public function updatevhpriceandvnc($prixtot = 0) {
+		global $user, $conf;
 
 		$this->fetch_lines(1);
-		if($prixtot==0){
+		if ($prixtot == 0) {
 			$prixtot = $this->total_ht;
 		}
 
 		$value = array();
-		$value = $this->calcvhprice($cmdnum,$prixtot);
+		$value = $this->calcvhprice($cmdnum, $prixtot);
 
-		foreach ($this->lines as $line){
-			if($line->fk_product ==$conf->global->VOLVO_TRUCK){
-				$res =$this->updateline($line->id, $line->label, $value['prixvh'], $line->qty, $line->remise_percent, $line->tva_tx,0,0,'HT',0,'','',0,0,0,0,$value['prixvh']);
-				if ($result<0) {
-					array_push($this->errors,$cmd->error);
-					return -1;
+		foreach ( $this->lines as $line ) {
+			if ($line->fk_product == $conf->global->VOLVO_TRUCK) {
+				$res = $this->updateline($line->id, $line->label, $value['prixvh'], $line->qty, $line->remise_percent, $line->tva_tx, 0, 0, 'HT', 0, '', '', 0, 0, 0, 0, $value['prixvh']);
+				if ($result < 0) {
+					array_push($this->errors, $cmd->error);
+					return - 1;
 				}
 			}
 		}
 
-
-		$this->array_options['options_vnac']=$value['vnc'];
-		$result=$this->updateExtraField('vnac');
-		if ($result<0) {
-			array_push($this->errors,$cmd->error);
-			return -2;
+		$this->array_options['options_vnac'] = $value['vnc'];
+		$result = $this->updateExtraField('vnac');
+		if ($result < 0) {
+			array_push($this->errors, $cmd->error);
+			return - 2;
 		}
-		$result=$this->update_price();
-		if ($result<0) {
-			array_push($this->errors,$cmd->error);
-			return -3;
+		$result = $this->update_price();
+		if ($result < 0) {
+			array_push($this->errors, $cmd->error);
+			return - 3;
 		}
 
 		return 1;
