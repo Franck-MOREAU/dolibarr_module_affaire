@@ -347,7 +347,6 @@ class CommandeVolvo extends Commande
 	/**
 	 * Create supplier order from
 	 *
-	 * @param unknown $user
 	 * @return number
 	 */
 	public function createSupplierOrder($user, $pricefourn_qty_array = array(), $orderid) {
@@ -371,71 +370,133 @@ class CommandeVolvo extends Commande
 		if (is_array($pricefourn_qty_array) && count($pricefourn_qty_array) > 0) {
 
 			$fourn_array = array();
-			foreach ( $pricefourn_qty_array as $priceid => $qty ) {
+			foreach ( $pricefourn_qty_array as $priceid => $detail ) {
 				$result = $sp->fetch_product_fournisseur_price($priceid);
 				if ($result < 0) {
 					$this->errors[] = 'Error fetch price fourn';
 					$error ++;
 				}
 
-				$fourn_array[$sp->fourn_id][] = array(
+				$fourn_array[$sp->fourn_id][$detail['suplierorderid']][] = array(
 						'productid' => $sp->fk_product,
-						'qty' => $qty['qty'],
+						'qty' => $detail['qty'],
 						'price' => $sp->fourn_price,
 						'ref_supplier' => $sp->ref_supplier,
 						'tva_tx' => $sp->fourn_tva_tx,
-						'desc' => $qty['desc'],
-						'px' => $qty['px']
-
+						'desc' => $detail['desc'],
+						'px' => $detail['px'],
+						'origorderlineid' => $detail['lineid']
 				);
-				$fourn_command_lineid[$sp->fourn_id]=$qty['lineid'];
 			}
 			if (count($fourn_array) > 0 && empty($error)) {
-				foreach ( $fourn_array as $fournid => $prodinfo ) {
 
-					if (is_array($prodinfo) && count($prodinfo) > 0) {
-						$cmdsup = new CommandeFournisseur($this->db);
-						$cmdsup->ref_supplier = $this->ref;
-						$cmdsup->socid = $fournid;
-						$cmdsup->source = $this->id;
-						$cmdsup->array_options['options_ctm'] = $this->array_options['options_ctm'];
+				foreach ( $fourn_array as $fournid => $detailorder ) {
+					//Find already exist supplier order for the same supplier on customer client
+					$sql = 'SELECT DISTINCT so.rowid as supplierorderid ';
+					$sql .= ' FROM '.MAIN_DB_PREFIX.'llx_societe as supplier';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commande_fourn as so ON so.fk_soc=supplier.rowid AND supplier.rowid='.$fournid;
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commandedet_extrafeilds as cdetextra ON cdetextra.fk_supplierorder=so.rowid';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commandedet as cdet ON cdet.rowid=cdetextra.fk_object';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'llx_commande as c ON c.rowid=cdet.fk_commande AND c.rowid='.$orderid;
 
-						foreach ( $prodinfo as $data ) {
-							$line = new CommandeFournisseurLigne($this->db);
-							$line->desc = $data['desc'];
-							$line->subprice = $data['px'];
-							$line->qty = $data['qty'];
-							$line->tva_tx = $data['tva_tx'];
-							$line->fk_product = $data['productid'];
-							$line->ref_supplier = $data['ref_supplier'];
-							$line->ref_fourn = $data['ref_supplier'];
+					$resql = $this->db->query($sql);
+					if (!$resql < 0) {
+						$this->errors[] =$this->db->error();
+						$error ++;
+					}
 
-							$cmdsup->lines[] = $line;
-						}
+					if (empty($error)) {
+						while($obj = $this->db->fetch_object($resql)) {
+							if (!empty($obj->supplierorderid)) {
+								foreach ( $detailorder as $exiintgsupplierorderid => $prodinfo ) {
 
-						$cmdsup->linked_objects["commande"] = $this->id;
-
-						$result = $cmdsup->create($user);
-						if ($result < 0) {
-							$error ++;
-							$this->errors[] = $cmdsup->error;
-						} else {
-							$commande_origin_line=new OrderLine($this->db);
-							$result=$commande_origin_line->fetch($fourn_command_lineid[$sp->fourn_id]);
-							if ($result < 0) {
-								$error ++;
-								$this->errors[] = $commande_origin_line->error;
-							} else {
-								$commande_origin_line->fetch_optionals($commande_origin_line->rowid);
-								$commande_origin_line->array_options['options_fk_supplierorder']=$cmdsup->id;
-								$result=$commande_origin_line->update($user);
-								if ($result < 0) {
-									$error ++;
-									$this->errors[] = $commande_origin_line->error;
-								} else {
-									$result = $cmdsup->update_price($user);
 								}
 
+							}
+						}
+					}
+
+				}
+
+				foreach ( $fourn_array as $fournid => $detailorder ) {
+
+					if (is_array($detailorder) && count($detailorder) > 0) {
+						foreach ( $detailorder as $supplierorderid => $prodinfo ) {
+
+							if (is_array($prodinfo) && count($prodinfo) > 0) {
+
+								$cmdsup = new CommandeFournisseur($this->db);
+
+								// Find if order oring line is already link to supplier order
+								if (! empty($supplierorderid)) {
+									$result = $cmdsup->fetch($supplierorderid);
+									if ($result < 0) {
+										$this->errors[] = $cmdsup->error;
+										$error ++;
+									}
+									$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_DRAFT);
+									foreach ( $prodinfo as $data ) {
+										$result = $cmdsup->addline($data['desc'], $data['px'], $data['qty'], $data['tva_tx'], 0, 0, $data['productid'], 0, $data['ref_supplier'], 0, 'HT', 0, 0, 0, false, null, null, 0, null);
+										if ($result < 0) {
+											$this->errors[] = $cmdsup->error;
+											$error ++;
+										}
+									}
+								} else {
+									$cmdsup->ref_supplier = $this->ref;
+									$cmdsup->socid = $fournid;
+									$cmdsup->source = $this->id;
+									$cmdsup->array_options['options_ctm'] = $this->array_options['options_ctm'];
+
+									// Create line (or add lines)
+									foreach ( $prodinfo as $data ) {
+										$line = new CommandeFournisseurLigne($this->db);
+										$line->desc = $data['desc'];
+										$line->subprice = $data['px'];
+										$line->qty = $data['qty'];
+										$line->tva_tx = $data['tva_tx'];
+										$line->fk_product = $data['productid'];
+										$line->ref_supplier = $data['ref_supplier'];
+										$line->ref_fourn = $data['ref_supplier'];
+
+										$cmdsup->lines[] = $line;
+									}
+
+									$cmdsup->linked_objects["commande"] = $this->id;
+
+									$result = $cmdsup->create($user);
+									if ($result < 0) {
+										$this->errors[] = $cmdsup->error;
+										$error ++;
+									}
+
+									foreach ( $prodinfo as $data ) {
+										$commande_origin_line = new OrderLine($this->db);
+										$result = $commande_origin_line->fetch($data['origorderlineid']);
+										if ($result < 0) {
+											$error ++;
+											$this->errors[] = $commande_origin_line->error;
+										} else {
+											$commande_origin_line->fetch_optionals($commande_origin_line->rowid);
+											if (empty($commande_origin_line->array_options['options_fk_supplierorder'])) {
+												$commande_origin_line->array_options['options_fk_supplierorder'] = $cmdsup->id;
+												$result = $commande_origin_line->update($user);
+												if ($result < 0) {
+													$error ++;
+													$this->errors[] = $commande_origin_line->error;
+												}
+											}
+										}
+									}
+								}
+								// var_dump($cmdsup);
+								if (empty($error)) {
+									$result = $cmdsup->update_price($user);
+									if ($result < 0) {
+										$error ++;
+										$this->errors[] = $commande_origin_line->error;
+									}
+								}
 							}
 						}
 					}
@@ -448,7 +509,7 @@ class CommandeVolvo extends Commande
 			return 1;
 		} else {
 			$this->db->rollback();
-			return - 1;
+			return - 1 * $error;
 		}
 	}
 	function printObjectLines_perso($action, $seller, $buyer, $selected = 0, $dateSelector = 0) {

@@ -96,7 +96,19 @@ if ($action == 'createsupplerorder') {
 		if (in_array($line->id, $lineupdate_array)) {
 			$priceid = GETPOST('fournprice_' . $line->id);
 			if (! empty($priceid)) {
-				$price_qty_array[$priceid] = array('qty'=>$line->qty,'desc'=>$line->desc,'px'=>$line->pa_ht, 'lineid'=>$line->id);
+
+				$result=$line->fetch_optionals($line->id);
+				if ($result < 0) {
+					$error ++;
+					$errors[] = $line->errors;
+				}
+				if (!empty($line->array_options['options_fk_supplierorder'])) {
+					$ordersupplierid=$line->array_options['options_fk_supplierorder'];
+				} else {
+					$ordersupplierid=0;
+				}
+
+				$price_qty_array[$priceid] = array('qty'=>$line->qty,'desc'=>$line->desc,'px'=>$line->pa_ht, 'lineid'=>$line->id,'suplierorderid'=>$ordersupplierid);
 			}
 		}
 	}
@@ -105,7 +117,7 @@ if ($action == 'createsupplerorder') {
 		$result = $cmdv->createSupplierOrder($user, $price_qty_array, $order->id);
 		if ($result < 0) {
 			$error ++;
-			$errors = $cmdv->errors;
+			$errors[] = $cmdv->errors;
 		}
 	}
 
