@@ -80,9 +80,7 @@ class VolvoImportfdd extends VolvoImport
 						'oblig' => $object->oblig
 				);
 			}
-
 		}
-
 
 		dol_syslog(get_class($this) . '::' . __METHOD__, LOG_DEBUG);
 

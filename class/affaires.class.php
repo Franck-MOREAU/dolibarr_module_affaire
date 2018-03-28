@@ -268,7 +268,7 @@ class Affaires extends CommonObject
 
 			return 1;
 		} else {
-			$this->error = "Error " . $this->db->lasterror();
+			$this->error[] = "Error " . $this->db->lasterror();
 			dol_syslog(get_class($this) . "::fetch " . $this->error, LOG_ERR);
 			return - 1;
 		}
@@ -1463,7 +1463,7 @@ class Affaires_det extends CommonObject
 		}
 	}
 
-	public function vh_tile($whithcustomerdetails=0){
+	public function vh_tile($whithcustomerdetails=0,$withlinktoaffaire=0){
 
 
 		global $user;
@@ -1499,7 +1499,16 @@ class Affaires_det extends CommonObject
 
  		//Info veh
  		$return .= '<div style="display: inline-block; ">';
- 		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
+ 		if (!empty($withlinktoaffaire)) {
+ 			$objectstaaff = new Affaires($this->db);
+ 			$ret = $objectstaaff->fetch($this->fk_affaires,1);
+ 			if ($ret < 0) {
+ 				setEventMessage(null,$object->errors,'errors');
+ 			} else {
+ 				$return.=$objectstaaff->getNomUrl(). -' ';
+ 			}
+ 		}
+ 		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
  		if($this->fk_status==6){
  			$return.= ' - Spécification: ' . $this->spec;
  			if($this->fk_commande > 0){

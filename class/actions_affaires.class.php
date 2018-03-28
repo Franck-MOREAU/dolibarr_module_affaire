@@ -92,7 +92,7 @@ class ActionsAffaires // extends CommonObject
 
 			foreach ( $affaires->doclines as $line ) {
 				print '<tr><td>';
-				print $line->vh_tile();
+				print $line->vh_tile(0,1);
 				print '</td>';
 				print '</tr>';
 			}
