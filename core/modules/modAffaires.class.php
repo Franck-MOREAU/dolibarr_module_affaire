@@ -92,7 +92,7 @@ class modAffaires extends DolibarrModules
 			'triggers' => 1,
 			'models' => 1,
 			'tpl' => 1,
-			'js'=>'/volvo/js/jquery.flot.orderBars.js',
+			'js'=>'/affaires/volvo/js/jquery.flot.orderBars.js',
 		// Set this to relative path of css if module has its own css file
 		// 'css' => '/affaires/css/mycss.css.php',
 		// Set here all hooks context managed by module

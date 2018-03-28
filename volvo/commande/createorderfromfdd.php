@@ -348,34 +348,49 @@ if ($step == 6) {
 	$rang ++;
 	$cmd->lines[] = $line;
 
-	var_dump($filetoimport);
-	exit();
 
+	$db->begin();
 	$idcommande = $cmd->create($user);
 	if ($idcommande < 0) {
 		setEventMessages(null, array(
 				$cmd->error
 		), 'errors');
+		$db->rollback();
 	} else {
 
-		$result = $objectdet->add_object_linked("commande", $idcommande);
+		$result = $objectdet->add_object_linked("commande", $cmd->id);
 		if ($result == 0) {
 			setEventMessages(null, array(
 					$objectdet->error
 			), 'errors');
+			$db->rollback();
 		}
 
-		$objectdet->fk_commande = $idcommande;
+		$objectdet->fk_commande = $cmd->id;
 		$res = $objectdet->update($user);
 		if ($res < 0) {
 			setEventMessages(null, $objectdet->errors, 'errors');
+			$db->rollback();
+		}
+
+		$filename = $dir . '/' . $filetoimport;
+		if (file_exists($filename)) {
+			$srcfile = $filename;
+			$destdir = $conf->commande->dir_output.'/'.dol_sanitizeFileName($cmd->ref);
+			$destfile = $destdir.'/'.$filetoimport;
+			if (dol_mkdir($destdir) >= 0) {
+				require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+				dol_copy($srcfile, $destfile);
+			}
 		}
 
 		if ($res < 0) {
 			setEventMessages(null, array(
 					$objectdet->errors
 			), 'errors');
+			$db->rollback();
 		} else {
+			$db->commit();
 			top_htmlhead('', '');
 			print '<script type="text/javascript">' . "\n";
 			print '	$(document).ready(function () {' . "\n";

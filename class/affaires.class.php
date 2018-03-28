@@ -1512,7 +1512,7 @@ class Affaires_det extends CommonObject
  		if($this->fk_status==6){
  			$return.= ' - Spécification: ' . $this->spec;
  			if($this->fk_commande > 0){
- 				require_once dol_buildpath('/affaires/volvo/class/commandevolvo.class.php');
+ 				dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
  				$cmd = new CommandeVolvo($this->db);
  				$cmd->fetch($this->fk_commande);
  				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
@@ -1590,80 +1590,10 @@ class Affaires_det extends CommonObject
 		return 0;
 	}
 
-	public function calcvhprice($cmdnum, $prixtot) {
-		global  $conf;
-		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
-
-		$cmd = new Commande($this->db);
-		$cmd->fetch($cmdnum);
-		$cmd->fetch_lines(1);
-
-		$cost = 0;
-		$costvnc = 0;
-		foreach ($cmd->lines as $line){
-			if($line->fk_product !=$conf->global->VOLVO_TRUCK){
-				if($line->fk_product == $conf->global->VOLVO_SURES){
-					if($line->total_ht>0) $costvnc+= $line->total_ht;
-					$cost+=$line->total_ht;
-				}elseif($line->fk_product == $conf->global->VOLVO_COM){
-					$cost+=$line->total_ht;
-				}else{
-					$cost+=$line->total_ht;
-					$costvnc+=$line->total_ht;
-				}
-
-			}
-		}
-		$ret=array();
-		$ret['prixvh'] = $prixtot-$cost;
-		$ret['vnc'] = $prixtot -$costvnc;
-		return $ret;
-	}
-
-	public function updatevhpriceandvnc($cmdnum,$prixtot=0) {
-		global $user,$conf;
-
-		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
-		$cmd = new Commande($this->db);
-		$cmd->fetch($cmdnum);
-		$cmd->fetch_lines(1);
-		if($prixtot==0){
-			$prixtot = $cmd->total_ht;
-		}
-
-		$value = array();
-		$value = $this->calcvhprice($cmdnum,$prixtot);
-
-		foreach ($cmd->lines as $line){
-			if($line->fk_product ==$conf->global->VOLVO_TRUCK){
-				$res =$cmd->updateline($line->id, $line->label, $value['prixvh'], $line->qty, $line->remise_percent, $line->tva_tx,0,0,'HT',0,'','',0,0,0,0,$value['prixvh']);
-				if ($result<0) {
-					array_push($this->errors,$cmd->error);
-					return -1;
-				}
-			}
-		}
-
-		$cmd->id=$cmdnum;
-		$cmd->array_options['options_vnac']=$value['vnc'];
-		$result=$cmd->updateExtraField('vnac');
-		if ($result<0) {
-			array_push($this->errors,$cmd->error);
-			return -2;
-		}
-		$result=$cmd->update_price();
-		if ($result<0) {
-			array_push($this->errors,$cmd->error);
-			return -3;
-		}
-
-		return 1;
-	}
-
-
 	public function createcmd() {
 		global $conf;
-		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+
+		dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 		require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 		require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
 
@@ -1680,7 +1610,7 @@ class Affaires_det extends CommonObject
 
 		$user->fetch($object->fk_user_resp);
 
-		$cmd = new Commande($this->db);
+		$cmd = new CommandeVolvo($this->db);
 		$cmd->socid = $object->thirdparty->id;
 		$cmd->date = dol_now();
 		$cmd->ref_client = $object->ref;
@@ -1865,13 +1795,14 @@ class Affaires_det extends CommonObject
 
 		$idcommande = $cmd->create($user);
 		if ($idcommande < 0) {
-			$this->errors = array_push($this->errors,$cmd->error);
+			array_push($this->errors,$cmd->error);
 			return -1;
 		}
 
-		$result = $this->updatevhpriceandvnc($idcommande,$this->prixvente);
+		$result = $cmd->updatevhpriceandvnc($this->prixvente);
 		if ($result < 0) {
-			return -2;
+			array_push($this->errors,$cmd->error);
+			return -1;
 		}
 		$result = $this->add_object_linked("commande", $idcommande);
 		if ($result == 0) {
