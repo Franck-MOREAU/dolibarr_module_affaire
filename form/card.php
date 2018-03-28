@@ -27,6 +27,8 @@ dol_include_once('/user/class/user.class.php');
 dol_include_once('/affaires/class/html.formaffaires.class.php');
 
 
+
+
 if (! empty($conf->commande->enabled))
 	dol_include_once('/commande/class/commande.class.php');
 
@@ -53,6 +55,7 @@ $vehid=GETPOST('vehid','int');
 $object = new Affaires($db);
 $objectdet = new Affaires_det($db);
 $formAffaires = new FormAffaires($db);
+
 
 // Load object
 if ($id > 0) {

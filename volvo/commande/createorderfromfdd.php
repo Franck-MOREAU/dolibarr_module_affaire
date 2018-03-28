@@ -13,6 +13,7 @@ dol_include_once('/core/lib/files.lib.php');
 dol_include_once('/affaires/volvo/class/volvoimportfdd.class.php');
 
 dol_include_once('/affaires/class/html.formaffaires.class.php');
+dol_include_once('/affaires/class/html.formaffairesproduct.class.php');
 dol_include_once('/affaires/class/affaires.class.php');
 
 ini_set('memory_limit', '-1');
@@ -37,6 +38,7 @@ $filetoimport = GETPOST('filetoimport');
 $importobject = new VolvoImportfdd($db);
 $form = new Form($db);
 $html_volvo = new FormAffaires($db);
+$html_volvo_product = new FormAffairesProduct($db);
 $object = new Affaires($db);
 $objectdet = new Affaires_det($db);
 
@@ -732,7 +734,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="interne[' . $i . '][npt]"/>';
 			print '<td>';
-			$html_volvo->select_produits(0, 'interne_product' . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
+			$html_volvo_product->select_produits(0, 'interne_product' . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['interne' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['interne' . $i]['value']) . ' €   <input type="hidden" name="interne[' . $i . '][price]" value="' . $targetInfoArray['interne' . $i]['value'] . '"></td>';
@@ -749,7 +751,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="externe[' . $i . '][npt]"/>';
 			print '<td>';
-			$html_volvo->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
+			$html_volvo_product->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['externe' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['externe' . $i]['value']) . ' €   <input type="hidden" name="externe[' . $i . '][price]" value="' . $targetInfoArray['externe' . $i]['value'] . '"></td>';
@@ -763,7 +765,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="externe[' . $i . '][npt]"/>';
 			print '<td>';
-			$html_volvo->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
+			$html_volvo_product->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['externe' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['externe' . $i]['value']) . ' €   <input type="hidden" name="externe[' . $i . '][price]" value="' . $targetInfoArray['externe' . $i]['value'] . '"></td>';
@@ -781,7 +783,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="interne[' . $pos . '][npt]"/>';
 			print '<td>';
-			$html_volvo->select_produits(0, "interne_product" . $pos, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
+			$html_volvo_product->select_produits(0, "interne_product" . $pos, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['local' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['local' . $i]['value']) . ' €   <input type="hidden" name="interne[' . $pos . '][price]" value="' . $targetInfoArray['local' . $i]['value'] . '"></td>';
