@@ -31,7 +31,7 @@ if ($action == 'update_extras')	{
 
 
 llxHeader('', 'VCM');
-$head = commande_prepare_head($object);
+$head = commande_prepare_head_custom($object);
 dol_fiche_head($head, 'vcm', $langs->trans("CustomerOrder"), 0, 'order');
 
 $code = volvo_vcm_ok($object);

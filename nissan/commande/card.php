@@ -1240,7 +1240,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 		$res = $object->fetch_optionals($object->id, $extralabels);
 
-		$head = commande_prepare_head($object);
+		$head = commande_prepare_head_custom($object);
 		dol_fiche_head($head, 'order', $langs->trans("CustomerOrder"), 0, 'order');
 
 		$formconfirm = '';

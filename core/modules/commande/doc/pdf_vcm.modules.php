@@ -38,6 +38,7 @@ require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
 require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 dol_include_once('/affaires/class/affaires.class.php');
+dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 
 /**
  *	Class to build contracts documents with model Strato
@@ -226,10 +227,10 @@ class pdf_vcm extends ModelePDFContract
 
 				$y=array(25.1,37.4,49.6,61.9,66,70.4,97.3,103.4,107.9,112.4,118.3,122.8,127.3,131.8,138.5,143.2,147.8,152.3,156.7,156.9,161.5,167.2,172,192.2,196.6,201.2,205.7,210.2,214.7,219.3,223.8,234,280,284);
 
-// 				$x = $sys->prepare_array('VOLVO_ANALYSELG_X', 'array');
-// 				$z = $sys->prepare_array('VOLVO_ANALYSELG_Z', 'array');
-// 				$yt = $sys->prepare_array('VOLVO_ANALYSELG_Y_ENTETE', 'array');
-// 				$yp = $sys->prepare_array('VOLVO_ANALYSELG_Y_PIED', 'array');
+				$x = prepare_array('VOLVO_ANALYSELG_X', 'array');
+				$z = prepare_array('VOLVO_ANALYSELG_Z', 'array');
+				$yt = prepare_array('VOLVO_ANALYSELG_Y_ENTETE', 'array');
+				$yp = prepare_array('VOLVO_ANALYSELG_Y_PIED', 'array');
 
 				$commercial = new User($this->db);
 				$commercial->fetch($object->user_author_id);

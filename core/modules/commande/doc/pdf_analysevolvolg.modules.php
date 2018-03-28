@@ -38,6 +38,7 @@ require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
 require_once DOL_DOCUMENT_ROOT . '/categories/class/categorie.class.php';
 dol_include_once('/affaires/class/affaires.class.php');
+dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 
 /**
  *	Class to build contracts documents with model Strato
@@ -224,11 +225,10 @@ class pdf_analysevolvolg extends ModelePDFContract
  				$extrafields = new ExtraFields($this->db);
 				$extralabels = $extrafields->fetch_name_optionals_label($object->table_element, true);
 
-				$sys = new Affaires_det($this->db);
-				/*$x = $sys->prepare_array('VOLVO_ANALYSELG_X', 'array');
-				$z = $sys->prepare_array('VOLVO_ANALYSELG_Z', 'array');
-				$yt = $sys->prepare_array('VOLVO_ANALYSELG_Y_ENTETE', 'array');
-				$yp = $sys->prepare_array('VOLVO_ANALYSELG_Y_PIED', 'array');*/
+				$x = prepare_array('VOLVO_ANALYSELG_X', 'array');
+				$z = prepare_array('VOLVO_ANALYSELG_Z', 'array');
+				$yt = prepare_array('VOLVO_ANALYSELG_Y_ENTETE', 'array');
+				$yp = prepare_array('VOLVO_ANALYSELG_Y_PIED', 'array');
 
 				//Carac client
 				$pdf->SetFont('','', $default_font_size);

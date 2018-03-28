@@ -52,7 +52,7 @@ $commande->info($comid);
 $soc = new Societe($db);
 $soc->fetch($commande->socid);
 
-$head = commande_prepare_head($commande);
+$head = commande_prepare_head_custom($commande);
 dol_fiche_head($head, 'info', $langs->trans("CustomerOrder"), 0, 'order');
 
 

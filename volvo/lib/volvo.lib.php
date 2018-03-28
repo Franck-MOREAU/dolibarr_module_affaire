@@ -1,5 +1,5 @@
 <?php
-function commande_prepare_head(Commande $object)
+function commande_prepare_head_custom(Commande $object)
 {
 	global $db, $langs, $conf, $user;
 	if (! empty($conf->expedition->enabled)) $langs->load("sendings");

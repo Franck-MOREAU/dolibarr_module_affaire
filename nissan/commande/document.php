@@ -91,7 +91,7 @@ if ($id > 0 || ! empty($ref))
 
 		$upload_dir = $conf->commande->dir_output.'/'.dol_sanitizeFileName($object->ref);
 
-		$head = commande_prepare_head($object);
+		$head = commande_prepare_head_custom($object);
 		dol_fiche_head($head, 'documents', $langs->trans('CustomerOrder'), 0, 'order');
 
 
