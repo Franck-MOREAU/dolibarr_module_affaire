@@ -116,7 +116,7 @@ if ($step == 6) {
 		$socctm->fetch($cmd->array_options['options_ctm']);
 		$cmd->note_public = 'Contremarque: ' . $socctm->name . "\n";
 	}
-	$cmd->cond_reglement_id=$objectdet->getReglementid();
+	$cmd->cond_reglement_id = $objectdet->getReglementid();
 	$rang = 1;
 	$line = new OrderLine($db);
 	$line->subprice = $targetInfoArray['VNAC']['value'];
@@ -348,29 +348,49 @@ if ($step == 6) {
 	$rang ++;
 	$cmd->lines[] = $line;
 
+
+	$db->begin();
 	$idcommande = $cmd->create($user);
 	if ($idcommande < 0) {
 		setEventMessages(null, array(
 				$cmd->error
 		), 'errors');
+		$db->rollback();
 	} else {
 
-		$result = $objectdet->add_object_linked("commande", $idcommande);
+		$result = $objectdet->add_object_linked("commande", $cmd->id);
 		if ($result == 0) {
 			setEventMessages(null, array(
 					$objectdet->error
 			), 'errors');
+			$db->rollback();
 		}
 
-		$objectdet->fk_commande = $idcommande;
+		$objectdet->fk_commande = $cmd->id;
 		$res = $objectdet->update($user);
 		if ($res < 0) {
 			setEventMessages(null, $objectdet->errors, 'errors');
+			$db->rollback();
+		}
+
+		$filename = $dir . '/' . $filetoimport;
+		if (file_exists($filename)) {
+			$srcfile = $filename;
+			$destdir = $conf->commande->dir_output.'/'.dol_sanitizeFileName($cmd->ref);
+			$destfile = $destdir.'/'.$filetoimport;
+			if (dol_mkdir($destdir) >= 0) {
+				require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
+				dol_copy($srcfile, $destfile);
+			}
 		}
 
 		if ($res < 0) {
-			setEventMessages(null,array($objectdet->errors), 'errors');
+			setEventMessages(null, array(
+					$objectdet->errors
+			), 'errors');
+			$db->rollback();
 		} else {
+			$db->commit();
 			top_htmlhead('', '');
 			print '<script type="text/javascript">' . "\n";
 			print '	$(document).ready(function () {' . "\n";
@@ -410,7 +430,7 @@ if ($action == 'confirm_deletefile' && $confirm == 'yes') {
 	} else {
 		setEventMessage($langs->trans("ErrorFailToDeleteFile", $urlfile), 'errors');
 	}
-	Header('Location: ' . $_SERVER["PHP_SELF"] . '?step=1&vehid='.$objectdet->id);
+	Header('Location: ' . $_SERVER["PHP_SELF"] . '?step=1&vehid=' . $objectdet->id);
 	exit();
 }
 
@@ -461,12 +481,12 @@ if ($step == 1 || $step == 2) {
 	 * Confirm delete file
 	 */
 	if ($action == 'delete') {
-		$ret = $form->formconfirm($_SERVER["PHP_SELF"] . '?vehid='.$objectdet->id.'&urlfile=' . urlencode(GETPOST('urlfile')), $langs->trans('DeleteFile'), $langs->trans('ConfirmDeleteFile'), 'confirm_deletefile', '', 0, 1);
+		$ret = $form->formconfirm($_SERVER["PHP_SELF"] . '?vehid=' . $objectdet->id . '&urlfile=' . urlencode(GETPOST('urlfile')), $langs->trans('DeleteFile'), $langs->trans('ConfirmDeleteFile'), 'confirm_deletefile', '', 0, 1);
 		print $ret;
 	}
 	print_fiche_titre('Selection de la FDD a importer');
-	if ($objectdet->fk_status == 6){
-		print '<div class="inline-block divButAction"><a href="' . dol_buildpath('/affaires/volvo/commande/createorder.php?vehid='.$objectdet->id,1) . '" class="butAction">Passer une commande manuelle</a></div>';
+	if ($objectdet->fk_status == 6) {
+		print '<div class="inline-block divButAction"><a href="' . dol_buildpath('/affaires/volvo/commande/createorder.php?vehid=' . $objectdet->id, 1) . '" class="butAction">Passer une commande manuelle</a></div>';
 	}
 	print '<form name="userfile" action="' . $_SERVER["PHP_SELF"] . '" enctype="multipart/form-data" METHOD="POST">';
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -480,7 +500,7 @@ if ($step == 1 || $step == 2) {
 	$var = true;
 
 	print '<tr><td colspan="6">' . $langs->trans("ChooseFileToImport", img_picto('', 'filenew')) . '</td></tr>';
-	//print '<tr><td colspan="6">' . $langs->trans("VolvoSampleFile") . ': <a href="sample/immat.xlsx">' . img_picto('', 'file') . '</a></td></tr>';
+	// print '<tr><td colspan="6">' . $langs->trans("VolvoSampleFile") . ': <a href="sample/immat.xlsx">' . img_picto('', 'file') . '</a></td></tr>';
 
 	print '<tr class="liste_titre"><td colspan="6">' . $langs->trans("FileWithDataToImport") . '</td></tr>';
 
@@ -525,7 +545,7 @@ if ($step == 1 || $step == 2) {
 			// Del button
 			print '<td align="right">';
 			if ($user->admin) {
-				print '<a href="' . $_SERVER['PHP_SELF'] . '?action=delete&vehid='.$objectdet->id.'&step=2' . '&urlfile=' . urlencode($relativepath);
+				print '<a href="' . $_SERVER['PHP_SELF'] . '?action=delete&vehid=' . $objectdet->id . '&step=2' . '&urlfile=' . urlencode($relativepath);
 				print '">' . img_delete() . '</a>';
 			}
 			print '</td>';
@@ -582,6 +602,7 @@ if ($step == 4) {
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="vehid" value="' . $objectdet->id . '">';
 	print '<input type="hidden" value="5" name="step">';
+	print '<input type="hidden" value="' . $filetoimport . '" name="filetoimport">';
 	print '<input type="hidden" name="targetInfoArray" value="' . htmlspecialchars(json_encode($importobject->targetInfoArray)) . '">';
 	print '<table class="border" width="100%">';
 	print '<tr class="liste_titre">';
@@ -679,6 +700,7 @@ if ($step == 5) {
 	print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 	print '<input type="hidden" name="vehid" value="' . $objectdet->id . '">';
 	print '<input type="hidden" value="6" name="step">';
+	print '<input type="hidden" value="' . $filetoimport . '" name="filetoimport">';
 	print '<input type="hidden" name="targetInfoArray" value="' . htmlspecialchars(json_encode($targetInfoArray)) . '">';
 	print '<table class="border" width="100%">';
 	print '<tr class="liste_titre">';
@@ -710,7 +732,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="interne[' . $i . '][npt]"/>';
 			print '<td>';
-			$form->select_produits(0, 'interne_product' . $i, '', '', '', 1, 2, '', 0, array(), '');
+			$html_volvo->select_produits(0, 'interne_product' . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['interne' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['interne' . $i]['value']) . ' €   <input type="hidden" name="interne[' . $i . '][price]" value="' . $targetInfoArray['interne' . $i]['value'] . '"></td>';
@@ -727,7 +749,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="externe[' . $i . '][npt]"/>';
 			print '<td>';
-			$form->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), '');
+			$html_volvo->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['externe' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['externe' . $i]['value']) . ' €   <input type="hidden" name="externe[' . $i . '][price]" value="' . $targetInfoArray['externe' . $i]['value'] . '"></td>';
@@ -741,7 +763,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="externe[' . $i . '][npt]"/>';
 			print '<td>';
-			$form->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), '');
+			$html_volvo->select_produits(0, "externe_product" . $i, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['externe' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['externe' . $i]['value']) . ' €   <input type="hidden" name="externe[' . $i . '][price]" value="' . $targetInfoArray['externe' . $i]['value'] . '"></td>';
@@ -759,7 +781,7 @@ if ($step == 5) {
 			print '<tr>';
 			print '<td><input class="flat" type="checkbox" align="left" name="interne[' . $pos . '][npt]"/>';
 			print '<td>';
-			$form->select_produits(0, "interne_product" . $pos, '', '', '', 1, 2, '', 0, array(), '');
+			$html_volvo->select_produits(0, "interne_product" . $pos, '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 			print '</td>';
 			print '<td>' . $targetInfoArray['local' . $i . '_label']['value'] . '</td>';
 			print '<td>' . price($targetInfoArray['local' . $i]['value']) . ' €   <input type="hidden" name="interne[' . $pos . '][price]" value="' . $targetInfoArray['local' . $i]['value'] . '"></td>';
@@ -782,7 +804,7 @@ if ($step == 5) {
 // }
 
 ?>
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 function visibilite(thingId) {
 	var targetElement;
 	targetElement = document.getElementById(thingId) ;

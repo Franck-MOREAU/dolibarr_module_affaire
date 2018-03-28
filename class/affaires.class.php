@@ -94,111 +94,111 @@ class Affaires extends CommonObject
 
 		if (isset($this->ref))
 			$this->ref = trim($this->ref);
-		if (isset($this->fk_user_resp))
-			$this->fk_user_resp = trim($this->fk_user_resp);
-		if (isset($this->fk_soc))
-			$this->fk_soc = trim($this->fk_soc);
-		if (isset($this->fk_ctm))
-			$this->fk_ctm = trim($this->fk_ctm);
-		if (isset($this->fk_c_type))
-			$this->fk_c_type = trim($this->fk_c_type);
-		if (isset($this->year))
-			$this->year = trim($this->year);
-		if (isset($this->description))
-			$this->description = trim($this->description);
+			if (isset($this->fk_user_resp))
+				$this->fk_user_resp = trim($this->fk_user_resp);
+				if (isset($this->fk_soc))
+					$this->fk_soc = trim($this->fk_soc);
+					if (isset($this->fk_ctm))
+						$this->fk_ctm = trim($this->fk_ctm);
+						if (isset($this->fk_c_type))
+							$this->fk_c_type = trim($this->fk_c_type);
+							if (isset($this->year))
+								$this->year = trim($this->year);
+								if (isset($this->description))
+									$this->description = trim($this->description);
 
 
-// Check parameters
-// Put here code to add control on parameters values
-		if (empty($this->ref)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
-		}
-		if (empty($this->fk_user_resp)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesCommercial'));
-		}
-		if (empty($this->fk_soc)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Customer'));
-		}
-		if (empty($this->fk_c_type)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesType'));
-		}
-		if (empty($this->year)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Affairesyear'));
-		}
+									// Check parameters
+									// Put here code to add control on parameters values
+									if (empty($this->ref)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
+									}
+									if (empty($this->fk_user_resp)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesCommercial'));
+									}
+									if (empty($this->fk_soc)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Customer'));
+									}
+									if (empty($this->fk_c_type)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesType'));
+									}
+									if (empty($this->year)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Affairesyear'));
+									}
 
-		if (! $error) {
-			// Insert request
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element . "(";
+									if (! $error) {
+										// Insert request
+										$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element . "(";
 
-			$sql .= "ref,";
-			$sql .= "fk_user_resp,";
-			$sql .= "fk_soc,";
-			$sql .= "fk_ctm,";
-			$sql .= "fk_c_type,";
-			$sql .= "year,";
-			$sql .= "description,";
-			$sql .= "fk_user_author,";
-			$sql .= "datec,";
-			$sql .= "fk_user_mod,";
-			$sql .= "tms";
+										$sql .= "ref,";
+										$sql .= "fk_user_resp,";
+										$sql .= "fk_soc,";
+										$sql .= "fk_ctm,";
+										$sql .= "fk_c_type,";
+										$sql .= "year,";
+										$sql .= "description,";
+										$sql .= "fk_user_author,";
+										$sql .= "datec,";
+										$sql .= "fk_user_mod,";
+										$sql .= "tms";
 
-			$sql .= ") VALUES (";
+										$sql .= ") VALUES (";
 
-			$sql .= " " . (! isset($this->ref) ? 'NULL' : "'" . $this->db->escape($this->ref) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_user_resp) ? 'NULL' : "'" . $this->fk_user_resp . "'") . ",";
-			$sql .= " " . (! isset($this->fk_soc) ? 'NULL' : "'" . $this->fk_soc . "'") . ",";
-			$sql .= " " . (! isset($this->fk_ctm) ? 'NULL' : "'" . $this->fk_ctm . "'") . ",";
-			$sql .= " " . (! isset($this->fk_c_type) ? 'NULL' : "'" . $this->fk_c_type . "'") . ",";
-			$sql .= " " . (! isset($this->year) ? 'NULL' : "'" . $this->year . "'") . ",";
-			$sql .= " " . (empty($this->description) ? 'NULL' : "'" . $this->db->escape($this->description) . "'") . ",";
-			$sql .= " " . $user->id . ",";
-			$sql .= " '" . $this->db->idate(dol_now()) . "',";
-			$sql .= " " . $user->id . ",";
-			$sql .= " '" . $this->db->idate(dol_now()) . "'";
-			$sql .= ")";
+										$sql .= " " . (! isset($this->ref) ? 'NULL' : "'" . $this->db->escape($this->ref) . "'") . ",";
+										$sql .= " " . (! isset($this->fk_user_resp) ? 'NULL' : "'" . $this->fk_user_resp . "'") . ",";
+										$sql .= " " . (! isset($this->fk_soc) ? 'NULL' : "'" . $this->fk_soc . "'") . ",";
+										$sql .= " " . (! isset($this->fk_ctm) ? 'NULL' : "'" . $this->fk_ctm . "'") . ",";
+										$sql .= " " . (! isset($this->fk_c_type) ? 'NULL' : "'" . $this->fk_c_type . "'") . ",";
+										$sql .= " " . (! isset($this->year) ? 'NULL' : "'" . $this->year . "'") . ",";
+										$sql .= " " . (empty($this->description) ? 'NULL' : "'" . $this->db->escape($this->description) . "'") . ",";
+										$sql .= " " . $user->id . ",";
+										$sql .= " '" . $this->db->idate(dol_now()) . "',";
+										$sql .= " " . $user->id . ",";
+										$sql .= " '" . $this->db->idate(dol_now()) . "'";
+										$sql .= ")";
 
-			$this->db->begin();
+										$this->db->begin();
 
-			dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if (! $resql) {
-				$error ++;
-				$this->errors[] = "Error " . $this->db->lasterror();
-			}
-		}
+										dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
+										$resql = $this->db->query($sql);
+										if (! $resql) {
+											$error ++;
+											$this->errors[] = "Error " . $this->db->lasterror();
+										}
+									}
 
-		if (! $error) {
-			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "affaires");
+									if (! $error) {
+										$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . "affaires");
 
-			if (! $notrigger) {
-				// // Call triggers
-				include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-				$interface = new Interfaces($this->db);
-				$result = $interface->run_triggers('AFFAIRES_CREATE', $this, $user, $langs, $conf);
-				if ($result < 0) {
-					$error ++;
-					$this->errors = $interface->errors;
-				}
-				// // End call triggers
-			}
-		}
+										if (! $notrigger) {
+											// // Call triggers
+											include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
+											$interface = new Interfaces($this->db);
+											$result = $interface->run_triggers('AFFAIRES_CREATE', $this, $user, $langs, $conf);
+											if ($result < 0) {
+												$error ++;
+												$this->errors = $interface->errors;
+											}
+											// // End call triggers
+										}
+									}
 
-		// Commit or rollback
-		if ($error) {
-			foreach ( $this->errors as $errmsg ) {
-				dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
-			}
-			$this->db->rollback();
-			return - 1 * $error;
-		} else {
-			$this->db->commit();
-			return $this->id;
-		}
+									// Commit or rollback
+									if ($error) {
+										foreach ( $this->errors as $errmsg ) {
+											dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
+										}
+										$this->db->rollback();
+										return - 1 * $error;
+									} else {
+										$this->db->commit();
+										return $this->id;
+									}
 	}
 
 	/**
@@ -266,7 +266,7 @@ class Affaires extends CommonObject
 
 			return 1;
 		} else {
-			$this->error = "Error " . $this->db->lasterror();
+			$this->error[] = "Error " . $this->db->lasterror();
 			dol_syslog(get_class($this) . "::fetch " . $this->error, LOG_ERR);
 			return - 1;
 		}
@@ -387,107 +387,107 @@ class Affaires extends CommonObject
 
 		if (isset($this->ref))
 			$this->ref = trim($this->ref);
-		if (isset($this->fk_user_resp))
-			$this->fk_user_resp = trim($this->fk_user_resp);
-		if (isset($this->fk_soc))
-			$this->fk_soc = trim($this->fk_soc);
-		if (isset($this->fk_ctm))
-			$this->fk_ctm = trim($this->fk_ctm);
-		if (isset($this->fk_c_type))
-			$this->fk_c_type = trim($this->fk_c_type);
-		if (isset($this->year))
-			$this->year = trim($this->year);
-		if (isset($this->description))
-			$this->description = trim($this->description);
+			if (isset($this->fk_user_resp))
+				$this->fk_user_resp = trim($this->fk_user_resp);
+				if (isset($this->fk_soc))
+					$this->fk_soc = trim($this->fk_soc);
+					if (isset($this->fk_ctm))
+						$this->fk_ctm = trim($this->fk_ctm);
+						if (isset($this->fk_c_type))
+							$this->fk_c_type = trim($this->fk_c_type);
+							if (isset($this->year))
+								$this->year = trim($this->year);
+								if (isset($this->description))
+									$this->description = trim($this->description);
 
 
-		// Check parameters
-		// Put here code to add control on parameters values
-		if (empty($this->ref)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
-		}
-		if (empty($this->fk_user_resp)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesCommercial'));
-		}
-		if (empty($this->fk_soc)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Customer'));
-		}
-		if (empty($this->fk_c_type)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesType'));
-		}
-		if (empty($this->year)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Affairesyear'));
-		}
+									// Check parameters
+									// Put here code to add control on parameters values
+									if (empty($this->ref)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
+									}
+									if (empty($this->fk_user_resp)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesCommercial'));
+									}
+									if (empty($this->fk_soc)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Customer'));
+									}
+									if (empty($this->fk_c_type)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesType'));
+									}
+									if (empty($this->year)) {
+										$error ++;
+										$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Affairesyear'));
+									}
 
-		if (! $error) {
-			// Update request
-			$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element . " SET";
+									if (! $error) {
+										// Update request
+										$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element . " SET";
 
-			$sql .= " ref=" . (isset($this->ref) ? "'" . $this->db->escape($this->ref) . "'" : "null") . ",";
-			$sql .= " fk_user_resp=" . (isset($this->fk_user_resp) ? $this->fk_user_resp : "null") . ",";
-			$sql .= " fk_soc=" . (isset($this->fk_soc) ? $this->fk_soc : "null") . ",";
-			$sql .= " fk_ctm=" . (isset($this->fk_ctm) ? $this->fk_ctm : "null") . ",";
-			$sql .= " fk_c_type=" . (isset($this->fk_c_type) ? $this->fk_c_type : "null") . ",";
-			$sql .= " year=" . (isset($this->year) ? "'" . $this->year . "'" : "null") . ",";
-			$sql .= " description=" . (! empty($this->description) ? "'" . $this->db->escape($this->description) . "'" : "null") . ",";
-			$sql .= " fk_user_mod=" . $user->id . ",";
-			$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
+										$sql .= " ref=" . (isset($this->ref) ? "'" . $this->db->escape($this->ref) . "'" : "null") . ",";
+										$sql .= " fk_user_resp=" . (isset($this->fk_user_resp) ? $this->fk_user_resp : "null") . ",";
+										$sql .= " fk_soc=" . (isset($this->fk_soc) ? $this->fk_soc : "null") . ",";
+										$sql .= " fk_ctm=" . (isset($this->fk_ctm) ? $this->fk_ctm : "null") . ",";
+										$sql .= " fk_c_type=" . (isset($this->fk_c_type) ? $this->fk_c_type : "null") . ",";
+										$sql .= " year=" . (isset($this->year) ? "'" . $this->year . "'" : "null") . ",";
+										$sql .= " description=" . (! empty($this->description) ? "'" . $this->db->escape($this->description) . "'" : "null") . ",";
+										$sql .= " fk_user_mod=" . $user->id . ",";
+										$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
 
-			$sql .= " WHERE rowid=" . $this->id;
+										$sql .= " WHERE rowid=" . $this->id;
 
-			$this->db->begin();
+										$this->db->begin();
 
-			dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if (! $resql) {
-				$error ++;
-				$this->errors[] = "Error " . $this->db->lasterror();
-			}
-		}
+										dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
+										$resql = $this->db->query($sql);
+										if (! $resql) {
+											$error ++;
+											$this->errors[] = "Error " . $this->db->lasterror();
+										}
+									}
 
-		if (! $error) {
-			if (! $notrigger) {
+									if (! $error) {
+										if (! $notrigger) {
 
-				// // Call triggers
-				include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-				$interface = new Interfaces($this->db);
-				$result = $interface->run_triggers('AFFAIRES_MODIFY', $this, $user, $langs, $conf);
-				if ($result < 0) {
-					$error ++;
-					$this->errors = $interface->errors;
-				}
-				// // End call triggers
-			}
-		}
-// 		if (! $error) {
-// 			foreach ($this->affaires_det as $affaires_det){
-// 				$res = $affaires_det->update($user);
-// 				if($res <1){
-// 					foreach ($affaires_det->errors as $det_error){
-// 						$this->errors[] = $det_error;
-// 						$error ++;
-// 					}
-// 				}
-// 			}
-// 		}
+											// // Call triggers
+											include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
+											$interface = new Interfaces($this->db);
+											$result = $interface->run_triggers('AFFAIRES_MODIFY', $this, $user, $langs, $conf);
+											if ($result < 0) {
+												$error ++;
+												$this->errors = $interface->errors;
+											}
+											// // End call triggers
+										}
+									}
+									// 		if (! $error) {
+									// 			foreach ($this->affaires_det as $affaires_det){
+									// 				$res = $affaires_det->update($user);
+									// 				if($res <1){
+									// 					foreach ($affaires_det->errors as $det_error){
+									// 						$this->errors[] = $det_error;
+									// 						$error ++;
+									// 					}
+									// 				}
+									// 			}
+									// 		}
 
-		// Commit or rollback
-		if ($error) {
-			foreach ( $this->errors as $errmsg ) {
-				dol_syslog(get_class($this) . "::update " . $errmsg, LOG_ERR);
-				$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
-			}
-			$this->db->rollback();
-			return - 1 * $error;
-		} else {
-			$this->db->commit();
-			return 1;
-		}
+									// Commit or rollback
+									if ($error) {
+										foreach ( $this->errors as $errmsg ) {
+											dol_syslog(get_class($this) . "::update " . $errmsg, LOG_ERR);
+											$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
+										}
+										$this->db->rollback();
+										return - 1 * $error;
+									} else {
+										$this->db->commit();
+										return 1;
+									}
 	}
 
 	/**
@@ -699,7 +699,11 @@ class Affaires_det extends CommonObject
 	public $usrname='';
 	public $cv_type_label='';
 
+	public $listofreferent=array();
+
 	function __construct($db) {
+
+		global $conf;
 
 		$this->db = $db;
 
@@ -710,6 +714,23 @@ class Affaires_det extends CommonObject
 		$result_silhouette = $this->loadSilhouette();
 		$result_marques = $this->loadMarques();
 		$result_motifs = $this->loadMotifs();
+
+		if (! empty($conf->contrat->enabled)) {
+			$this->listofreferent['contract'] = array (
+					'title' => "Contrat",
+					'class' => 'Contrat',
+					'table' => 'contrat',
+					'test' => $conf->contrat->enabled && $user->rights->contrat->lire
+			);
+		}
+		if (! empty($conf->commande->enabled)) {
+			$this->listofreferent['orders'] = array (
+					'title' => "Commande",
+					'class' => 'Commande',
+					'table' => 'commande',
+					'test' => $conf->commande->enabled && $user->rights->commande->lire
+			);
+		}
 
 		return ($result_status&&$result_carrosserie&&$result_gamme&&$result_genre&&$result_marques&&$result_motifs&&$result_silhouette);
 	}
@@ -882,153 +903,153 @@ class Affaires_det extends CommonObject
 	}
 
 	/* Create object into database
-	*
-	* @param User $user that creates
-	* @param int $notrigger triggers after, 1=disable triggers
-	* @return int <0 if KO, Id of created object if OK
-	*/
+	 *
+	 * @param User $user that creates
+	 * @param int $notrigger triggers after, 1=disable triggers
+	 * @return int <0 if KO, Id of created object if OK
+	 */
 	function create($user, $notrigger = 0) {
 		global $conf, $langs;
 		$error = 0;
 
 		if (isset($this->fk_affaires))
 			$this->fk_affaires = trim($this->fk_affaires);
-		if (isset($this->fk_game))
-			$this->fk_gamme = trim($this->fk_gamme);
-		if (isset($this->fk_silhouette))
-			$this->fk_silhouette = trim($this->fk_silhouette);
-		if (isset($this->fk_genre))
-			$this->fk_genre = trim($this->fk_genre);
-		if (isset($this->fk_carrosserie))
-			$this->fk_carrosserie = trim($this->fk_carrosserie);
-		if (isset($this->fk_status))
-			$this->fk_status = trim($this->fk_status);
-		if (isset($this->fk_marque_trt))
-			$this->fk_marque_trt = trim($this->fk_marque_trt);
-		if (isset($this->fk_motifs))
-			$this->fk_motifs = trim($this->fk_motifs);
-		if (isset($this->spec))
-			$this->spec = trim($this->spec);
-		if (isset($this->fk_commande))
-			$this->fk_commande = trim($this->fk_commande);
+			if (isset($this->fk_game))
+				$this->fk_gamme = trim($this->fk_gamme);
+				if (isset($this->fk_silhouette))
+					$this->fk_silhouette = trim($this->fk_silhouette);
+					if (isset($this->fk_genre))
+						$this->fk_genre = trim($this->fk_genre);
+						if (isset($this->fk_carrosserie))
+							$this->fk_carrosserie = trim($this->fk_carrosserie);
+							if (isset($this->fk_status))
+								$this->fk_status = trim($this->fk_status);
+								if (isset($this->fk_marque_trt))
+									$this->fk_marque_trt = trim($this->fk_marque_trt);
+									if (isset($this->fk_motifs))
+										$this->fk_motifs = trim($this->fk_motifs);
+										if (isset($this->spec))
+											$this->spec = trim($this->spec);
+											if (isset($this->fk_commande))
+												$this->fk_commande = trim($this->fk_commande);
 
 
-		// Check parameters
-		// Put here code to add control on parameters values
-		if (empty($this->fk_affaires)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
-		}
+												// Check parameters
+												// Put here code to add control on parameters values
+												if (empty($this->fk_affaires)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+												}
 
-		if (empty($this->fk_gamme)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Gamme'));
-		}
+												if (empty($this->fk_gamme)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Gamme'));
+												}
 
-		if (empty($this->fk_genre)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Genre'));
-		}
+												if (empty($this->fk_genre)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Genre'));
+												}
 
-		if (empty($this->fk_silhouette)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Silhouette'));
-		}
+												if (empty($this->fk_silhouette)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Silhouette'));
+												}
 
-		if (empty($this->fk_carrosserie)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Carrosserie'));
-		}
+												if (empty($this->fk_carrosserie)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Carrosserie'));
+												}
 
-		if (empty($this->fk_status)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
-		}
-		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
-			$this->fk_motifs=implode(',',$this->fk_motifs_array);
-		}
+												if (empty($this->fk_status)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
+												}
+												if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
+													$this->fk_motifs=implode(',',$this->fk_motifs_array);
+												}
 
-		if (! $error) {
-			// Insert request
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element."(";
+												if (! $error) {
+													// Insert request
+													$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element."(";
 
-			$sql .= "fk_affaires,";
-			$sql .= "fk_gamme,";
-			$sql .= "fk_silhouette,";
-			$sql .= "fk_genre,";
-			$sql .= "fk_carrosserie,";
-			$sql .= "fk_status,";
-			$sql .= "fk_marque_trt,";
-			$sql .= "fk_motifs,";
-			$sql .= "fk_commande,";
-			$sql .= "spec,";
-			$sql .= "fk_user_author,";
-			$sql .= "datec,";
-			$sql .= "fk_user_mod,";
-			$sql .= "tms";
+													$sql .= "fk_affaires,";
+													$sql .= "fk_gamme,";
+													$sql .= "fk_silhouette,";
+													$sql .= "fk_genre,";
+													$sql .= "fk_carrosserie,";
+													$sql .= "fk_status,";
+													$sql .= "fk_marque_trt,";
+													$sql .= "fk_motifs,";
+													$sql .= "fk_commande,";
+													$sql .= "spec,";
+													$sql .= "fk_user_author,";
+													$sql .= "datec,";
+													$sql .= "fk_user_mod,";
+													$sql .= "tms";
 
-			$sql .= ") VALUES (";
-			$sql .= " " . (! isset($this->fk_affaires) ? 'NULL' : "'" . $this->db->escape($this->fk_affaires) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_gamme) ? 'NULL' : "'" . $this->db->escape($this->fk_gamme) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_silhouette) ? 'NULL' : "'" . $this->db->escape($this->fk_silhouette) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_genre) ? 'NULL' : "'" . $this->db->escape($this->fk_genre) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_carrosserie) ? 'NULL' : "'" . $this->db->escape($this->fk_carrosserie) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_status) ? 'NULL' : "'" . $this->db->escape($this->fk_status) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_marque_trt) ? 'NULL' : "'" . $this->db->escape($this->fk_marque_trt) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_motifs) ? 'NULL' : "'" . $this->db->escape($this->fk_motifs) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_commande) ? 'NULL' : "'" . $this->db->escape($this->fk_commande) . "'") . ",";
-			$sql .= " " . (! isset($this->spec) ? 'NULL' : "'" . $this->db->escape($this->spec) . "'") . ",";
-			$sql .= " " . $user->id . ",";
-			$sql .= " '" . $this->db->idate(dol_now()) . "',";
-			$sql .= " " . $user->id . ",";
-			$sql .= " '" . $this->db->idate(dol_now()) . "'";
+													$sql .= ") VALUES (";
+													$sql .= " " . (! isset($this->fk_affaires) ? 'NULL' : "'" . $this->db->escape($this->fk_affaires) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_gamme) ? 'NULL' : "'" . $this->db->escape($this->fk_gamme) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_silhouette) ? 'NULL' : "'" . $this->db->escape($this->fk_silhouette) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_genre) ? 'NULL' : "'" . $this->db->escape($this->fk_genre) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_carrosserie) ? 'NULL' : "'" . $this->db->escape($this->fk_carrosserie) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_status) ? 'NULL' : "'" . $this->db->escape($this->fk_status) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_marque_trt) ? 'NULL' : "'" . $this->db->escape($this->fk_marque_trt) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_motifs) ? 'NULL' : "'" . $this->db->escape($this->fk_motifs) . "'") . ",";
+													$sql .= " " . (! isset($this->fk_commande) ? 'NULL' : "'" . $this->db->escape($this->fk_commande) . "'") . ",";
+													$sql .= " " . (! isset($this->spec) ? 'NULL' : "'" . $this->db->escape($this->spec) . "'") . ",";
+													$sql .= " " . $user->id . ",";
+													$sql .= " '" . $this->db->idate(dol_now()) . "',";
+													$sql .= " " . $user->id . ",";
+													$sql .= " '" . $this->db->idate(dol_now()) . "'";
 
-			$sql .= ")";
+													$sql .= ")";
 
-			$this->db->begin();
+													$this->db->begin();
 
-			dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if (! $resql) {
-				$error ++;
-				$this->errors[] = "Error " . $this->db->lasterror();
-			}
+													dol_syslog(get_class($this) . "::create sql=" . $sql, LOG_DEBUG);
+													$resql = $this->db->query($sql);
+													if (! $resql) {
+														$error ++;
+														$this->errors[] = "Error " . $this->db->lasterror();
+													}
 
-			if (! $error) {
-				$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . $this->table_element);
+													if (! $error) {
+														$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX . $this->table_element);
 
-				if (! $notrigger) {
-					// Uncomment this and change MYOBJECT to your own tag if you
-					// want this action calls a trigger.
+														if (! $notrigger) {
+															// Uncomment this and change MYOBJECT to your own tag if you
+															// want this action calls a trigger.
 
-					// // Call triggers
-					include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-					$interface = new Interfaces($this->db);
-					$result = $interface->run_triggers('AFFAIRES_DET_CREATE', $this, $user, $langs, $conf);
-					if ($result < 0) {
-						$error ++;
-						$this->errors = $interface->errors;
-					}
-					// // End call triggers
-				}
-			}
+															// // Call triggers
+															include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
+															$interface = new Interfaces($this->db);
+															$result = $interface->run_triggers('AFFAIRES_DET_CREATE', $this, $user, $langs, $conf);
+															if ($result < 0) {
+																$error ++;
+																$this->errors = $interface->errors;
+															}
+															// // End call triggers
+														}
+													}
 
-			// Commit or rollback
-			if ($error) {
-				foreach ( $this->errors as $errmsg ) {
-					dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
-					$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
-				}
-				$this->db->rollback();
-				return - 1 * $error;
-			} else {
-				$this->db->commit();
-				return $this->id;
-			}
-		} else {
-			dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
-			return - 1;
-		}
+													// Commit or rollback
+													if ($error) {
+														foreach ( $this->errors as $errmsg ) {
+															dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
+															$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
+														}
+														$this->db->rollback();
+														return - 1 * $error;
+													} else {
+														$this->db->commit();
+														return $this->id;
+													}
+												} else {
+													dol_syslog(get_class($this) . "::create " . $errmsg, LOG_ERR);
+													return - 1;
+												}
 	}
 
 	/**
@@ -1157,14 +1178,14 @@ class Affaires_det extends CommonObject
 				if (($key == 'det.fk_affaires') || ($key == 'det.rowid') || ($key == 'det.fk_gamme') || ($key == 'det.fk_silhouette') || ($key == 'det.fk_genre')
 						|| ($key == 'det.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 'det.fk_marque_trt')
 						|| ($key == 'det.fk_commande') || $key == 't.fk_c_type' || $key == 't.year') {
-					$sql .= ' AND ' . $key . ' = ' . $value;
-				} elseif ($key == 't.fk_status !IN') {
-					$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
-				} elseif ($key == 't.rowid !IN') {
-					$sql .= ' AND t.rowid NOT IN (' . $value . ')';
-				}else {
-					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
-				}
+							$sql .= ' AND ' . $key . ' = ' . $value;
+						} elseif ($key == 't.fk_status !IN') {
+							$sql .= ' AND t.fk_status NOT IN (' . $value . ')';
+						} elseif ($key == 't.rowid !IN') {
+							$sql .= ' AND t.rowid NOT IN (' . $value . ')';
+						}else {
+							$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
+						}
 			}
 		}
 
@@ -1259,126 +1280,126 @@ class Affaires_det extends CommonObject
 
 		if (isset($this->fk_affaires))
 			$this->fk_affaires = trim($this->fk_affaires);
-		if (isset($this->fk_game))
-			$this->fk_gamme = trim($this->fk_gamme);
-		if (isset($this->fk_silhouette))
-			$this->fk_silhouette = trim($this->fk_silhouette);
-		if (isset($this->fk_genre))
-			$this->fk_genre = trim($this->fk_genre);
-		if (isset($this->fk_carrosserie))
-			$this->fk_carrosserie = trim($this->fk_carrosserie);
-		if (isset($this->fk_status))
-			$this->fk_status = trim($this->fk_status);
-		if (isset($this->fk_marque_trt))
-			$this->fk_marque_trt = trim($this->fk_marque_trt);
-		if (isset($this->fk_motifs))
-			$this->fk_motifs = trim($this->fk_motifs);
-		if (isset($this->fk_commande))
-			$this->fk_commande = trim($this->fk_commande);
-		if (isset($this->spec))
-			$this->spec = trim($this->spec);
+			if (isset($this->fk_game))
+				$this->fk_gamme = trim($this->fk_gamme);
+				if (isset($this->fk_silhouette))
+					$this->fk_silhouette = trim($this->fk_silhouette);
+					if (isset($this->fk_genre))
+						$this->fk_genre = trim($this->fk_genre);
+						if (isset($this->fk_carrosserie))
+							$this->fk_carrosserie = trim($this->fk_carrosserie);
+							if (isset($this->fk_status))
+								$this->fk_status = trim($this->fk_status);
+								if (isset($this->fk_marque_trt))
+									$this->fk_marque_trt = trim($this->fk_marque_trt);
+									if (isset($this->fk_motifs))
+										$this->fk_motifs = trim($this->fk_motifs);
+										if (isset($this->fk_commande))
+											$this->fk_commande = trim($this->fk_commande);
+											if (isset($this->spec))
+												$this->spec = trim($this->spec);
 
 
-		// Check parameters
-		// Put here code to add control on parameters values
+												// Check parameters
+												// Put here code to add control on parameters values
 
-		if (empty($this->fk_affaires)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
-		}
+												if (empty($this->fk_affaires)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRefInt'));
+												}
 
-		if (empty($this->fk_gamme)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Gamme'));
-		}
+												if (empty($this->fk_gamme)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Gamme'));
+												}
 
-		if (empty($this->fk_genre)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Genre'));
-		}
+												if (empty($this->fk_genre)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Genre'));
+												}
 
-		if (empty($this->fk_silhouette)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Silhouette'));
-		}
+												if (empty($this->fk_silhouette)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Silhouette'));
+												}
 
-		if (empty($this->fk_carrosserie)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Carrosserie'));
-		}
+												if (empty($this->fk_carrosserie)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Carrosserie'));
+												}
 
-		if (empty($this->fk_status)) {
-			$error ++;
-			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
-		}
+												if (empty($this->fk_status)) {
+													$error ++;
+													$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
+												}
 
-		$objstatic = new self($this->db);
-		$objstatic->fetch($this->id);
-		if (!empty($objstatic->fk_commande)) {
-			$error ++;
-			$this->errors[] = "un chassis commandé ne peut etre modifié";
-		}
-		unset($objstatic);
+												$objstatic = new self($this->db);
+												$objstatic->fetch($this->id);
+												if (!empty($objstatic->fk_commande)) {
+													$error ++;
+													$this->errors[] = "un chassis commandé ne peut etre modifié";
+												}
+												unset($objstatic);
 
-		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
-			$this->fk_motifs=implode(',',$this->fk_motifs_array);
-		}
+												if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
+													$this->fk_motifs=implode(',',$this->fk_motifs_array);
+												}
 
-		if (! $error) {
-			// Update request
-			$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element . " SET";
+												if (! $error) {
+													// Update request
+													$sql = "UPDATE " . MAIN_DB_PREFIX . $this->table_element . " SET";
 
-			$sql .= " fk_affaires=" . (isset($this->fk_affaires) ? "'" . $this->db->escape($this->fk_affaires) . "'" : "null") . ",";
-			$sql .= " fk_gamme=" . (isset($this->fk_gamme) ? "'" . $this->db->escape($this->fk_gamme) . "'" : "null") . ",";
-			$sql .= " fk_silhouette=" . (isset($this->fk_silhouette) ? "'" . $this->db->escape($this->fk_silhouette) . "'" : "null") . ",";
-			$sql .= " fk_genre=" . (isset($this->fk_genre) ? "'" . $this->db->escape($this->fk_genre) . "'" : "null") . ",";
-			$sql .= " fk_carrosserie=" . (isset($this->fk_carrosserie) ? "'" . $this->db->escape($this->fk_carrosserie) . "'" : "null") . ",";
-			$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
-			$sql .= " fk_marque_trt=" . (isset($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
-			$sql .= " fk_motifs=" . (isset($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
-			$sql .= " fk_commande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
-			$sql .= " spec=" . (isset($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
-			$sql .= " fk_user_mod=" . $user->id . ",";
-			$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
+													$sql .= " fk_affaires=" . (isset($this->fk_affaires) ? "'" . $this->db->escape($this->fk_affaires) . "'" : "null") . ",";
+													$sql .= " fk_gamme=" . (isset($this->fk_gamme) ? "'" . $this->db->escape($this->fk_gamme) . "'" : "null") . ",";
+													$sql .= " fk_silhouette=" . (isset($this->fk_silhouette) ? "'" . $this->db->escape($this->fk_silhouette) . "'" : "null") . ",";
+													$sql .= " fk_genre=" . (isset($this->fk_genre) ? "'" . $this->db->escape($this->fk_genre) . "'" : "null") . ",";
+													$sql .= " fk_carrosserie=" . (isset($this->fk_carrosserie) ? "'" . $this->db->escape($this->fk_carrosserie) . "'" : "null") . ",";
+													$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
+													$sql .= " fk_marque_trt=" . (isset($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
+													$sql .= " fk_motifs=" . (isset($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
+													$sql .= " fk_commande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
+													$sql .= " spec=" . (isset($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
+													$sql .= " fk_user_mod=" . $user->id . ",";
+													$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
 
-			$sql .= " WHERE rowid=" . $this->id;
+													$sql .= " WHERE rowid=" . $this->id;
 
-			$this->db->begin();
+													$this->db->begin();
 
-			dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if (! $resql) {
-				$error ++;
-				$this->errors[] = "Error " . $this->db->lasterror();
-			}
-		}
+													dol_syslog(get_class($this) . "::update sql=" . $sql, LOG_DEBUG);
+													$resql = $this->db->query($sql);
+													if (! $resql) {
+														$error ++;
+														$this->errors[] = "Error " . $this->db->lasterror();
+													}
+												}
 
-		if (! $error) {
-			if (! $notrigger) {
-				// // Call triggers
-				include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
-				$interface = new Interfaces($this->db);
-				$result = $interface->run_triggers('AFFAIRES_DET_MODIFY', $this, $user, $langs, $conf);
-				if ($result < 0) {
-					$error ++;
-					$this->errors = $interface->errors;
-				}
-				// // End call triggers
-			}
-		}
+												if (! $error) {
+													if (! $notrigger) {
+														// // Call triggers
+														include_once DOL_DOCUMENT_ROOT . '/core/class/interfaces.class.php';
+														$interface = new Interfaces($this->db);
+														$result = $interface->run_triggers('AFFAIRES_DET_MODIFY', $this, $user, $langs, $conf);
+														if ($result < 0) {
+															$error ++;
+															$this->errors = $interface->errors;
+														}
+														// // End call triggers
+													}
+												}
 
-		// Commit or rollback
-		if ($error) {
-			foreach ( $this->errors as $errmsg ) {
-				dol_syslog(get_class($this) . "::update " . $errmsg, LOG_ERR);
-				$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
-			}
-			$this->db->rollback();
-			return - 1 * $error;
-		} else {
-			$this->db->commit();
-			return 1;
-		}
+												// Commit or rollback
+												if ($error) {
+													foreach ( $this->errors as $errmsg ) {
+														dol_syslog(get_class($this) . "::update " . $errmsg, LOG_ERR);
+														$this->error .= ($this->error ? ', ' . $errmsg : $errmsg);
+													}
+													$this->db->rollback();
+													return - 1 * $error;
+												} else {
+													$this->db->commit();
+													return 1;
+												}
 
 	}
 
@@ -1440,7 +1461,9 @@ class Affaires_det extends CommonObject
 		}
 	}
 
-	function vh_tile($whithcustomerdetails=0){
+	public function vh_tile($whithcustomerdetails=0,$withlinktoaffaire=0){
+
+
 		global $user;
 
 		if($this->fk_genre==1){
@@ -1468,43 +1491,52 @@ class Affaires_det extends CommonObject
 			$color2= '#b2b2b2';
 		}
 
- 		$return = '<div id="vh_'. $this->id . '" style="background:' . $color .'; ';
- 		$return.= ' background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')); ';
- 		$return.= ' border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
+		$return = '<div id="vh_'. $this->id . '" style="background:' . $color .'; ';
+		$return.= ' background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')); ';
+		$return.= ' border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
 
- 		//Info veh
- 		$return .= '<div style="display: inline-block; ">';
- 		$return.= $img . ' ' . $this->gamme[$this->fk_gamme]->gamme . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
- 		if($this->fk_status==6){
- 			$return.= ' - Spécification: ' . $this->spec;
- 			if($this->fk_commande > 0){
- 				dol_include_once('/affaires/class/commandevolvo.class.php');
- 				$cmd = new CommandeVolvo($this->db);
- 				$cmd->fetch($this->fk_commande);
- 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
- 			}
- 		}
- 		$return.= '</div>';
+		//Info veh
+		$return .= '<div style="display: inline-block; ">';
+		if (!empty($withlinktoaffaire)) {
+			$objectstaaff = new Affaires($this->db);
+			$ret = $objectstaaff->fetch($this->fk_affaires,1);
+			if ($ret < 0) {
+				setEventMessage(null,$object->errors,'errors');
+			} else {
+				$return.=$objectstaaff->getNomUrl(). -' ';
+			}
+		}
+		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
+		if($this->fk_status==6){
+			$return.= ' - Spécification: ' . $this->spec;
+			if($this->fk_commande > 0){
+				dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
+				$cmd = new CommandeVolvo($this->db);
+				$cmd->fetch($this->fk_commande);
+				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
+			}
+		}
+		$return.= '</div>';
 
- 		//Button
- 		$return.= '<div style="display: inline-block; float:right;">';
- 		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
- 		}
- 		if ($user->rights->affaires->write && $this->fk_status== 6 && $this->fk_commande<1) {
- 			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
- 		}
- 		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
- 		}
- 		if ($user->admin && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
- 		}
- 		$return.='</div>';
+		//Button
+		$return.= '<div style="display: inline-block; float:right;">';
+		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
+			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
+		}
+		if ($user->rights->affaires->write && $this->fk_status== 6 && $this->fk_commande<1) {
+			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
+		}
+		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
+			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
+		}
+		if ($user->admin && !($this->fk_status== 6 && $this->fk_commande>0)) {
+			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
+		}
+		$return.='</div>';
 
- 		$return.= '</div>';
+		$return.= '</div>';
 
-//		$return = var_dump($this);
+		//		$return = var_dump($this);
 
 		return $return;
 	}
@@ -1518,7 +1550,7 @@ class Affaires_det extends CommonObject
 		$staticself=new self($this->db);
 		$staticself->fetch($vehid);
 		if($staticself->fk_commande > 0){
-			dol_include_once('/affaires/class/commandevolvo.class.php');
+			dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 			$cmd = new CommandeVolvo($this->db);
 			$cmd->fetch($staticself->fk_commande);
 			return $cmd->total_ht;
@@ -1556,10 +1588,10 @@ class Affaires_det extends CommonObject
 		return 0;
 	}
 
-
 	public function createcmd() {
 		global $conf;
-		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
+
+		dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 		require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 		require_once DOL_DOCUMENT_ROOT . '/product/class/product.class.php';
 
@@ -1576,7 +1608,7 @@ class Affaires_det extends CommonObject
 
 		$user->fetch($object->fk_user_resp);
 
-		$cmd = new Commande($this->db);
+		$cmd = new CommandeVolvo($this->db);
 		$cmd->socid = $object->thirdparty->id;
 		$cmd->date = dol_now();
 		$cmd->ref_client = $object->ref;
@@ -1761,13 +1793,14 @@ class Affaires_det extends CommonObject
 
 		$idcommande = $cmd->create($user);
 		if ($idcommande < 0) {
-			$this->errors = array_push($this->errors,$cmd->error);
+			array_push($this->errors,$cmd->error);
 			return -1;
 		}
 
-		$result = $this->updatevhpriceandvnc($idcommande,$this->prixvente);
+		$result = $cmd->updatevhpriceandvnc($this->prixvente);
 		if ($result < 0) {
-			return -2;
+			array_push($this->errors,$cmd->error);
+			return -1;
 		}
 		$result = $this->add_object_linked("commande", $idcommande);
 		if ($result == 0) {
@@ -1782,6 +1815,52 @@ class Affaires_det extends CommonObject
 
 		return $idcommande;
 	}
+
+	/**
+	 * Load object in memory from database
+	 *
+	 * @param int $id ID
+	 * @param string $tablename Name of the table
+	 *
+	 * @return int if KO, >0 if OK
+	 */
+	public function  fetchAffairesDetLink($id, $tablename) {
+		global $langs;
+
+		$this->doclines = array ();
+
+		$sql = "SELECT";
+		$sql .= " t.rowid,";
+		$sql .= " t.fk_source,";
+		$sql .= " t.sourcetype,";
+		$sql .= " t.fk_target,";
+		$sql .= " t.targettype";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "element_element as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . $this->table_element . " as l ON l.rowid=t.fk_target";
+		$sql .= " WHERE t.fk_source = " . $id;
+		$sql .= " AND t.targettype='affaires_det'";
+		if (! empty($tablename)) {
+			$sql .= " AND t.sourcetype='" . $tablename . "'";
+		}
+
+		dol_syslog(get_class($this) . "::fetchDocumentLink sql=" . $sql, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+		if ($resql) {
+			while ( $obj = $this->db->fetch_object($resql) ) {
+				$line = new self($this->db);
+				$line->fetch($obj->fk_target);
+				$this->doclines[] = $line;
+			}
+			$this->db->free($resql);
+			return 1;
+		} else {
+			$this->error = "Error " . $this->db->lasterror();
+			dol_syslog(get_class($this) . "::fetchDocumentLink " . $this->error, LOG_ERR);
+
+			return - 1;
+		}
+	}
+
 
 
 	/**
@@ -1814,14 +1893,14 @@ class Affaires_det extends CommonObject
 		if ($result < 0)
 			$error ++;
 
-		// End
-		if (! $error) {
-			unset ( $this->context ['createfromclone'] );
-			$this->db->commit ();
-			return $this->id;
-		} else {
-			$this->db->rollback ();
-			return - 1;
-		}
+			// End
+			if (! $error) {
+				unset ( $this->context ['createfromclone'] );
+				$this->db->commit ();
+				return $this->id;
+			} else {
+				$this->db->rollback ();
+				return - 1;
+			}
 	}
 }

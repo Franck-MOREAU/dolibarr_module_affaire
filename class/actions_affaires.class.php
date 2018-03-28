@@ -34,22 +34,23 @@ class ActionsAffaires // extends CommonObject
 	function showLinkedObjectBlock($parameters, $object, $action) {
 		global $conf, $langs, $db;
 
-		require_once 'affaires.class.php';
+		dol_include_once('/affaires/class/affaires.class.php');
 
-		$affaires = new Affaires($db);
+		$affaires = new Affaires_det($db);
 
 		$authorized_object = array ();
-		foreach ( $affaires->listofreferent as $referent ) {
-			$authorized_object[] = $referent['table'];
+		if (is_array($affaires->listofreferent) && count($affaires->listofreferent)>0) {
+			foreach ( $affaires->listofreferent as $referent ) {
+				$authorized_object[] = $referent['table'];
+			}
 		}
-
 		if (is_object($object) && in_array($object->table_element, $authorized_object)) {
 			$langs->load("affaires@affaires");
 			require_once 'html.formaffaires.class.php';
 
-			$formaffaires = new FormAffaires($db);
+			//$formaffaires = new FormAffaires($db);
 
-			$ret = $affaires->fetchAffairesLink(($object->rowid ? $id = $object->rowid : $object->id), $object->table_element);
+			$ret = $affaires->fetchAffairesDetLink(($object->rowid ? $id = $object->rowid : $object->id), $object->table_element);
 			if ($ret < 0) {
 				setEventMessages(null, $affaires->errors, 'errors');
 			}
@@ -79,7 +80,7 @@ class ActionsAffaires // extends CommonObject
 			if (count($array_exclude_affaires) > 0) {
 				$filter['t.rowid !IN'] = implode($array_exclude_affaires, ',');
 			}
-			$selectList = $formaffaires->select_affaires('', 'affairesid', 1, $filter);
+			/*$selectList = $formaffaires->select_affaires('', 'affairesid', 1, $filter);
 			if (! empty($selectList) && (count($affaires->doclines) == 0  || ($object->table_element=='contrat' && !empty($conf->global->AFFAIRES_ALLOW_MULIPLE_AFFAIRES_ON_CONTRACT)))) {
 				print '<tr>';
 				print '<td>';
@@ -87,16 +88,11 @@ class ActionsAffaires // extends CommonObject
 				print "<input type=submit name=join value=" . $langs->trans("Link") . ">";
 				print '</td>';
 				print '</tr>';
-			}
+			}*/
 
 			foreach ( $affaires->doclines as $line ) {
 				print '<tr><td>';
-				print $line->getNomUrl(1).'-'.dol_trunc($line->description).' ('.$line->status_label.' - '.$line->type_label.')';
-				print '<a href="' . dol_buildpath("/affaires/affaires/manage_link.php", 1) . '?action=unlink&sourceid=' . ($object->rowid ? $object->rowid : $object->id);
-				print '&sourcetype=' . $object->table_element;
-				print '&affairesid=' . $line->id;
-				print '&redirect=' . urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-				print '">' . img_picto($langs->trans('AffairesUnlinkDoc'), 'unlink.png@affaires') . '</a>';
+				print $line->vh_tile(0,1);
 				print '</td>';
 				print '</tr>';
 			}
