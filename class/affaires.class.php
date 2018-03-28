@@ -1503,7 +1503,7 @@ class Affaires_det extends CommonObject
  			if ($ret < 0) {
  				setEventMessage(null,$object->errors,'errors');
  			} else {
- 				$return.=$objectstaaff->getNomUrl(). -' ';
+ 				$return.=$objectstaaff->getNomUrl(). ' - ';
  			}
  		}
  		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
@@ -1791,29 +1791,35 @@ class Affaires_det extends CommonObject
 		$rang++;
 		$cmd->lines[] = $line;
 
+		$this->db->begin();
 		$idcommande = $cmd->create($user);
 		if ($idcommande < 0) {
 			array_push($this->errors,$cmd->error);
+			$this->db->rollback();
 			return -1;
-		}
+		} else {
 
-		$result = $cmd->updatevhpriceandvnc($this->prixvente);
-		if ($result < 0) {
-			array_push($this->errors,$cmd->error);
-			return -1;
-		}
-		$result = $this->add_object_linked("commande", $idcommande);
-		if ($result == 0) {
-			return -3;
-		}
+			$result = $cmd->updatevhpriceandvnc($this->prixvente);
+			if ($result < 0) {
+				array_push($this->errors,$cmd->error);
+				$this->db->rollback();
+				return -1;
+			}
+			$result = $this->add_object_linked("commande", $cmd->id);
+			if ($result == 0) {
+				$this->db->rollback();
+				return -3;
+			}
 
-		$this->fk_commande = $idcommande;
-		$res = $this->update($user);
-		if ($res < 0) {
-			return -4;
+			$this->fk_commande = $cmd->id;
+			$res = $this->update($user);
+			if ($res < 0) {
+				$this->db->rollback();
+				return -4;
+			}
 		}
-
-		return $idcommande;
+		$this->db->commit();
+		return $cmd->id;
 	}
 
 	/**
