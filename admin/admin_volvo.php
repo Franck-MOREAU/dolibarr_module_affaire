@@ -32,6 +32,7 @@ if (! $res) {
 require_once '../lib/affaires.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/admin.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.form.class.php';
+dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 // Translations
 // $langs->load("lead@lead");
 $langs->load("admin");
@@ -169,7 +170,22 @@ if ($action == 'updateMask') {
 	if (! empty($vcmoblig)) {
 		$res = dolibarr_set_const($db, 'VOLVO_VCM_OBLIG', $vcmoblig, 'chaine', 0, '', $conf->entity);
 	}
+	if (! $res > 0) {
+		$error ++;
+	}
 
+	$catprod = GETPOST('VOLVO_CAT_PROD');
+	if (! empty($catprod)) {
+		$res = dolibarr_set_const($db, 'VOLVO_CAT_PROD', $catprod, 'chaine', 0, '', $conf->entity);
+	}
+	if (! $res > 0) {
+		$error ++;
+	}
+
+	$vehicules = GETPOST('VOLVO_VEHICULE');
+	if (! empty($vehicules)) {
+		$res = dolibarr_set_const($db, 'VOLVO_VEHICULE', $vehicules, 'chaine', 0, '', $conf->entity);
+	}
 	if (! $res > 0) {
 		$error ++;
 	}
@@ -212,6 +228,13 @@ print '<td>' . $langs->trans("Name") . '</td>';
 print '<td width="400px">' . $langs->trans("Valeur") . '</td>';
 print "</tr>\n";
 
+// Liste categorie produit volvo
+print '<tr class="pair"><td>catégorie des produits volvo</td>';
+print '<td align="left">';
+print $form->select_all_categories(0, $conf->global->VOLVO_CAT_PROD, 'VOLVO_CAT_PROD', 64, 0, 0);
+print '</tr>';
+
+
 // Liste VCM
 print '<tr class="pair"><td>Liste des produit contrat de maintenance</td>';
 print '<td align="left">';
@@ -252,6 +275,12 @@ print '</tr>';
 print '<tr class="impair"><td>Article Forfait Livraison</td>';
 print '<td align="left">';
 print $form->select_produits($conf->global->VOLVO_FORFAIT_LIV,'VOLVO_FORFAIT_LIV');
+print '</tr>';
+
+// Catégorie véhicules
+print '<tr class="impair"><td>Catégorie pour véhicules volvo</td>';
+print '<td align="left">';
+print $form->select_all_categories(0, $conf->global->VOLVO_VEHICULE, 'VOLVO_VEHICULE', 64, 0, 0);
 print '</tr>';
 
 // Catégorie Travaux Obligatoire

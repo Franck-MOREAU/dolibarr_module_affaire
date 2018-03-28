@@ -348,14 +348,14 @@ class pdf_vcm extends ModelePDFContract
  				$x = 32;
  				foreach ($extrafields->attribute_param['vcm_duree']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$y[14],3,3,'','','M',1);
+ 						$pdf->image(show_picto_pdf(1),$x,$y[14],3,3,'','','M',1);
  						$pdf->SetFont('','', $default_font_size);
  						$pdf->SetXY($x+3.5, $y[14]);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(80, 0, $value,0,'L');
  						$x=$x+22;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$y[14],3,3,'','','M',1);
+ 						$pdf->image(show_picto_pdf(0),$x,$y[14],3,3,'','','M',1);
  						$pdf->SetFont('','', $default_font_size);
  						$pdf->SetXY($x+3.5, $y[14]);
  						$out = $outputlangs->convToOutputCharset($value);
@@ -394,14 +394,14 @@ class pdf_vcm extends ModelePDFContract
  				$x = 37;
  				foreach ($extrafields->attribute_param['vcm_pto']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$y[18],3,3,'','','M',1);
+ 						$pdf->image( show_picto_pdf(1),$x,$y[18],3,3,'','','M',1);
  						$pdf->SetFont('','', $default_font_size);
  						$pdf->SetXY($x+3.5, $y[18]);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(30, 0, $value,0,'L');
  						$x=$x+22;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$y[18],3,3,'','','M',1);
+ 						$pdf->image( show_picto_pdf(0),$x,$y[18],3,3,'','','M',1);
  						$pdf->SetFont('','', $default_font_size);
  						$pdf->SetXY($x+3.5, $y[18]);
  						$out = $outputlangs->convToOutputCharset($value);
@@ -425,14 +425,14 @@ class pdf_vcm extends ModelePDFContract
  				$x = 41;
  				foreach ($extrafields->attribute_param['vcm_hydro']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$y[21],3,3,'','','M',1);
+ 						$pdf->image( show_picto_pdf(1),$x,$y[21],3,3,'','','M',1);
  						$pdf->SetFont('','', $default_font_size);
  						$pdf->SetXY($x+3.5, $y[21]);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(80, 0, $value,0,'L');
  						$x=$x+70;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$y[21],3,3,'','','M',1);
+ 						$pdf->image( show_picto_pdf(0),$x,$y[21],3,3,'','','M',1);
  						$pdf->SetFont('','', $default_font_size);
  						$pdf->SetXY($x+3.5, $y[21]);
  						$out = $outputlangs->convToOutputCharset($value);
@@ -513,14 +513,14 @@ class pdf_vcm extends ModelePDFContract
  				$yy = $y[31];
  				foreach ($extrafields->attribute_param['vcm_pack']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(80, 0, $value,0,'L');
  						$yy=$yy+3.5;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
@@ -536,14 +536,14 @@ class pdf_vcm extends ModelePDFContract
  				$yy = $ysuiv;
  				foreach ($extrafields->attribute_param['vcm_option']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(80, 0, $value,0,'L');
  						$yy=$yy+3.5;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
@@ -559,14 +559,14 @@ class pdf_vcm extends ModelePDFContract
  				$yy = $y[31];
  				foreach ($extrafields->attribute_param['vcm_sup']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(80, 0, $value,0,'L');
  						$yy=$yy+3.5;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
@@ -581,14 +581,14 @@ class pdf_vcm extends ModelePDFContract
  				$yy = $y[31];
  				foreach ($extrafields->attribute_param['vcm_legal']['options'] as $key => $value){
  					if(in_array($key, $selected)){
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(1),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
  						$pdf->MultiCell(80, 0, $value,0,'L');
  						$yy=$yy+3.5;
  					}else{
- 						$pdf->image("http://www.erp-theobald.com" . show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
+ 						$pdf->image( show_picto_pdf(0),$x,$yy,2,2,'','','M',1);
  						$pdf->SetFont('','', $default_font_size-1);
  						$pdf->SetXY($x+2.5, $yy-0.3);
  						$out = $outputlangs->convToOutputCharset($value);
