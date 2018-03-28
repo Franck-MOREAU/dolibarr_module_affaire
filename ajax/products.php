@@ -180,7 +180,7 @@ if (! empty($action) && $action == 'fetch' && ! empty($id)) {
 
 	echo json_encode($outjson);
 } else {
-	dol_include_once('/affaires/class/html.formaffaires.class.php');
+	dol_include_once('/affaires/class/html.formaffairesproduct.class.php');
 
 	$langs->load("products");
 	$langs->load("main");
@@ -205,7 +205,7 @@ if (! empty($action) && $action == 'fetch' && ! empty($id)) {
 	// When used from jQuery, the search term is added as GET param "term".
 	$searchkey = (($idprod && GETPOST($idprod, 'alpha')) ? GETPOST($idprod, 'alpha') : (GETPOST($htmlname, 'alpha') ? GETPOST($htmlname, 'alpha') : ''));
 
-	$form = new FormAffaires($db);
+	$form = new FormAffairesProduct($db);
 	if (empty($mode) || $mode == 1) { // mode=1: customer
 		$arrayresult = $form->select_produits_list("", $htmlname, $type, 0, $price_level, $searchkey, $status, $finished, $outjson, $socid, '1', 0, '', $hidepriceinlabel, $warehouseStatus, $filterbycat);
 	} elseif ($mode == 2) { // mode=2: supplier
