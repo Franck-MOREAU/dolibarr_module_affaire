@@ -170,8 +170,9 @@ if ($action == 'confirm_clone' && $confirm == 'yes' && $user->rights->commande->
 		if ($result > 0) {
 			$object->ref_client = $orig->ref_client;
 			$object->update ( $user );
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . "element_element (fk_source, sourcetype, fk_target, targettype) VALUE (" . $result . ", 'commande'," . $affnum . ",'affaires_det')";
-			$db->query ( $sql );
+			$affaires->add_object_linked('commande',$object->id);
+			$affaires->fk_commande = $object->id;
+			$affaires->update($user);
 			header ( "Location: " . $_SERVER ['PHP_SELF'] . '?id=' . $result );
 			exit ();
 		} else {
