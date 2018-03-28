@@ -1585,7 +1585,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 					$out .= '' . "\n";
 					$out .= '' . "\n";
 					$out .= '  	function popSupplierOrder() {' . "\n";
-					$out .= '  		$divsupplier = $(\'<div id="popSupplierOrder"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/volvo/orders/createsupplierorder.php',2).'?orderid=' . $object->id . '"></iframe></div>\');' . "\n";
+					$out .= '  		$divsupplier = $(\'<div id="popSupplierOrder"><iframe width="100%" height="100%" frameborder="0" src="' . dol_buildpath('/affaires/form/createsupplierorder.php',2).'?orderid=' . $object->id . '"></iframe></div>\');' . "\n";
 					$out .= '' . "\n";
 					$out .= '  		$divsupplier.dialog({' . "\n";
 					$out .= '  			modal:true' . "\n";

@@ -663,4 +663,47 @@ class FormAffairesProduct extends FormAffaires
 		$opt.= "</option>\n";
 		$optJson = array('key'=>$outkey, 'value'=>$outref, 'label'=>$outval, 'label2'=>$outlabel, 'desc'=>$outdesc, 'type'=>$outtype, 'price_ht'=>$outprice_ht, 'price_ttc'=>$outprice_ttc, 'pricebasetype'=>$outpricebasetype, 'tva_tx'=>$outtva_tx, 'qty'=>$outqty, 'discount'=>$outdiscount, 'duration_value'=>$outdurationvalue, 'duration_unit'=>$outdurationunit);
 	}
+
+	/**
+	 *
+	 * @param string $htmlname
+	 * @param unknown $selectedvalue
+	 * @param number $fk_product
+	 * @param number $nooutput
+	 * @return string
+	 */
+	public function selectFournPrice($htmlname = 'fournprice', $selectedvalue, $fk_product = 0, $nooutput = 1,$showempty=0) {
+		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
+
+		$out = '<select id="' . $htmlname . '" name="' . $htmlname . '" class="flat">';
+		if (!empty($showempty)) {
+			$out .= '<option value=""></option>';
+		}
+		$sp = new ProductFournisseur($this->db);
+		$result = $sp->list_product_fournisseur_price($fk_product);
+		if ($result == - 1) {
+			setEventMessages(null, array(
+					$sp->error
+			), 'errors');
+		} else {
+			if (is_array($result) && count($result) > 0) {
+				foreach ( $result as $line ) {
+					if ($selectedvalue == $line->product_fourn_price_id) {
+						$selected = " selected ";
+					} else {
+						$selected = '';
+					}
+					$out .= '<option value="' . $line->product_fourn_price_id . '" ' . $selected . '>' . $line->fourn_name . ' - ' . price($line->fourn_price) . ' (' . $line->ref_supplier . ')' . '</option>';
+				}
+			}
+		}
+
+		$out .= '</select>';
+
+		if ($nooutput) {
+			return $out;
+		} else {
+			print $out;
+		}
+	}
 }
