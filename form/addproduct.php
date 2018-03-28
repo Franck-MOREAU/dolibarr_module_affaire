@@ -29,7 +29,7 @@ if ($action == 'addproduct') {
 	$error=0;
 	if (! empty($productid)) {
 
-		$product->fetch($idprod);
+		$product->fetch($productid);
 
 		// Set ORder status in memory to draft to allow use of addline
 		$current_status = $order->statut;
@@ -63,6 +63,7 @@ if ($action == 'addproduct') {
 	}
 }
 
+top_htmlhead('', '');
 
 print '<form name="createorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
@@ -73,7 +74,7 @@ print '<table class="border" width="100%">';
 print '<tr class="liste_titre">';
 print '<th align="center">' . "Ajout d'un produit</th>";
 print '</tr>';
-print '<tr class="liste_titre">';
+print '<tr>';
 print '<td>';
 $formAffairesProduct->select_produits(0, 'productid', '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 print '</td>';
