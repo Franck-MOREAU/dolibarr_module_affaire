@@ -995,10 +995,10 @@ class Affaires_det extends CommonObject
 			$sql .= " " . (! isset($this->fk_genre) ? 'NULL' : "'" . $this->db->escape($this->fk_genre) . "'") . ",";
 			$sql .= " " . (! isset($this->fk_carrosserie) ? 'NULL' : "'" . $this->db->escape($this->fk_carrosserie) . "'") . ",";
 			$sql .= " " . (! isset($this->fk_status) ? 'NULL' : "'" . $this->db->escape($this->fk_status) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_marque_trt) ? 'NULL' : "'" . $this->db->escape($this->fk_marque_trt) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_motifs) ? 'NULL' : "'" . $this->db->escape($this->fk_motifs) . "'") . ",";
-			$sql .= " " . (! isset($this->fk_commande) ? 'NULL' : "'" . $this->db->escape($this->fk_commande) . "'") . ",";
-			$sql .= " " . (! isset($this->spec) ? 'NULL' : "'" . $this->db->escape($this->spec) . "'") . ",";
+			$sql .= " " . (empty($this->fk_marque_trt) ? 'NULL' : "'" . $this->db->escape($this->fk_marque_trt) . "'") . ",";
+			$sql .= " " . (empty($this->fk_motifs) ? 'NULL' : "'" . $this->db->escape($this->fk_motifs) . "'") . ",";
+			$sql .= " " . (empty($this->fk_commande) ? 'NULL' : "'" . $this->db->escape($this->fk_commande) . "'") . ",";
+			$sql .= " " . (empty($this->spec) ? 'NULL' : "'" . $this->db->escape($this->spec) . "'") . ",";
 			$sql .= " " . $user->id . ",";
 			$sql .= " '" . $this->db->idate(dol_now()) . "',";
 			$sql .= " " . $user->id . ",";
@@ -1376,10 +1376,10 @@ class Affaires_det extends CommonObject
 			$sql .= " fk_genre=" . (isset($this->fk_genre) ? "'" . $this->db->escape($this->fk_genre) . "'" : "null") . ",";
 			$sql .= " fk_carrosserie=" . (isset($this->fk_carrosserie) ? "'" . $this->db->escape($this->fk_carrosserie) . "'" : "null") . ",";
 			$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
-			$sql .= " fk_marque_trt=" . (isset($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
-			$sql .= " fk_motifs=" . (isset($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
-			$sql .= " fk_commande=" . (isset($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
-			$sql .= " spec=" . (isset($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
+			$sql .= " fk_marque_trt=" . (!empty($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
+			$sql .= " fk_motifs=" . (!empty($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
+			$sql .= " fk_commande=" . (!empty($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
+			$sql .= " spec=" . (!empty($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
 			$sql .= " fk_user_mod=" . $user->id . ",";
 			$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
 
