@@ -1556,76 +1556,6 @@ class Affaires_det extends CommonObject
 		return 0;
 	}
 
-	public function calcvhprice($cmdnum, $prixtot) {
-		global  $conf;
-		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
-
-		$cmd = new Commande($this->db);
-		$cmd->fetch($cmdnum);
-		$cmd->fetch_lines(1);
-
-		$cost = 0;
-		$costvnc = 0;
-		foreach ($cmd->lines as $line){
-			if($line->fk_product !=$conf->global->VOLVO_TRUCK){
-				if($line->fk_product == $conf->global->VOLVO_SURES){
-					if($line->total_ht>0) $costvnc+= $line->total_ht;
-					$cost+=$line->total_ht;
-				}elseif($line->fk_product == $conf->global->VOLVO_COM){
-					$cost+=$line->total_ht;
-				}else{
-					$cost+=$line->total_ht;
-					$costvnc+=$line->total_ht;
-				}
-
-			}
-		}
-		$ret=array();
-		$ret['prixvh'] = $prixtot-$cost;
-		$ret['vnc'] = $prixtot -$costvnc;
-		return $ret;
-	}
-
-	public function updatevhpriceandvnc($cmdnum,$prixtot=0) {
-		global $user,$conf;
-
-		require_once DOL_DOCUMENT_ROOT . '/commande/class/commande.class.php';
-		$cmd = new Commande($this->db);
-		$cmd->fetch($cmdnum);
-		$cmd->fetch_lines(1);
-		if($prixtot==0){
-			$prixtot = $cmd->total_ht;
-		}
-
-		$value = array();
-		$value = $this->calcvhprice($cmdnum,$prixtot);
-
-		foreach ($cmd->lines as $line){
-			if($line->fk_product ==$conf->global->VOLVO_TRUCK){
-				$res =$cmd->updateline($line->id, $line->label, $value['prixvh'], $line->qty, $line->remise_percent, $line->tva_tx,0,0,'HT',0,'','',0,0,0,0,$value['prixvh']);
-				if ($result<0) {
-					array_push($this->errors,$cmd->error);
-					return -1;
-				}
-			}
-		}
-
-		$cmd->id=$cmdnum;
-		$cmd->array_options['options_vnac']=$value['vnc'];
-		$result=$cmd->updateExtraField('vnac');
-		if ($result<0) {
-			array_push($this->errors,$cmd->error);
-			return -2;
-		}
-		$result=$cmd->update_price();
-		if ($result<0) {
-			array_push($this->errors,$cmd->error);
-			return -3;
-		}
-
-		return 1;
-	}
-
 
 	public function createcmd() {
 		global $conf;
@@ -1851,5 +1781,47 @@ class Affaires_det extends CommonObject
 		}
 
 		return $idcommande;
+	}
+
+
+	/**
+	 *	Load an object from its id and create a new one in database
+	 *
+	 *	@param		int			$socid			Id of thirdparty
+	 *	@return		int							New id of clone
+	 */
+	function createFromClone($socid = 0) {
+		global $user, $hookmanager;
+
+		$error = 0;
+
+		$this->context ['createfromclone'] = 'createfromclone';
+
+		$this->db->begin ();
+
+		// Load source object
+		$objFrom = clone $this;
+
+		$this->id = 0;
+
+		// Clear fields
+		$this->fk_user_author = $user->id;
+		$this->datec = dol_now ();
+		$this->fk_user_mod = $user->id;
+
+		// Create clone
+		$result = $this->create ( $user );
+		if ($result < 0)
+			$error ++;
+
+		// End
+		if (! $error) {
+			unset ( $this->context ['createfromclone'] );
+			$this->db->commit ();
+			return $this->id;
+		} else {
+			$this->db->rollback ();
+			return - 1;
+		}
 	}
 }

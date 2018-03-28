@@ -315,3 +315,19 @@ function show_picto($value) {
 		return img_picto('non', 'statut0');
 	}
 }
+
+Function prepare_array($var,$mode){
+	global $conf;
+
+	if($mode == 'sql'){
+		$outtemp = explode(',',$conf->global->$var);
+		foreach ($outtemp as $value){
+			$out.= "'" . $value ."',";
+		}
+		$out = substr($out, 0,-1);
+	}elseif($mode ='array'){
+		$out = explode(',',$conf->global->$var);
+	}
+	return $out;
+
+}
