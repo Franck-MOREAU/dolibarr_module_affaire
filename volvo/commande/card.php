@@ -1572,7 +1572,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 						print '<div class="inline-block divButAction"><a class="butActionRefused" href="#">' . $langs->trans('SendByMail') . '</a></div>';
 				}
 
-				if ($user->rights->volvo->update_cost && $object->statut!=0 && $blocdate->getTimestamp()>=time()) {
+				if ($user->rights->affaires->volvo->update_cost && $object->statut!=0 && $blocdate->getTimestamp()>=time()) {
 
 					$out = '<script type="text/javascript">' . "\n";
 					$out .= '  	$(document).ready(function() {' . "\n";
