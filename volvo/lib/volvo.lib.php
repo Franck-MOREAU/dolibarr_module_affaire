@@ -308,7 +308,7 @@ Function print_extra($key,$type,$action,$extrafields,$object,$label=1,$lenght = 
 	return $out;
 }
 
-function show_picto_pdf($value) {
+function show_picto($value) {
 	if ($value == 1) {
 		return img_picto('non', 'statut6');
 	} else {
@@ -341,7 +341,11 @@ Function prepare_array($var,$mode){
 }
 
 function categchild($categ, $mode){
-	$cat=array($categ);
+	if(is_array($categ)){
+		$cat=$categ;
+	}else{
+		$cat=array($categ);
+	}
 
 	$retour = categ_child($cat);
 	while (is_array($retour)&&count($retour)>0){

@@ -197,9 +197,11 @@ class FormAffairesProduct extends FormAffaires
 	function select_produits_list($selected='',$htmlname='productid',$filtertype='',$limit=20,$price_level=0,$filterkey='',$status=1,$finished=2,$outputmode=0,$socid=0,$showempty='1',$forcecombo=0,$morecss='',$hidepriceinlabel=0, $warehouseStatus='', $filterbycat='')
 	{
 		global $langs,$conf,$user,$db;
-
+		dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 		$out='';
 		$outarray=array();
+
+		//$filterbycat=categchild($filterbycat, 'sql');
 
 		$warehouseStatusArray = array();
 		if (! empty($warehouseStatus))
