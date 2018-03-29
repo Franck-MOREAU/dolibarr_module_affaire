@@ -34,7 +34,7 @@ class CommandeVolvo extends Commande
 	public $actionmsg;
 	public $date_billed;
 	public $total_real_paht;
-	public $picto = 'volvo@affaires';
+	public $picto = 'iron02@affaires';
 
 	/**
 	 * PAYED

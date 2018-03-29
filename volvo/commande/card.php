@@ -984,6 +984,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $formorder = new FormOrder($db);
 $formmargin = new FormMargin($db);
+$formvolvo = new FormAffairesProduct($db);
 
 
 /**
@@ -1370,7 +1371,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 		$morehtmlref.='</div>';
 
 		$linkback = '<a href="' . DOL_URL_ROOT . '/commande/list.php' . (! empty($socid) ? '?socid=' . $socid : '') . '">' . $langs->trans("BackToList") . '</a>';
-
+		$object->picto = 'volvo@affaires';
 		dol_banner_tab_perso($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 
 		print '<table class="border" width="100%">';
