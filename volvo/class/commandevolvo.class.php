@@ -459,6 +459,11 @@ class CommandeVolvo extends Commande
 											$this->errors[] = $cmdsup->error;
 											$error ++;
 										}
+										$result = $cmdsup->updateline($ordersuplineid,$data['desc'], $data['px'], $data['qty'],0, $data['tva_tx'], 0, 0, 'HT',0,0,1,'', '', array(), null,$data['px'], 'HT', $data['ref_supplier']);
+										if ($result < 0) {
+											$this->errors[] = $cmdsup->error;
+											$error ++;
+										}
 
 										//Affecte le rowid de la ligne fourn crée à l'attribut supp de la ligne  de commande client
 										$commande_origin_line = new OrderLine($this->db);
@@ -499,6 +504,11 @@ class CommandeVolvo extends Commande
 											$this->errors[] = $cmdsup->error;
 											$error ++;
 										}
+										$result = $cmdsup->updateline($ordersuplineid,$data['desc'], $data['px'], $data['qty'],0, $data['tva_tx'], 0, 0, 'HT',0,0,1,'', '', array(), null,$data['px'], 'HT', $data['ref_supplier']);
+										if ($result < 0) {
+											$this->errors[] = $cmdsup->error;
+											$error ++;
+										}
 										//Affecte le rowid de la ligne fourn crée à l'attribut supp de la ligne  de commande client
 										$commande_origin_line = new OrderLine($this->db);
 										$result = $commande_origin_line->fetch($data['origorderlineid']);
@@ -520,7 +530,7 @@ class CommandeVolvo extends Commande
 								}
 								// var_dump($cmdsup);
 								if (empty($error)) {
-									$result = $cmdsup->update_price($user);
+									$result = $cmdsup->update_price(1,'auto',0,$cmdsup->thirdparty);
 									if ($result < 0) {
 										$error ++;
 										$this->errors[] = $commande_origin_line->error;
