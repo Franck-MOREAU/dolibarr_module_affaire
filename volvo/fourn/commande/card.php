@@ -40,22 +40,12 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/fourn.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
-if (! empty($conf->supplier_proposal->enabled))
-	require_once DOL_DOCUMENT_ROOT . '/supplier_proposal/class/supplier_proposal.class.php';
 if (!empty($conf->produit->enabled))
 	require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
-}
 require_once NUSOAP_PATH.'/nusoap.php';     // Include SOAP
-
-if (!empty($conf->variants->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/variants/class/ProductCombination.class.php';
-}
+dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 
 $langs->loadLangs(array('admin','orders','sendings','companies','bills','propal','supplier_proposal','deliveries','products','stocks','productbatch'));
-if (!empty($conf->incoterm->enabled)) $langs->load('incoterm');
 
 $id 			= GETPOST('id','int');
 $ref 			= GETPOST('ref','alpha');
@@ -1321,14 +1311,12 @@ elseif (! empty($object->id))
 	$linkback = '<a href="'.DOL_URL_ROOT.'/fourn/commande/list.php?restore_lastsearch_values=1'.(! empty($socid)?'&socid='.$socid:'').'">'.$langs->trans("BackToList").'</a>';
 
 	$morehtmlref='<div class="refidno">';
-	// Ref supplier
-	$morehtmlref.=$form->editfieldkey("RefSupplier", 'ref_supplier', $object->ref_supplier, $object, $user->rights->fournisseur->commande->creer, 'string', '', 0, 1);
-	$morehtmlref.=$form->editfieldval("RefSupplier", 'ref_supplier', $object->ref_supplier, $object, $user->rights->fournisseur->commande->creer, 'string', '', null, null, '', 1);
+	$morehtmlref.= '<strong style="font-size: 25px;">Commande Fournisseur N°' . $object->ref . '</Strong></br>';
 	// Thirdparty
-	$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
-	// Project
+	$morehtmlref.= 'Fournisseur : ' . $object->thirdparty->getNomUrl(1);
 	$morehtmlref.='</div>';
-	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
+	$object->picto='volvo@affaires';
+	dol_banner_tab_perso($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
@@ -1392,7 +1380,9 @@ elseif (! empty($object->id))
 	// Mode of payment
 	$langs->load('bills');
 	print '<tr><td class="nowrap">';
+	print $form->editfieldkey("Dossier Commercial", 'ref_supplier', $object->ref_supplier, $object, 0, 'string', '', 0, 1);
 	print '</td><td>';
+	print $form->editfieldval("RefSupplier", 'ref_supplier', $object->ref_supplier, $object, $user->rights->fournisseur->commande->creer, 'string', '', null, null, '', 1);
 	print '</td></tr>';
 
 	print '</table>';
@@ -1428,7 +1418,7 @@ elseif (! empty($object->id))
 	print '<strong style="font-size: 25px;">Information sur la commande de véhicule</Strong>';
 	print '</th></tr>';
 	print '<tr>';
-	$key = 'ctm';
+	$key = 'client';
 	$label = $extrafields->attribute_label[$key];
 	include dol_buildpath('/affaires/tpl/extra_inline.php');
 
@@ -1442,15 +1432,27 @@ elseif (! empty($object->id))
 	$label = $extrafields->attribute_label[$key];
 	include dol_buildpath('/affaires/tpl/extra_inline.php');
 
-	print'<td></td>';
+	$key = 'dt_liv_maj';
+	$label = $extrafields->attribute_label[$key];
+	include dol_buildpath('/affaires/tpl/extra_inline.php');
 	print '</tr>';
 
 	print '<tr>';
-	$key = 'ctm';
+	$key = 'dt_blockupdate';
 	$label = $extrafields->attribute_label[$key];
 	include dol_buildpath('/affaires/tpl/extra_inline.php');
 
-	$key = 'ctm';
+	$key = 'dt_lim_annul';
+	$label = $extrafields->attribute_label[$key];
+	include dol_buildpath('/affaires/tpl/extra_inline.php');
+	print '</tr>';
+
+	print '<tr>';
+	$key = 'vin';
+	$label = $extrafields->attribute_label[$key];
+	include dol_buildpath('/affaires/tpl/extra_inline.php');
+
+	$key = 'immat';
 	$label = $extrafields->attribute_label[$key];
 	include dol_buildpath('/affaires/tpl/extra_inline.php');
 	print '</tr>';
@@ -1458,7 +1460,7 @@ elseif (! empty($object->id))
 	print '</table>';
 
 	// Other attributes
-	include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_view.tpl.php';
+	//include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_view.tpl.php';
 
 	print '<div class="clearboth"></div><br>';
 

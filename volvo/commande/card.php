@@ -1358,21 +1358,22 @@ if ($action == 'create' && $user->rights->commande->creer)
 		 */
 		$nbrow = 9;
 		$res = $object->fetch_optionals($object->id, $extralabels);
-		print '<table class="border" width="100%">';
+
+		$morehtmlref='<div class="refidno">';
+		// Ref customer
+		$morehtmlref.= '<strong style="font-size: 25px;">Dossier Commercial N° : ' . $object->ref . ' du: ';
+		$morehtmlref.= dol_print_date($object->date, 'daytext');
+		if ($object->hasDelay() && empty($object->date_livraison)) {
+			$morehtmlref.= ' '.img_picto($langs->trans("Late").' : '.$object->showDelay(), "warning");
+		}
+		$morehtmlref.= '</Strong>';
+		$morehtmlref.='</div>';
 
 		$linkback = '<a href="' . DOL_URL_ROOT . '/commande/list.php' . (! empty($socid) ? '?socid=' . $socid : '') . '">' . $langs->trans("BackToList") . '</a>';
 
-		// Ref
-		print '<tr class="liste_titre">';
+		dol_banner_tab_perso($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
 
-
-		print '<th Colspan="4" align ="center">  <strong style="font-size: 25px;">Dossier Commercial N° : ' . $object->ref . ' du: ';
-		print  dol_print_date($object->date, 'daytext');
-		if ($object->hasDelay() && empty($object->date_livraison)) {
-			print ' '.img_picto($langs->trans("Late").' : '.$object->showDelay(), "warning");
-		}
-		print '</Strong></th></tr>';
-
+		print '<table class="border" width="100%">';
 
 		print '<tr style="height:25px">';
 
@@ -1449,7 +1450,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 		print '</tr>';
 
-		$rowspan = 5;
+		$rowspan = 4;
 		print '<tr>';
 		$key = 'vin';
 		$label = $extrafields->attribute_label[$key];
@@ -1484,14 +1485,6 @@ if ($action == 'create' && $user->rights->commande->creer)
 		$label = $extrafields->attribute_label[$key];
 		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
-		print '<td></td>';
-		print '</tr>';
-
-		print '<tr>';
-		$key = 'vnac';
-		$label = $extrafields->attribute_label[$key];
-		include dol_buildpath('/affaires/tpl/extra_inline.php');
-
 		print '<td>Délai Cash: ' . $object->get_cash() . ' Jour(s)</td>';
 		print '</tr>';
 
@@ -1499,9 +1492,9 @@ if ($action == 'create' && $user->rights->commande->creer)
 		print '<tr style="height:25px"><td>' . $langs->trans('AmountHT') . ': ';
 		print price($object->total_ht, 1, '', 1, - 1, - 1, $conf->currency) . '</td>';
 
-		print '<td><table width="100%" class="nobordernopadding"><tr><td align ="left">';
-		print $object->getLibStatut(4) ."</td></tr></table></td>";
-		print '</tr>';
+		$key = 'vnac';
+		$label = $extrafields->attribute_label[$key];
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
 
 		print '</table>';
 
