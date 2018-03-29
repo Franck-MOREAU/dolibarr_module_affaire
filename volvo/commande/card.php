@@ -228,7 +228,7 @@ if ($action == 'confirm_deleteline' && $confirm == 'yes' && $user->rights->comma
 		$object->statut = 0;
 		$object->update($user);
 	}
-	$result = $object->deleteline($lineid);
+	$result = $object->deleteline($user,$lineid);
 
 	if ($result > 0){
 		// Define output language
@@ -295,6 +295,10 @@ if ($action == 'add' && $user->rights->commande->creer){
 		if (! $error){
 			$ret = $extrafields->setOptionalsFromPost($extralabels, $object);
    			if ($ret < 0) $error++;
+		}
+		if (! $error)
+		{
+			$object_id = $object->create($user);
 		}
 
  		// End of object creation, we show it
@@ -612,8 +616,8 @@ if ($action == 'addline' && $user->rights->commande->creer && !empty($idprod)) {
 			}
 		}
 	}
-header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=recalc&prixtot='.$px_org); // Pour reaffichage de la fiche en cours d'edition
-exit();
+	header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $object->id . '&action=recalc&prixtot='.$px_org); // Pour reaffichage de la fiche en cours d'edition
+	exit();
 }
 
 /*
