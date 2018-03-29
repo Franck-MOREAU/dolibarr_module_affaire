@@ -1226,59 +1226,61 @@ class Affaires_det extends CommonObject
 		if ($resql) {
 			$this->lines = array ();
 			$num = $this->db->num_rows($resql);
-			while ( $obj = $this->db->fetch_object($resql) ) {
-				$line = new Affaires_det($this->db);
-				$line->id = $obj->rowid;
-				$line->fk_affaires = $obj->fk_affaires;
-				$line->fk_gamme = $obj->fk_gamme;
-				$line->fk_silhouette = $obj->fk_silhouette;
-				$line->fk_genre = $obj->fk_genre;
-				$line->fk_carrosserie = $obj->fk_carrosserie;
-				$line->fk_status = $obj->fk_status;
-				$line->fk_marque_trt = $obj->fk_marque_trt;
-				$line->fk_motifs = $obj->fk_motifs;
-				if (!empty($this->fk_motifs)) {
-					$this->fk_motifs_array= explode(',',$obj->fk_motifs);
+			if ($num>0) {
+				while ( $obj = $this->db->fetch_object($resql) ) {
+					$line = new Affaires_det($this->db);
+					$line->id = $obj->rowid;
+					$line->fk_affaires = $obj->fk_affaires;
+					$line->fk_gamme = $obj->fk_gamme;
+					$line->fk_silhouette = $obj->fk_silhouette;
+					$line->fk_genre = $obj->fk_genre;
+					$line->fk_carrosserie = $obj->fk_carrosserie;
+					$line->fk_status = $obj->fk_status;
+					$line->fk_marque_trt = $obj->fk_marque_trt;
+					$line->fk_motifs = $obj->fk_motifs;
+					if (!empty($this->fk_motifs)) {
+						$this->fk_motifs_array= explode(',',$obj->fk_motifs);
+					}
+					$line->fk_commande = $obj->fk_commande;
+					$line->spec = $obj->spec;
+					$line->fk_user_author = $obj->fk_user_author;
+					$line->datec = $this->db->jdate($obj->datec);
+					$line->fk_user_mod = $obj->fk_user_mod;
+					$line->tms = $this->db->jdate($obj->tms);
+
+					$line->gamme_label = $line->gamme[$line->fk_gamme]->gamme;
+					$line->silhouette_label = $line->silhouette[$line->fk_silhouette]->silhouette;
+					$line->genre_label = $line->genre[$line->fk_genre]->genre;
+					$line->carrosserie_label = $line->carrosserie[$line->fk_carrosserie]->carrosserie;
+					$line->status_label = $line->status[$line->fk_c_status];
+					$line->marque_trt_label = $line->marque_trt[$line->fk_marque_trt]->marque;
+					$line->status_label = $line->status[$line->fk_status];
+
+					$line->soc_url='';
+					if (!empty($obj->socid)) {
+						$socstatic= new Societe($this->db);
+						$socstatic->fetch($obj->socid);
+						$line->soc_url=$socstatic->getNomUrl();
+					}
+					$line->ctm_url='';
+					if (!empty($obj->ctmid)) {
+						$socstatic= new Societe($this->db);
+						$socstatic->fetch($obj->ctmid);
+						$line->ctm_url=$socstatic->getNomUrl();
+					}
+
+					$affstatic= new Affaires($this->db);
+					$affstatic->fetch($obj->fk_affaires,1);
+					$line->ref_url=$affstatic->getNomUrl();
+					$line->cv_type_label = $affstatic->type_label;
+
+					$line->year=$affstatic->year;
+					$line->usrname=$obj->usrname;
+
+
+
+					$this->lines[] = $line;
 				}
-				$line->fk_commande = $obj->fk_commande;
-				$line->spec = $obj->spec;
-				$line->fk_user_author = $obj->fk_user_author;
-				$line->datec = $this->db->jdate($obj->datec);
-				$line->fk_user_mod = $obj->fk_user_mod;
-				$line->tms = $this->db->jdate($obj->tms);
-
-				$line->gamme_label = $line->gamme[$line->fk_gamme]->gamme;
-				$line->silhouette_label = $line->silhouette[$line->fk_silhouette]->silhouette;
-				$line->genre_label = $line->genre[$line->fk_genre]->genre;
-				$line->carrosserie_label = $line->carrosserie[$line->fk_carrosserie]->carrosserie;
-				$line->status_label = $line->status[$line->fk_c_status];
-				$line->marque_trt_label = $line->marque_trt[$line->fk_marque_trt]->marque;
-				$line->status_label = $line->status[$line->fk_status];
-
-				$line->soc_url='';
-				if (!empty($obj->socid)) {
-					$socstatic= new Societe($this->db);
-					$socstatic->fetch($obj->socid);
-					$line->soc_url=$socstatic->getNomUrl();
-				}
-				$line->ctm_url='';
-				if (!empty($obj->ctmid)) {
-					$socstatic= new Societe($this->db);
-					$socstatic->fetch($obj->ctmid);
-					$line->ctm_url=$socstatic->getNomUrl();
-				}
-
-				$affstatic= new Affaires($this->db);
-				$affstatic->fetch($obj->fk_affaires,1);
-				$line->ref_url=$affstatic->getNomUrl();
-				$line->cv_type_label = $affstatic->type_label;
-
-				$line->year=$affstatic->year;
-				$line->usrname=$obj->usrname;
-
-
-
-				$this->lines[] = $line;
 			}
 			$this->db->free($resql);
 
@@ -1537,7 +1539,7 @@ class Affaires_det extends CommonObject
  				dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
  				$cmd = new CommandeVolvo($this->db);
  				$cmd->fetch($this->fk_commande);
- 				$return.= ' - Commande: ' . $cmd->getNomUrl(1) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
+ 				$return.= ' - Commande: ' . $cmd->getNomUrl(0) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
  			}
  		}
  		$return.= '</div>';

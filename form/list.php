@@ -354,6 +354,10 @@ if (! empty($viewtype)) {
 	$option .= '&viewtype=' . $viewtype;
 }
 
+if (!empty($limit)) {
+	$option .= '&limit=' . $limit;
+}
+
 if (empty($page) || $page == - 1) {
 	$page = 0;
 }
@@ -393,9 +397,10 @@ $moreforfilter = '';
 if ($resql != - 1) {
 	$num = $resql;
 
-	print_barre_liste($title, $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', $num, $nbtotalofrecords, 'affaires@affaires.png', 0, '', '', $limit);
+
 
 	print '<form method="post" action="' . $_SERVER['PHP_SELF'] . '" name="searchFormList" id="searchFormList">' . "\n";
+	print_barre_liste($title, $page, $_SERVER['PHP_SELF'], $option, $sortfield, $sortorder, '', $num, $nbtotalofrecords, 'affaires@affaires.png', 0, '', '', $limit);
 	print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
 	print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
@@ -408,9 +413,6 @@ if ($resql != - 1) {
 	}
 	if (! empty($page)) {
 		print '<input type="hidden" name="page" value="' . $page . '"/>';
-	}
-	if (! empty($limit)) {
-		print '<input type="hidden" name="limit" value="' . $limit . '"/>';
 	}
 	if (! empty($viewtype)) {
 		print '<input type="hidden" name="viewtype" value="' . $viewtype . '"/>';
@@ -456,12 +458,9 @@ if ($resql != - 1) {
 		}
 	}
 
-	// Filter button
+	// select column button
 	print_liste_field_titre($selectedfields, $_SERVER["PHP_SELF"], "", '', $option, 'align="center"', $sortfield, $sortorder, 'maxwidthsearch ');
 	print '</tr>' . "\n";
-
-	$totalamountguess = 0;
-	$totalamountreal = 0;
 
 	foreach ( $objectdet->lines as $line ) {
 
