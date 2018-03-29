@@ -1358,8 +1358,9 @@ class modAffaires extends DolibarrModules
 		$res = $extrafields->addExtraField('dt_blockupdate', 'Date blocage modification', 'date', 53, '', 'commande',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('dt_lim_annul', 'Date limite d\'annulation', 'date', 54, '', 'commande',0, 0,'', array('options'=>''),1,1,1);
 
+
 		//extrafields Commande ligne
-		$res = $extrafields->addExtraField('fk_supplierorder', 'Commande fournisseur', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseur:ref:rowid::'=>null)),1,1,0);
+		$res = $extrafields->addExtraField('fk_supplierorderlineid', 'Commande fournisseur', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseurdet:rowid:rowid::'=>null)),1,1,0);
 
 		//extrafields contrat
 		$res = $extrafields->addExtraField('dt_env_cli', 'Date d\'envoi Au client', 'date', 0 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);

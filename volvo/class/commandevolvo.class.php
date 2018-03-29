@@ -395,7 +395,8 @@ class CommandeVolvo extends Commande
 					$sql = 'SELECT DISTINCT so.rowid as supplierorderid ';
 					$sql .= ' FROM '.MAIN_DB_PREFIX.'societe as supplier';
 					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commande_fournisseur as so ON so.fk_soc=supplier.rowid AND supplier.rowid='.$fournid;
-					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commandedet_extrafields as cdetextra ON cdetextra.fk_supplierorder=so.rowid';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commande_fournisseurdet as sod ON sod.fk_commande=so.rowid';
+					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commandedet_extrafields as cdetextra ON cdetextra.fk_supplierorderlineid=sod.rowid';
 					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commandedet as cdet ON cdet.rowid=cdetextra.fk_object';
 					$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'commande as c ON c.rowid=cdet.fk_commande AND c.rowid='.$orderid;
 
@@ -438,13 +439,27 @@ class CommandeVolvo extends Commande
 										$error ++;
 									}
 									$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_DRAFT);
-									foreach ( $prodinfo as $data ) {
-										$result = $cmdsup->addline($data['desc'], $data['px'], $data['qty'], $data['tva_tx'], 0, 0, $data['productid'], 0, $data['ref_supplier'], 0, 'HT', 0, 0, 0, false, null, null, 0, null);
+									if ($result < 0) {
+										$this->errors[] = $cmdsup->error;
+										$error ++;
+									}
+									//Update Note puplic
+									if (strpos($cmdsup->note_public,'Annule et remplace la précédante')===false) {
+										$result=$cmdsup->update_note($cmdsup->note_public."\r\n".'Annule et remplace la précédante','_public');
 										if ($result < 0) {
 											$this->errors[] = $cmdsup->error;
 											$error ++;
 										}
+									}
 
+									foreach ( $prodinfo as $data ) {
+										$ordersuplineid = $cmdsup->addline($data['desc'], $data['px'], $data['qty'], $data['tva_tx'], 0, 0, $data['productid'], 0, $data['ref_supplier'], 0, 'HT', 0, 0, 0, false, null, null, 0, null);
+										if ($ordersuplineid < 0) {
+											$this->errors[] = $cmdsup->error;
+											$error ++;
+										}
+
+										//Affecte le rowid de la ligne fourn crée à l'attribut supp de la ligne  de commande client
 										$commande_origin_line = new OrderLine($this->db);
 										$result = $commande_origin_line->fetch($data['origorderlineid']);
 										if ($result < 0) {
@@ -452,8 +467,8 @@ class CommandeVolvo extends Commande
 											$this->errors[] = $commande_origin_line->error;
 										} else {
 											$commande_origin_line->fetch_optionals($data['origorderlineid']);
-											if (empty($commande_origin_line->array_options['options_fk_supplierorder'])) {
-												$commande_origin_line->array_options['options_fk_supplierorder'] = $cmdsup->id;
+											if (empty($commande_origin_line->array_options['options_fk_supplierorderlineid'])) {
+												$commande_origin_line->array_options['options_fk_supplierorderlineid'] = $ordersuplineid;
 												$result = $commande_origin_line->update($user);
 												if ($result < 0) {
 													$error ++;
@@ -462,29 +477,11 @@ class CommandeVolvo extends Commande
 											}
 										}
 									}
-
-
-
-
 								} else {
 									$cmdsup->ref_supplier = $this->ref;
 									$cmdsup->socid = $fournid;
 									$cmdsup->source = $this->id;
 									$cmdsup->array_options['options_ctm'] = $this->array_options['options_ctm'];
-
-									// Create line (or add lines)
-									foreach ( $prodinfo as $data ) {
-										$line = new CommandeFournisseurLigne($this->db);
-										$line->desc = $data['desc'];
-										$line->subprice = $data['px'];
-										$line->qty = $data['qty'];
-										$line->tva_tx = $data['tva_tx'];
-										$line->fk_product = $data['productid'];
-										$line->ref_supplier = $data['ref_supplier'];
-										$line->ref_fourn = $data['ref_supplier'];
-
-										$cmdsup->lines[] = $line;
-									}
 
 									$cmdsup->linked_objects["commande"] = $this->id;
 
@@ -495,15 +492,22 @@ class CommandeVolvo extends Commande
 									}
 
 									foreach ( $prodinfo as $data ) {
+
+										$ordersuplineid = $cmdsup->addline($data['desc'], $data['px'], $data['qty'], $data['tva_tx'], 0, 0, $data['productid'], 0, $data['ref_supplier'], 0, 'HT', 0, 0, 0, false, null, null, 0, null);
+										if ($ordersuplineid < 0) {
+											$this->errors[] = $cmdsup->error;
+											$error ++;
+										}
+										//Affecte le rowid de la ligne fourn crée à l'attribut supp de la ligne  de commande client
 										$commande_origin_line = new OrderLine($this->db);
 										$result = $commande_origin_line->fetch($data['origorderlineid']);
 										if ($result < 0) {
 											$error ++;
 											$this->errors[] = $commande_origin_line->error;
 										} else {
-											$commande_origin_line->fetch_optionals($commande_origin_line->rowid);
-											if (empty($commande_origin_line->array_options['options_fk_supplierorder'])) {
-												$commande_origin_line->array_options['options_fk_supplierorder'] = $cmdsup->id;
+											$commande_origin_line->fetch_optionals($data['origorderlineid']);
+											if (empty($commande_origin_line->array_options['options_fk_supplierorderlineid'])) {
+												$commande_origin_line->array_options['options_fk_supplierorderlineid'] = $ordersuplineid;
 												$result = $commande_origin_line->update($user);
 												if ($result < 0) {
 													$error ++;
