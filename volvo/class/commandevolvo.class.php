@@ -464,6 +464,23 @@ class CommandeVolvo extends Commande
 											$this->errors[] = $cmdsup->error;
 											$error ++;
 										}
+										$p = new Product($this->db);
+										$p->fetch($data['productid']);
+										if (!empty($p->array_options['notupdatecost'])) {
+											$orderline = new CommandeFournisseurLigne($this->db);
+											$result=$orderline->fetch($ordersuplineid);
+											if ($result < 0) {
+												$this->errors[] = $orderline->error;
+												$error ++;
+											} else {
+												$orderline->array_options['options_solde']=1;
+												$result=$orderline->update();
+												if ($result < 0) {
+													$this->errors[] = $orderline->error;
+													$error ++;
+												}
+											}
+										}
 
 										//Affecte le rowid de la ligne fourn crée à l'attribut supp de la ligne  de commande client
 										$commande_origin_line = new OrderLine($this->db);
@@ -508,6 +525,23 @@ class CommandeVolvo extends Commande
 										if ($result < 0) {
 											$this->errors[] = $cmdsup->error;
 											$error ++;
+										}
+										$p = new Product($this->db);
+										$p->fetch($data['productid']);
+										if (!empty($p->array_options['notupdatecost'])) {
+											$orderline = new CommandeFournisseurLigne($this->db);
+											$result=$orderline->fetch($ordersuplineid);
+											if ($result < 0) {
+												$this->errors[] = $orderline->error;
+												$error ++;
+											} else {
+												$orderline->array_options['options_solde']=1;
+												$result=$orderline->update();
+												if ($result < 0) {
+													$this->errors[] = $orderline->error;
+													$error ++;
+												}
+											}
 										}
 										//Affecte le rowid de la ligne fourn crée à l'attribut supp de la ligne  de commande client
 										$commande_origin_line = new OrderLine($this->db);
