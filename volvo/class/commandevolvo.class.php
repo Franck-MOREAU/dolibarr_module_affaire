@@ -439,10 +439,13 @@ class CommandeVolvo extends Commande
 										$error ++;
 									}
 									$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_DRAFT);
-
+									if ($result < 0) {
+										$this->errors[] = $cmdsup->error;
+										$error ++;
+									}
 									//Update Note puplic
 									if (strpos($cmdsup->note_public,'Annule et remplace la précédante')===false) {
-										$result=$cmdsup->update_note('_public',$cmdsup->note_public."\r\n".'Annule et remplace la précédante');
+										$result=$cmdsup->update_note($cmdsup->note_public."\r\n".'Annule et remplace la précédante','_public');
 										if ($result < 0) {
 											$this->errors[] = $cmdsup->error;
 											$error ++;

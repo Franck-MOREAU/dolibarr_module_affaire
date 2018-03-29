@@ -105,9 +105,36 @@ class InterfaceAffaires {
 				return - 1;
 			}
 
-
-
-
+			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
+			$sql = 'SELECT DISTINCT sdet.fk_commande FROM ' . MAIN_DB_PREFIX . 'commandedet_extrafields as dete ';
+			$sql .=' INNER JOIN ' . MAIN_DB_PREFIX . 'commandedet as det ON det.rowid=dete.fk_object AND det.fk_commande='.$object->id;
+			$sql .=' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet as sdet ON sdet.rowid=dete.fk_supplierorderlineid';
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$this->error = $this->db->lasterror;
+				dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+				return - 1;
+			} else {
+				require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
+				while ($obj = $this->db->fetch_object($resql)) {
+					$cmdsup = new CommandeFournisseur($this->db);
+					$result = $cmdsup->fetch($obj->fk_commande);
+					if ($result < 0) {
+						$this->errors = $cmdsup->error;
+						return -1;
+					}
+					$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_DRAFT);
+					if ($result < 0) {
+						$this->errors = $cmdsup->error;
+						return -1;
+					}
+					$result = $cmdsup->delete($user);
+					if ($result < 0) {
+						$this->errors = $cmdsup->error;
+						return -1;
+					}
+				}
+			}
 
 			return 1;
 		}
