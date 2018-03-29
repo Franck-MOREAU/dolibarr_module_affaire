@@ -312,9 +312,9 @@ class ActionsAffaires // extends CommonObject
 			exit;
 
 		} elseif (in_array('ordersuppliercard', $current_context)) {
-			/*$dest = dol_buildpath('/affaires/volvo/fourn/commande/card.php',2). '?id=' . $object->id;
+			$dest = dol_buildpath('/affaires/volvo/fourn/commande/card.php',2). '?id=' . $object->id;
 			header("Location: ".$dest);
-			exit;*/
+			exit;
 
 		}
 
