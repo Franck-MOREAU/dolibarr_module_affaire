@@ -22,7 +22,7 @@ class AffairesFactureFourn
 	 */
 	function fetch_supplierorderline($sortorder, $sortfield, $limit, $offset, $filter = array()) {
 		global $langs;
-		$sql = "SELECT";
+		$sql = "SELECT DISTINCT ";
 		$sql .= " cdet.rowid";
 		$sql .= " ,cdet.description";
 		$sql .= " ,cdet.fk_product";
@@ -107,8 +107,87 @@ class AffairesFactureFourn
 			return $num;
 		} else {
 			$this->errors[] = "Error " . $this->db->lasterror();
-			dol_syslog(get_class($this) . "::fetch_all " . $this->error, LOG_ERR);
+			dol_syslog(get_class($this) . "::" . __METHOD__. ' ' . $this->db->lasterror(), LOG_ERR);
 			return - 1;
 		}
+	}
+
+	public function createFactureFourn($socid,$ref,$date,$lineid=array(),$solde=array(),$amount=array()) {
+		global $conf,$user;
+
+		$error = 0;
+
+		dol_syslog(__METHOD__, LOG_DEBUG);
+
+		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
+		//require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
+
+
+		if (count($lineid)==0){
+			$this->errors[]='Missing line id array';
+			$error++;
+		}
+		if (count($amount)==0){
+			$this->errors[]='Missing amount array';
+			$error++;
+		}
+		if (empty($socid)==0){
+			$this->errors[]='Missing $socid';
+			$error++;
+		}
+		if (empty($ref)==0){
+			$this->errors[]='Ref fourn';
+			$error++;
+		}
+
+		$this->db->begin();
+		if (empty($error)) {
+
+			//Build an array for link supplier invoice to order invoice
+			$orderid=array();
+			foreach($lineid as $key=>$val) {
+				$sql = 'SELECT fk_commande FROM '.MAIN_DB_PREFIX.'commande_fournisseurdet WHERE rowid='.$val;
+				$resql = $this->db->query($sql);
+				if (!$resql) {
+					$this->errors[] = "Error " . $this->db->lasterror();
+				} else {
+					$num = $this->db->num_rows($resql);
+					if ($num > 0) {
+						while ( $obj = $this->db->fetch_object($resql) ) {
+							$orderid[$obj->fk_commande]=$obj->fk_commande;
+						}
+					}
+				}
+			}
+
+			$factsup = new FactureFournisseur($this->db);
+			$factsup->socid=$socid;
+			$factsup->ref_supplier=$ref_fact_fourn;
+			$factsup->date=$date_fact_fourn;
+
+			foreach($orderid as $val) {
+				$cmdsup->linked_objects["commande"] = $this->id;
+			}
+
+
+			$result=$factsup->create($user);
+			if ($result < 0) {
+				$this->errors[] = $factsup->error;
+				$error ++;
+			}
+		}
+
+		if (! $error) {
+			$this->db->commit();
+			return 1;
+		} else {
+			foreach ( $this->errors as $errmsg ) {
+				dol_syslog(get_class($this) . "::".__METHOD__ .' '. $errmsg, LOG_ERR);
+			}
+			$this->db->rollback();
+			return - 1 * $error;
+		}
+
+
 	}
 }

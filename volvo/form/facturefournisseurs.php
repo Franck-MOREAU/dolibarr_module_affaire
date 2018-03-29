@@ -56,11 +56,33 @@ $date_fact_fourn = dol_mktime(0, 0, 0, GETPOST('date_fact_fourn_month', 'int'), 
 if ($action == 'createsupplierinvoice') {
 	if (empty($ref_fact_fourn)) {
 		setEventMessage('Veuillez saisir une référence de facture fournisseur','errors');
+		$error++;
 	}
 	if (empty($date_fact_fourn)) {
 		setEventMessage('Veuillez saisir une date de facture fournisseur','errors');
+		$error++;
+	}
+	$orderlineid_array=array();
+	$orderlineid_solde_array=array();
+	$orderlineid_amount_array=array();
+	foreach($_POST as $key=>$value) {
+		if (strpos($key,'lineid_')===0) {
+			$orderlineid_array[]=$value;
+			$orderlineid_amount_array[$value]=price2num(GETPOST('lineidamount_'.$value,'int'));
+			$orderlineid_solde_array[$value]=price2num(GETPOST('solde_lineid_'.$value,'int'));
+		}
+	}
+	if (count($orderlineid_array)==0){
+		setEventMessage('Veuillez cocher des lignes pour la création de facture','errors');
+		$error++;
 	}
 
+	if (empty($error)) {
+		$result=$object->createFactureFourn($search_socid,$ref_fact_fourn,$date_fact_fourn,$orderlineid_array,$orderlineid_solde_array,$orderlineid_amount_array);
+		if ($result<0) {
+			setEventMessages(null, $object->errors,'errors');
+		}
+	}
 }
 
 $arrayfields = array(
