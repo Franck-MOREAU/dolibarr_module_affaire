@@ -105,12 +105,31 @@ class InterfaceAffaires {
 				return - 1;
 			}
 
+
+
+
+
 			return 1;
 		}
 
 		if ($action == 'ORDER_SUPPLIER_DELETE') {
 			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
-			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commandedet_extrafields SET fk_supplierorder=NULL WHERE fk_supplierorder=' . $object->id;
+			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commandedet_extrafields SET fk_supplierorderlineid=NULL WHERE fk_supplierorderlineid IN ';
+			$sql .=' (SELECT rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE fk_commande ='. $object->id.')';
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$this->error = $this->db->lasterror;
+
+				dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+				return - 1;
+			}
+
+			return 1;
+		}
+
+		if ($action == 'LINEORDER_SUPPLIER_DELETE') {
+			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
+			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commandedet_extrafields SET fk_supplierorderlineid=NULL WHERE fk_supplierorderlineid ='.$object->id;
 			$resql = $this->db->query($sql);
 			if (! $resql) {
 				$this->error = $this->db->lasterror;

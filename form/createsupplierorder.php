@@ -97,18 +97,35 @@ if ($action == 'createsupplerorder') {
 			$priceid = GETPOST('fournprice_' . $line->id);
 			if (! empty($priceid)) {
 
-				$result=$line->fetch_optionals($line->id);
+				$result = $line->fetch_optionals($line->id);
 				if ($result < 0) {
 					$error ++;
-					$errors=array_merge($errors,$line->errors);
+					$errors = array_merge($errors, $line->errors);
 				}
-				if (!empty($line->array_options['options_fk_supplierorder'])) {
-					$ordersupplierid=$line->array_options['options_fk_supplierorder'];
+				if (! empty($line->array_options['options_fk_supplierorderlineid'])) {
+					$ordersupplierlineid = $line->array_options['options_fk_supplierorderlineid'];
+					$cmdsupdet = new CommandeFournisseurLigne($db);
+					$result = $cmdsupdet->fetch($line->array_options['options_fk_supplierorderlineid']);
+					if ($result < 0) {
+						setEventMessages(null, array(
+								'Error Fetch line fourn'
+						), 'errors');
+					}
+					$suplierorderid=$cmdsupdet->fk_commande;
+
 				} else {
-					$ordersupplierid=0;
+					$suplierorderid=0;
+					$ordersupplierlineid = 0;
 				}
 
-				$price_qty_array[$priceid] = array('qty'=>$line->qty,'desc'=>$line->desc,'px'=>$line->pa_ht, 'lineid'=>$line->id,'suplierorderid'=>$ordersupplierid);
+				$price_qty_array[$priceid] = array(
+						'qty' => $line->qty,
+						'desc' => $line->desc,
+						'px' => $line->pa_ht,
+						'lineid' => $line->id,
+						'supplierorderlineid' => $ordersupplierlineid,
+						'suplierorderid'=>$suplierorderid
+				);
 			}
 		}
 	}
@@ -117,23 +134,23 @@ if ($action == 'createsupplerorder') {
 		$result = $cmdv->createSupplierOrder($user, $price_qty_array, $order->id);
 		if ($result < 0) {
 			$error ++;
-			$errors=array_merge($errors,$cmdv->errors);
+			$errors = array_merge($errors, $cmdv->errors);
 		}
 	}
 
 	if (! empty($error)) {
 		setEventMessages(null, $errors, 'errors');
 	} /*else {
-		top_htmlhead('', '');
-		print '<script type="text/javascript">' . "\n";
-		print '	$(document).ready(function () {' . "\n";
-		print '	window.parent.$(\'#popSupplierOrder\').dialog(\'close\');' . "\n";
-		print '	window.parent.$(\'#popSupplierOrder\').remove();' . "\n";
-		print '});' . "\n";
-		print '</script>' . "\n";
-		llxFooter();
-		exit;
-	}*/
+	   top_htmlhead('', '');
+	   print '<script type="text/javascript">' . "\n";
+	   print '	$(document).ready(function () {' . "\n";
+	   print '	window.parent.$(\'#popSupplierOrder\').dialog(\'close\');' . "\n";
+	   print '	window.parent.$(\'#popSupplierOrder\').remove();' . "\n";
+	   print '});' . "\n";
+	   print '</script>' . "\n";
+	   llxFooter();
+	   exit;
+	   }*/
 }
 
 print '<form name="createsupplerorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
@@ -153,14 +170,26 @@ print '</tr>';
 if (is_array($order->lines) && count($order->lines)) {
 	$lineupdate_array = array();
 	foreach ( $order->lines as $line ) {
-		$line->fetch_optionals($line->rowid);
+		$line->fetch_optionals();
 
 		if ($line->product_type != 9) {
-			$cmdsup = new CommandeFournisseur ( $db );
-			$url_op='';
-			if (!empty($line->array_options['options_fk_supplierorder'])) {
-				$cmdsup->fetch($line->array_options['options_fk_supplierorder']);
-				$url_op=$cmdsup->getNomUrl();
+			$cmdsup = new CommandeFournisseur($db);
+			$cmdsupdet = new CommandeFournisseurLigne($db);
+			$url_op = '';
+			if (! empty($line->array_options['options_fk_supplierorderlineid'])) {
+				$result = $cmdsupdet->fetch($line->array_options['options_fk_supplierorderlineid']);
+				if ($result < 0) {
+					setEventMessages(null, array(
+							'Error Fetch line fourn'
+					), 'errors');
+				}
+				$result = $cmdsup->fetch($cmdsupdet->fk_commande);
+				if ($result < 0) {
+					setEventMessages(null, array(
+							'Error Fetch commande fourn:'.$cmdsup->error
+					), 'errors');
+				}
+				$url_op = $cmdsup->getNomUrl();
 			}
 
 			if (array_key_exists($line->id, $linedisplay_array)) {
@@ -179,7 +208,7 @@ if (is_array($order->lines) && count($order->lines)) {
 				print '<td align="center">' . $productdesc . '</td>';
 				print '<td align="center">' . price($line->total_ht) . '</td>';
 				print '<td align="center">' . $line->qty . '</td>';
-				print '<td align="center">' . $formAffaireProduct->selectFournPrice('fournprice_' . $line->id, '', $line->fk_product,1,1) . '</td>';
+				print '<td align="center">' . (empty($url_op) ? $formAffaireProduct->selectFournPrice('fournprice_' . $line->id, '', $line->fk_product, 1, 1) : '') . '</td>';
 				print '<td align="center">' . $url_op . '</td>';
 				print '</tr>';
 			}

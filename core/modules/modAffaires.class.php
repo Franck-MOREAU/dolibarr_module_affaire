@@ -1354,8 +1354,9 @@ class modAffaires extends DolibarrModules
 		$res = $extrafields->addExtraField('vcm_model', 'Modèle du groupe', 'varchar', 49, 255, 'commande',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('vcm_fonct', 'Fonctionnement du groupe', 'select', 50 , '', 'commande',0, 0,'', array('options'=>array(1=>'Diesel',2=>'Diesel + Electrique')),1,1,3);
 		$res = $extrafields->addExtraField('vcm_frigo_nbh', 'Nombre d\'heure de fonctionnement:', 'int', 51 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+
 		//extrafields Commande ligne
-		$res = $extrafields->addExtraField('fk_supplierorder', 'Commande fournisseur', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseur:ref:rowid::'=>null)),1,1,0);
+		$res = $extrafields->addExtraField('fk_supplierorderlineid', 'Commande fournisseur', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseurdet:rowid:rowid::'=>null)),1,1,0);
 
 		//extrafields contrat
 		$res = $extrafields->addExtraField('dt_env_cli', 'Date d\'envoi Au client', 'date', 0 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
