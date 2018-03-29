@@ -100,7 +100,7 @@ if ($action == 'createsupplerorder') {
 				$result=$line->fetch_optionals($line->id);
 				if ($result < 0) {
 					$error ++;
-					$errors[] = $line->errors;
+					$errors=array_merge($errors,$line->errors);
 				}
 				if (!empty($line->array_options['options_fk_supplierorder'])) {
 					$ordersupplierid=$line->array_options['options_fk_supplierorder'];
@@ -117,7 +117,7 @@ if ($action == 'createsupplerorder') {
 		$result = $cmdv->createSupplierOrder($user, $price_qty_array, $order->id);
 		if ($result < 0) {
 			$error ++;
-			$errors[] = $cmdv->errors;
+			$errors=array_merge($errors,$cmdv->errors);
 		}
 	}
 
