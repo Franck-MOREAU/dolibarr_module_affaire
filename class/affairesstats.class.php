@@ -49,11 +49,11 @@ class AffairesStats extends Stats
 	 */
 	function __construct($db) {
 		global $conf, $user;
-		
+
 		$this->db = $db;
-		
+
 		require_once 'affaires.class.php';
-		
+
 		$this->affaires = new Affaires($this->db);
 	}
 
@@ -67,14 +67,15 @@ class AffairesStats extends Stats
 	 */
 	function getAllAffairesByType($limit = 5) {
 		global $conf, $user, $langs;
-		
+
 		$datay = array ();
-		
+
 		$sql = "SELECT";
-		$sql .= " count(DISTINCT t.rowid), t.fk_c_type";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+		$sql .= " count(DISTINCT a.rowid), a.fk_c_type";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
 		$sql .= $this->buildWhere();
-		$sql .= " GROUP BY t.fk_c_type";
+		$sql .= " GROUP BY a.fk_c_type";
 
 		$result = array ();
 		$res = array ();
@@ -90,7 +91,7 @@ class AffairesStats extends Stats
 				if ($i < $limit || $num == $limit)
 					$result[$i] = array (
 							$this->affaires->type[$row[1]] . '(' . $row[0] . ')',
-							$row[0] 
+							$row[0]
 					);
 				else
 					$other += $row[1];
@@ -99,7 +100,7 @@ class AffairesStats extends Stats
 			if ($num > $limit)
 				$result[$i] = array (
 						$langs->transnoentitiesnoconv("Other"),
-						$other 
+						$other
 				);
 			$this->db->free($resql);
 		} else {
@@ -125,10 +126,11 @@ class AffairesStats extends Stats
 		$datay = array ();
 
 		$sql = "SELECT";
-		$sql .= " count(DISTINCT t.rowid), t.fk_c_status";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+		$sql .= " count(DISTINCT t.rowid), t.fk_status";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
 		$sql .= $this->buildWhere();
-		$sql .= " GROUP BY t.fk_c_status";
+		$sql .= " GROUP BY t.fk_status";
 
 		$result = array ();
 		$res = array ();
@@ -144,7 +146,7 @@ class AffairesStats extends Stats
 				if ($i < $limit || $num == $limit)
 					$result[$i] = array (
 							$this->affaires->status[$row[1]] . '(' . $row[0] . ')',
-							$row[0] 
+							$row[0]
 					);
 				else
 					$other += $row[1];
@@ -153,7 +155,7 @@ class AffairesStats extends Stats
 			if ($num > $limit)
 				$result[$i] = array (
 						$langs->transnoentitiesnoconv("Other"),
-						$other 
+						$other
 				);
 			$this->db->free($resql);
 		} else {
@@ -172,15 +174,17 @@ class AffairesStats extends Stats
 	 */
 	function getAllByYear() {
 		global $conf, $user, $langs;
-		
-		$sql = "SELECT date_format(t.datec,'%Y') as year, COUNT(t.rowid) as nb, SUM(t.amount_prosp) as total, AVG(t.amount_prosp) as avg";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+
+		$sql = "SELECT a.year, COUNT(DISTINCT t.rowid) as nb, SUM(cmd.total_ht) as total, AVG(cmd.total_ht) as avg";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
+		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "commande as cmd ON cmd.rowid=t.fk_commande";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
-			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=a.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
-		$sql .= " GROUP BY year";
+		$sql .= " GROUP BY a.year";
 		$sql .= $this->db->order('year', 'DESC');
-		
+
 		return $this->_getAllByYear($sql);
 	}
 
@@ -192,25 +196,23 @@ class AffairesStats extends Stats
 	public function buildWhere() {
 		$sqlwhere_str = '';
 		$sqlwhere = array ();
-		
-		$sqlwhere[] = ' t.entity IN (' . getEntity('affaires') . ')';
-		
+
 		if (! empty($this->userid))
-			$sqlwhere[] = ' t.fk_user_resp=' . $this->userid;
+			$sqlwhere[] = ' a.fk_user_resp=' . $this->userid;
 		if (! empty($this->socid))
-			$sqlwhere[] = ' t.fk_soc=' . $this->socid;
+			$sqlwhere[] = ' a.fk_soc=' . $this->socid;
 		if (! empty($this->year) && empty($this->yearmonth))
-			$sqlwhere[] = " date_format(t.datec,'%Y')='" . $this->year . "'";
+			$sqlwhere[] = " a.year='" . $this->year . "'";
 		if (! empty($this->yearmonth))
-			$sqlwhere[] = " t.datec BETWEEN '" . $this->db->idate(dol_get_first_day($this->yearmonth)) . "' AND '" . $this->db->idate(dol_get_last_day($this->yearmonth)) . "'";
-		
+			$sqlwhere[] = " a.datec BETWEEN '" . $this->db->idate(dol_get_first_day($this->yearmonth)) . "' AND '" . $this->db->idate(dol_get_last_day($this->yearmonth)) . "'";
+
 		if (! empty($this->status))
-			$sqlwhere[] = " t.fk_c_status IN (" . $this->status . ")";
-		
+			$sqlwhere[] = " t.fk_status IN (" . $this->status . ")";
+
 		if (count($sqlwhere) > 0) {
 			$sqlwhere_str = ' WHERE ' . implode(' AND ', $sqlwhere);
 		}
-		
+
 		return $sqlwhere_str;
 	}
 
@@ -222,19 +224,20 @@ class AffairesStats extends Stats
 	 */
 	function getNbByMonth($year) {
 		global $user;
-		
+
 		$this->yearmonth = $year;
-		
-		$sql = "SELECT date_format(t.datec,'%m') as dm, COUNT(*) as nb";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+
+		$sql = "SELECT date_format(t.datec,'%m') as dm, COUNT(DISTINCT t.rowid) as nb";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
-			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=a.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
 		$sql .= " GROUP BY dm";
 		$sql .= $this->db->order('dm', 'DESC');
-		
+
 		$this->yearmonth=0;
-		
+
 		$res = $this->_getNbByMonth($year, $sql);
 		// var_dump($res);print '<br>';
 		return $res;
@@ -248,18 +251,20 @@ class AffairesStats extends Stats
 	 */
 	function getAmountByMonth($year) {
 		global $user;
-		
+
 		$this->yearmonth = $year;
-		
-		$sql = "SELECT date_format(t.datec,'%m') as dm, SUM(t.amount_prosp)";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+
+		$sql = "SELECT date_format(cmd.date_commande,'%m') as dm, SUM(cmd.total_ht)";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
+		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "commande as cmd ON cmd.rowid=t.fk_commande";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
-			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=a.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
 		$sql .= " GROUP BY dm";
 		$sql .= $this->db->order('dm', 'DESC');
 		$this->yearmonth=0;
-		
+
 		$res = $this->_getAmountByMonth($year, $sql);
 		// var_dump($res);print '<br>';
 		return $res;
@@ -275,12 +280,12 @@ class AffairesStats extends Stats
 	 */
 	function getTransformRateByMonthWithPrevYear($endyear, $startyear, $cachedelay = 0) {
 		global $conf, $user, $langs;
-		
+
 		if ($startyear > $endyear)
 			return - 1;
-		
+
 		$datay = array ();
-		
+
 		// Search into cache
 		if (! empty($cachedelay)) {
 			include_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
@@ -289,15 +294,15 @@ class AffairesStats extends Stats
 
 		$newpathofdestfile = $conf->user->dir_temp . '/' . get_class($this) . '_' . __FUNCTION__ . '_' . (empty($this->cachefilesuffix) ? '' : $this->cachefilesuffix . '_') . $langs->defaultlang . '_user' . $user->id . '.cache';
 		$newmask = '0644';
-		
+
 		$nowgmt = dol_now();
-		
+
 		$foundintocache = 0;
 		if ($cachedelay > 0) {
 			$filedate = dol_filemtime($newpathofdestfile);
 			if ($filedate >= ($nowgmt - $cachedelay)) {
 				$foundintocache = 1;
-				
+
 				$this->_lastfetchdate[get_class($this) . '_' . __FUNCTION__] = $filedate;
 			} else {
 				dol_syslog(get_class($this) . '::' . __FUNCTION__ . " cache file " . $newpathofdestfile . " is not found or older than now - cachedelay (" . $nowgmt . " - " . $cachedelay . ") so we can't use it.");
@@ -339,7 +344,7 @@ class AffairesStats extends Stats
 			if (! empty($conf->global->MAIN_UMASK))
 				$newmask = $conf->global->MAIN_UMASK;
 			@chmod($newpathofdestfile, octdec($newmask));
-			
+
 			$this->_lastfetchdate[get_class($this) . '_' . __FUNCTION__] = $nowgmt;
 		}
 
@@ -357,33 +362,37 @@ class AffairesStats extends Stats
 
 		$this->yearmonth = $year;
 
-		$sql = "SELECT date_format(t.datec,'%m') as dm, count(t.amount_prosp)";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+		$sql = "SELECT date_format(cmd.date_commande,'%m') as dm, count(cmd.total_ht)";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
+		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "commande as cmd ON cmd.rowid=t.fk_commande";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
-			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=a.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
 		$sql .= " GROUP BY dm";
 		$sql .= $this->db->order('dm', 'DESC');
 
 		$res_total = $this->_getNbByMonth($year, $sql);
-		
+
 		$this->status=6;
-		
-		$sql = "SELECT date_format(t.datec,'%m') as dm, count(t.amount_prosp)";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires as t";
+
+		$sql = "SELECT date_format(cmd.date_commande,'%m') as dm, count(cmd.total_ht)";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "affaires_det as t";
+		$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "affaires as a ON a.rowid=t.fk_affaires";
+		$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "commande as cmd ON cmd.rowid=t.fk_commande";
 		if (! $user->rights->societe->client->voir && ! $user->societe_id)
-			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=t.fk_soc AND sc.fk_user=" . $user->id;
+			$sql .= " INNER JOIN " . MAIN_DB_PREFIX . "societe_commerciaux as sc ON sc.fk_soc=a.fk_soc AND sc.fk_user=" . $user->id;
 		$sql .= $this->buildWhere();
 		$sql .= " GROUP BY dm";
 		$sql .= $this->db->order('dm', 'DESC');
-		
+
 		$this->status=0;
 		$this->yearmonth=0;
-		
+
 		$res_only_wined = $this->_getNbByMonth($year, $sql);
-		
+
 		$res=array();
-		
+
 		foreach($res_total as $key=>$total_row) {
 			//var_dump($total_row);
 			if (!empty($total_row[1])) {
@@ -391,7 +400,7 @@ class AffairesStats extends Stats
 			} else {
 				$res[$key]=array($total_row[0],0);
 			}
-			
+
 		}
 		// var_dump($res);print '<br>';
 		return $res;

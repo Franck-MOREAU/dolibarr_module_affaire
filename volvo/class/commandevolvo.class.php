@@ -1089,7 +1089,7 @@ class CommandeVolvo extends Commande
 			$this->line->array_options = $array_options;
 		}
 
-		$result = $this->line->update();
+		$result = $this->line->update($user);
 		if ($result > 0) {
 			// Reorder if child line
 			if (! empty($fk_parent_line))

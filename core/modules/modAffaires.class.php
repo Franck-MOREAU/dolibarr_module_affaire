@@ -1267,6 +1267,22 @@ class modAffaires extends DolibarrModules
 		);
 		$r ++;
 
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo',
+				'type' => 'left',
+				'titre' => 'Factures fournisseurs',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'soltrs',
+				'url' => '/affaires/volvo/form/facturefournisseurs.php',
+				'langs' => 'lead@lead',
+				'position' => 100+$r,
+				'enabled' => '1',
+				'perms' => '1',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
 	}
 
 	/**
@@ -1360,7 +1376,8 @@ class modAffaires extends DolibarrModules
 
 
 		//extrafields Commande ligne
-		$res = $extrafields->addExtraField('fk_supplierorderlineid', 'Commande fournisseur', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseurdet:rowid:rowid::'=>null)),1,1,0);
+		$res = $extrafields->addExtraField('fk_supplierorderlineid', 'Commande fournisseur ligne', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseurdet:rowid:rowid::'=>null)),1,1,0);
+
 
 		//extrafields contrat
 		$res = $extrafields->addExtraField('dt_env_cli', 'Date d\'envoi Au client', 'date', 0 , '', 'contrat',0, 0,'', array('options'=>''),1,1,1);
@@ -1380,6 +1397,12 @@ class modAffaires extends DolibarrModules
 		$res = $extrafields->addExtraField('vin', 'VIN', 'varchar', 5, 18, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('immat', 'Immat', 'varchar', 6, 10, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('client', 'Client', 'varchar', 7, 255, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+
+		//extrafields commande fournisseur ligne
+		$res = $extrafields->addExtraField('solde', 'Solder', 'boolean', 1 , '', 'commande_fournisseurdet',0, 0,'', array('options'=>''),1,1,0);
+
+		//extrafields facture fournisseur ligne
+		$res = $extrafields->addExtraField('fk_supplierorderlineid', 'Commande fournisseur ligne', 'sellist', 1 , '', 'facture_fourn_det',0, 0,'', array('options'=>array('commande_fournisseurdet:rowid:rowid::'=>null)),1,1,0);
 
 		//extrafields produits
 		$res = $extrafields->addExtraField('notupdatecost', 'Cout non modifiable (MAJ prix commande)', 'boolean', 0, '', 'product',0, 0,'', array('options'=>''),1,1,3);
