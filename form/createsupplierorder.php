@@ -33,6 +33,10 @@ $langs->load('companies');
 $langs->load('products');
 $langs->load('volvo@volvo');
 
+if (empty($user->rights->fournisseur->commande->creer) && empty($user->rights->affaires->volvo->update_cost)) {
+	accessforbidden();
+}
+
 $orderid = GETPOST('orderid', 'int');
 $action = GETPOST('action', 'alpha');
 $idlines = GETPOST('idlines', 'alpha');

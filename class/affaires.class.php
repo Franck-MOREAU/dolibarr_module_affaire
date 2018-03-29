@@ -284,7 +284,7 @@ class Affaires extends CommonObject
 	 *
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array()) {
+	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array(),$nodetail=0) {
 		global $langs;
 		$sql = "SELECT";
 		$sql .= " t.rowid,";
@@ -353,11 +353,13 @@ class Affaires extends CommonObject
 				$line->fetch_thirdparty($this->fk_soc);
 				if($line->fk_ctm >0) $line->contremarque = $line->fetchObjectFrom('soci�t�', 'rowid', $line->ctm);
 
-				// loading affaires lines into affaires_det array of object
-				$det = New Affaires_det($this->db);
-				$det->fetch_all('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
-				foreach ($det->lines as $line_det){
-					$line->affaires_det[$line_det->id]=$line_det;
+				if (empty($nodetail)) {
+					// loading affaires lines into affaires_det array of object
+					$det = New Affaires_det($this->db);
+					$det->fetch_all('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
+					foreach ($det->lines as $line_det){
+						$line->affaires_det[$line_det->id]=$line_det;
+					}
 				}
 				$this->lines[] = $line;
 			}
