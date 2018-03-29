@@ -201,7 +201,7 @@ class FormAffairesProduct extends FormAffaires
 		$out='';
 		$outarray=array();
 
-		//$filterbycat=categchild($filterbycat, 'sql');
+		$filterbycat=categchild($filterbycat, 'sql');
 
 		$warehouseStatusArray = array();
 		if (! empty($warehouseStatus))
