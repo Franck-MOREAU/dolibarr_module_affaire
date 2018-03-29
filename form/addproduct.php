@@ -64,7 +64,7 @@ if ($action == 'addproduct') {
 	}
 }
 
-top_htmlhead('', '',0,0,array(),array('overflow'=>'hidden'));
+top_htmlhead('', '');
 print '<body style="overflow:hidden">';
 print '<form name="createorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
