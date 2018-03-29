@@ -154,7 +154,7 @@ if ($action == 'createsupplerorder') {
 	   print '</script>' . "\n";
 	   llxFooter();
 	   exit;
-	   }*/
+	 }*/
 }
 
 print '<form name="createsupplerorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';

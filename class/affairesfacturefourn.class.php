@@ -46,13 +46,13 @@ class AffairesFactureFourn
 
 		if (is_array($filter)) {
 			foreach ( $filter as $key => $value ) {
-				if ($key == 'cdet.rowid' || $key == 'cdet.fk_product' || $key == 'c.fk_soc' ) {
+				if ($key == 'cdet.rowid' || $key == 'cdet.fk_product' || $key == 'c.fk_soc') {
 					$sql .= ' AND ' . $key . ' = ' . $value;
 				} elseif ($key == 'cdet.qty' || $key == 'cdet.total_ht') {
 					$sql .= ' AND ' . $key . ' = \'' . $this->db->escape($value) . '\'';
 				} elseif ($key == 'cdete.solde') {
 					$sql .= ' AND ' . $key . $value;
-				}else {
+				} else {
 					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
 				}
 			}
@@ -83,7 +83,7 @@ class AffairesFactureFourn
 						$line->$key = $val;
 					}
 
-					$line->id=$line->rowid;
+					$line->id = $line->rowid;
 					$line->p_url = '';
 					if (! empty($line->fk_product)) {
 						$objstatic = new Product($this->db);
@@ -92,11 +92,11 @@ class AffairesFactureFourn
 					}
 					$line->solde_checkbox = '';
 					if (! empty($line->solde)) {
-						$line->solde_checkbox = img_picto('', 'switch_on', ' id="swith_'.$line->id.'" data-src="'.$line->id.'" ');
-						$line->solde_checkbox .= '<input type="checkbox" name="solde_lineid_'.$line->id.'" id="solde_lineid_'.$line->id.'" value="'.$line->id.'" checked style="display:none">';
+						$line->solde_checkbox = img_picto('', 'switch_on', ' id="swith_' . $line->id . '" data-src="' . $line->id . '" ');
+						$line->solde_checkbox .= '<input type="checkbox" name="solde_lineid_' . $line->id . '" id="solde_lineid_' . $line->id . '" value="' . $line->id . '" checked style="display:none">';
 					} else {
-						$line->solde_checkbox = img_picto('', 'switch_off', ' id="swith_'.$line->id.'" data-src="'.$line->id.'" ');
-						$line->solde_checkbox .= '<input type="checkbox" name="solde_lineid_'.$line->id.'" id="solde_lineid_'.$line->id.'" value="'.$line->id.'" style="display:none">';
+						$line->solde_checkbox = img_picto('', 'switch_off', ' id="swith_' . $line->id . '" data-src="' . $line->id . '" ');
+						$line->solde_checkbox .= '<input type="checkbox" name="solde_lineid_' . $line->id . '" id="solde_lineid_' . $line->id . '" value="' . $line->id . '" style="display:none">';
 					}
 
 					$this->lines[] = $line;
@@ -107,87 +107,138 @@ class AffairesFactureFourn
 			return $num;
 		} else {
 			$this->errors[] = "Error " . $this->db->lasterror();
-			dol_syslog(get_class($this) . "::" . __METHOD__. ' ' . $this->db->lasterror(), LOG_ERR);
+			dol_syslog(get_class($this) . "::" . __METHOD__ . ' ' . $this->db->lasterror(), LOG_ERR);
 			return - 1;
 		}
 	}
 
-	public function createFactureFourn($socid,$ref,$date,$lineid=array(),$solde=array(),$amount=array()) {
-		global $conf,$user;
+	/**
+	 *
+	 * @param int $socid
+	 * @param string $ref
+	 * @param int $date
+	 * @param array $linesid
+	 * @param array $solde
+	 * @param array $amount
+	 * @return number
+	 */
+	public function createFactureFourn($socid, $ref, $date, $linesid = array(), $solde = array(), $amount = array()) {
+		global $conf, $user;
 
 		$error = 0;
 
 		dol_syslog(__METHOD__, LOG_DEBUG);
 
 		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
-		//require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
+		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
+		// require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
 
-
-		if (count($lineid)==0){
-			$this->errors[]='Missing line id array';
-			$error++;
+		if (count($linesid) == 0) {
+			$this->errors[] = 'Missing line id array';
+			$error ++;
 		}
-		if (count($amount)==0){
-			$this->errors[]='Missing amount array';
-			$error++;
+		if (count($amount) == 0) {
+			$this->errors[] = 'Missing amount array';
+			$error ++;
 		}
-		if (empty($socid)==0){
-			$this->errors[]='Missing $socid';
-			$error++;
+		if (empty($socid)) {
+			$this->errors[] = 'Missing $socid';
+			$error ++;
 		}
-		if (empty($ref)==0){
-			$this->errors[]='Ref fourn';
-			$error++;
+		if (empty($ref)) {
+			$this->errors[] = 'Ref fourn';
+			$error ++;
 		}
 
 		$this->db->begin();
 		if (empty($error)) {
 
-			//Build an array for link supplier invoice to order invoice
-			$orderid=array();
-			foreach($lineid as $key=>$val) {
-				$sql = 'SELECT fk_commande FROM '.MAIN_DB_PREFIX.'commande_fournisseurdet WHERE rowid='.$val;
+			// Build an array for link supplier invoice to order invoice
+			$orderid = array();
+			$lineorderidinfo = array();
+			foreach ( $linesid as $key => $val ) {
+				$sql = 'SELECT fk_commande,description,tva_tx,info_bits,fk_product,qty,product_type FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE rowid=' . $val;
 				$resql = $this->db->query($sql);
-				if (!$resql) {
+				if (! $resql) {
 					$this->errors[] = "Error " . $this->db->lasterror();
 				} else {
 					$num = $this->db->num_rows($resql);
 					if ($num > 0) {
 						while ( $obj = $this->db->fetch_object($resql) ) {
-							$orderid[$obj->fk_commande]=$obj->fk_commande;
+							$orderid[$obj->fk_commande] = $obj->fk_commande;
+							$lineorderidinfo[$val] = array(
+									'desc' => $obj->description,
+									'tva' => $obj->tva_tx,
+									'bits' => $obj->info_bits,
+									'fk_product'=>$obj->fk_product,
+									'qty'=>$obj->qty,
+									'type'=>$obj->product_type,
+							);
 						}
 					}
 				}
 			}
 
 			$factsup = new FactureFournisseur($this->db);
-			$factsup->socid=$socid;
-			$factsup->ref_supplier=$ref_fact_fourn;
-			$factsup->date=$date_fact_fourn;
+			$factsup->socid = $socid;
+			$factsup->ref_supplier = $ref;
+			$factsup->date = $date;
 
-			foreach($orderid as $val) {
-				$cmdsup->linked_objects["commande"] = $this->id;
+			$factsup->linked_objects["order_supplier"] = $orderid;
+
+			foreach ( $linesid as $key => $val ) {
+
+				$line = new SupplierInvoiceLine($this->db);
+				$line->description = $lineorderidinfo[$val]['description'];
+				$line->pu_ht=$amount[$val];
+				$line->tva_tx=$lineorderidinfo[$val]['tva'];
+				$line->localtax1_tx=0;
+				$line->localtax2_tx=0;
+				$line->qty=$lineorderidinfo[$val]['qty'];
+				$line->fk_product=$lineorderidinfo[$val]['fk_product'];
+				$line->info_bits=$lineorderidinfo[$val]['bits'];
+				$line->product_type=$lineorderidinfo[$val]['type'];
+
+				$line->array_options['options_fk_supplierorderlineid']=$val;
+
+				$factsup->lines[]=$line;
 			}
 
-
-			$result=$factsup->create($user);
-			if ($result < 0) {
+			$invoiceid = $factsup->create($user);
+			if ($invoiceid < 0) {
 				$this->errors[] = $factsup->error;
 				$error ++;
 			}
 		}
 
+		//Update supplier oerder line with status solde
+		if (empty($error)) {
+			foreach ( $solde as $key => $val ) {
+				$orderline = new CommandeFournisseurLigne($this->db);
+				$result=$orderline->fetch($val);
+				if ($result < 0) {
+					$this->errors[] = $orderline->error;
+					$error ++;
+				} else {
+					$orderline->array_options['options_solde']=1;
+					$result=$orderline->update();
+					if ($result < 0) {
+						$this->errors[] = $orderline->error;
+						$error ++;
+					}
+				}
+			}
+		}
+
 		if (! $error) {
 			$this->db->commit();
-			return 1;
+			return $invoiceid;
 		} else {
 			foreach ( $this->errors as $errmsg ) {
-				dol_syslog(get_class($this) . "::".__METHOD__ .' '. $errmsg, LOG_ERR);
+				dol_syslog(get_class($this) . "::" . __METHOD__ . ' ' . $errmsg, LOG_ERR);
 			}
 			$this->db->rollback();
 			return - 1 * $error;
 		}
-
-
 	}
 }
