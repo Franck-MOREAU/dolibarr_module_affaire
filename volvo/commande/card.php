@@ -1449,8 +1449,8 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 		print '</tr>';
 
-		$rowspan = 3;
-		print '<tr style="height:25px">';
+		$rowspan = 5;
+		print '<tr>';
 		$key = 'vin';
 		$label = $extrafields->attribute_label[$key];
 		include dol_buildpath('/affaires/tpl/extra_inline.php');
@@ -1469,7 +1469,25 @@ if ($action == 'create' && $user->rights->commande->creer)
 
 		print '</tr>';
 
-		print '<tr style="height:25px">';
+		print '<tr>';
+		$key = 'dt_blockupdate';
+		$label = $extrafields->attribute_label[$key];
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
+
+		$key = 'dt_lim_annul';
+		$label = $extrafields->attribute_label[$key];
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
+		print '</tr>';
+
+		print '<tr>';
+		$key = 'dt_liv_maj';
+		$label = $extrafields->attribute_label[$key];
+		include dol_buildpath('/affaires/tpl/extra_inline.php');
+
+		print '<td></td>';
+		print '</tr>';
+
+		print '<tr>';
 		$key = 'vnac';
 		$label = $extrafields->attribute_label[$key];
 		include dol_buildpath('/affaires/tpl/extra_inline.php');

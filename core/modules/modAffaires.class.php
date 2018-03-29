@@ -1354,6 +1354,10 @@ class modAffaires extends DolibarrModules
 		$res = $extrafields->addExtraField('vcm_model', 'Modèle du groupe', 'varchar', 49, 255, 'commande',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('vcm_fonct', 'Fonctionnement du groupe', 'select', 50 , '', 'commande',0, 0,'', array('options'=>array(1=>'Diesel',2=>'Diesel + Electrique')),1,1,3);
 		$res = $extrafields->addExtraField('vcm_frigo_nbh', 'Nombre d\'heure de fonctionnement:', 'int', 51 , '10', 'commande',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('dt_liv_maj', 'Date de livraison mise a jour', 'date', 52, '', 'commande',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_blockupdate', 'Date blocage modification', 'date', 53, '', 'commande',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('dt_lim_annul', 'Date limite d\'annulation', 'date', 54, '', 'commande',0, 0,'', array('options'=>''),1,1,1);
+
 		//extrafields Commande ligne
 		$res = $extrafields->addExtraField('fk_supplierorder', 'Commande fournisseur', 'sellist', 1 , '', 'commandedet',0, 0,'', array('options'=>array('commande_fournisseur:ref:rowid::'=>null)),1,1,0);
 
@@ -1374,6 +1378,7 @@ class modAffaires extends DolibarrModules
 		$res = $extrafields->addExtraField('dt_lim_annul', 'Date limite d\'annulation', 'date', 4, '', 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('vin', 'VIN', 'varchar', 5, 18, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
 		$res = $extrafields->addExtraField('immat', 'Immat', 'varchar', 6, 10, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
+		$res = $extrafields->addExtraField('client', 'Client', 'varchar', 7, 255, 'commande_fournisseur',0, 0,'', array('options'=>''),1,1,1);
 
 		//extrafields produits
 		$res = $extrafields->addExtraField('notupdatecost', 'Cout non modifiable (MAJ prix commande)', 'boolean', 0, '', 'product',0, 0,'', array('options'=>''),1,1,3);
