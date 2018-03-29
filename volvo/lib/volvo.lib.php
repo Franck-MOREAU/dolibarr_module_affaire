@@ -341,7 +341,11 @@ Function prepare_array($var,$mode){
 }
 
 function categchild($categ, $mode){
-	$cat=array($categ);
+	if(is_array($categ)){
+		$cat=$categ;
+	}else{
+		$cat=array($categ);
+	}
 
 	$retour = categ_child($cat);
 	while (is_array($retour)&&count($retour)>0){

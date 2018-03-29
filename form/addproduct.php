@@ -19,6 +19,7 @@ $langs->load('orders');
 $orderid = GETPOST('orderid', 'int');
 $productid = GETPOST('productid', 'int');
 $action = GETPOST('action', 'alpha');
+$comment = GETPOST('comment','alpha');
 
 $result = $order->fetch($orderid);
 if ($result < 0) {
@@ -35,7 +36,7 @@ if ($action == 'addproduct') {
 		$current_status = $order->statut;
 		$order->statut = $order::STATUS_DRAFT;
 
-		$result = $order->addline('', 0, 1, 0, 0, 0, $product->id, 0, 0, 0, 'HT', 0, '', '', 0, - 1, '', '', '', 0, '', $array_options);
+		$result = $order->addline($comment, 0, 1, 0, 0, 0, $product->id, 0, 0, 0, 'HT', 0, '', '', 0, - 1, '', '', '', 0, '', $array_options);
 		if ($result < 0) {
 			if (! empty($order->error)) {
 				setEventMessages($order->error, null, 'errors');
@@ -64,21 +65,24 @@ if ($action == 'addproduct') {
 }
 
 top_htmlhead('', '');
-
+print '<body style="overflow:hidden">';
 print '<form name="createorder" action="' . $_SERVER["PHP_SELF"] . '" method="POST">';
 print '<input type="hidden" name="token" value="' . $_SESSION['newtoken'] . '">';
 print '<input type="hidden" name="orderid" value="' . $orderid. '">';
 print '<input type="hidden" name="action" value="addproduct">';
 
 print '<table class="border" width="100%">';
-print '<tr class="liste_titre">';
-print '<th align="center">' . "Ajout d'un produit</th>";
-print '</tr>';
 print '<tr>';
 print '<td>';
 $formAffairesProduct->select_produits(0, 'productid', '', '', '', 1, 2, '', 0, array(), 0, 1, 0, '', 0, '', array(), $conf->global->VOLVO_CAT_PROD);
 print '</td>';
 print '</tr>';
+print '<tr>';
+print '<td>';
+print 'Commentaires: <input type="text" name="comment" value="' . $comment . '" size="30" ></td>';
+print '</td>';
+print '</tr>';
+
 print '</table>';
 
 print '<div class="tabsAction">';
@@ -86,6 +90,7 @@ print '<div class="tabsAction">';
 print '<input type="submit" align="center" class="button" value="' . $langs->trans('Add') . '" name="save" id="save"/>';
 print '</div>';
 print '</form>';
+print '</body>';
 
-llxFooter();
+//llxFooter();
 $db->close();

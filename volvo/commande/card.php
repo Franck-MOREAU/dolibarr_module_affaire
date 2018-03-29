@@ -1600,8 +1600,9 @@ if ($action == 'create' && $user->rights->commande->creer)
 					$out .= '' . "\n";
 					$out .= '  		$divsupplier.dialog({' . "\n";
 					$out .= '  			modal:true' . "\n";
+					$out .= '			,title:"Ajout d\'un produit"' . "\n";
 					$out .= '  			,width:500' . "\n";
-					$out .= '  			,height:200' . "\n";
+					$out .= '  			,height:"auto"' . "\n";
 					$out .= '  			,close:function() {document.location.reload(true);}' . "\n";
 					$out .= '  		});' . "\n";
 					$out .= '' . "\n";
