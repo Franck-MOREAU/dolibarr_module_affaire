@@ -1604,7 +1604,14 @@ class Affaires_det extends CommonObject
 	 * @return number
 	 */
 	public function getMarginReelDate($vehid=0) {
-		return $this->getSumFactFourn($vehid,1);
+		$asssts=new self($this->db);
+		$asssts->fetch($vehid);
+		if (!empty($asssts->fk_commande)) {
+			return $asssts->getSumFactFourn($asssts->fk_commande,1);
+		} else {
+			return 0;
+		}
+
 	}
 
 	/**
@@ -1613,7 +1620,13 @@ class Affaires_det extends CommonObject
 	 * @return number
 	 */
 	public function getMarginDate($vehid=0) {
-		return $this->getSumFactFourn($vehid,0);
+		$asssts=new self($this->db);
+		$asssts->fetch($vehid);
+		if (!empty($asssts->fk_commande)) {
+			return $asssts->getSumFactFourn($asssts->fk_commande,0);
+		} else {
+			return 0;
+		}
 	}
 
 	public function getSumFactFournLn($orderlineid=0,$solde=0) {
@@ -1632,7 +1645,7 @@ class Affaires_det extends CommonObject
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as cfd ON de.fk_supplierorderlineid=cfd.rowid';
 		$sql .=' LEFT JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cfde ON cfde.fk_object=cfd.rowid';
 		if (!empty($solde)) {
-			$sql .= 'AND cfde.solde='.$solde;
+			$sql .= ' AND cfde.solde='.$solde;
 		}
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=cfd.rowid';
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det as fd ON fd.rowid=fde.fk_object';
