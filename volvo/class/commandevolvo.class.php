@@ -259,37 +259,44 @@ class CommandeVolvo extends Commande
 	 */
 	public function getCostPriceReal($orderid, $type = 'real') {
 		require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
+		dol_include_once('/affaires/class/affaires.class.php');
 
-		$extrafieldslines = new Extrafields($this->db);
-		$extralabelslines = $extrafieldslines->fetch_name_optionals_label($this->table_element_line);
+		$extrafieldslines = new Extrafields ( $this->db );
+		$extralabelslines = $extrafieldslines->fetch_name_optionals_label ( $this->table_element_line );
 
-		$result = $this->fetch($orderid);
+		$result = $this->fetch ( $orderid );
 		if ($result < 0) {
 			return - 1;
 		}
-
-		$this->total_real_paht = 0;
-		// Calc other margin
-		if (is_array($this->lines) && count($this->lines)) {
-			foreach ( $this->lines as $line ) {
-				$line->fetch_optionals($line->id, $extralabelslines);
-
-				$realpa = price2num($line->array_options['options_buyingprice_real']);
-				if ($type == 'real') {
-					if (! empty($line->array_options['options_fk_supplier']) || ! empty($line->array_options['options_dt_invoice'])) {
-						$this->total_real_paht += $realpa;
-					} elseif (! empty($line->pa_ht)) {
-						$this->total_real_paht += $line->pa_ht * $line->qty;
-					}
-				} elseif ($type == 'theo') {
-					if (! empty($line->pa_ht)) {
-						$this->total_real_paht += $line->pa_ht * $line->qty;
+		if ($type = 'real') {
+			$this->total_real_paht = 0;
+			// Calc other margin
+			if (is_array ( $this->lines ) && count ( $this->lines )) {
+				foreach ( $this->lines as $line ) {
+					$line->fetch_optionals ( $line->id, $extralabelslines );
+					$affaires_det = new Affaires_det ( $this->db );
+					$solde_amount_reel = $affaires_det->getSumFactFournLn ( $line->id, 1 );
+					if ($solde_amount_reel == - 99999)
+						$solde_amount_reel = '';
+					if (! empty ( $solde_amount_reel )) {
+						$this->total_real_paht += $solde_amount_reel;
+					} else {
+						$this->total_real_paht += $line->pa_ht;
 					}
 				}
 			}
-		}
 
-		return 1;
+			return 1;
+		} else {
+			if (is_array ( $this->lines ) && count ( $this->lines )) {
+				foreach ( $this->lines as $line ) {
+					$line->fetch_optionals ( $line->id, $extralabelslines );
+					$this->total_real_paht += $line->pa_ht;
+				}
+			}
+
+			return 1;
+		}
 	}
 
 	/**
@@ -1223,13 +1230,15 @@ class CommandeVolvo extends Commande
 	}
 	public function calcvhprice($prixtot) {
 		global $conf;
+		dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 
 		$this->fetch_lines(1);
 
 		$cost = 0;
 		$costvnc = 0;
 		foreach ( $this->lines as $line ) {
-			if ($line->fk_product != $conf->global->VOLVO_TRUCK) {
+			$categ = product_all_categ($line->fk_product, 'array');
+			if (is_array($categ) && !in_array($conf->global->VOLVO_VEHICULE, $categ)) {
 				if ($line->fk_product == $conf->global->VOLVO_SURES) {
 					if ($line->total_ht > 0)
 						$costvnc += $line->total_ht;
@@ -1249,6 +1258,7 @@ class CommandeVolvo extends Commande
 	}
 	public function updatevhpriceandvnc($prixtot = 0) {
 		global $user, $conf;
+		dol_include_once('/affaires/volvo/lib/volvo.lib.php');
 
 		$this->fetch_lines(1);
 		if ($prixtot == 0) {
@@ -1256,10 +1266,11 @@ class CommandeVolvo extends Commande
 		}
 
 		$value = array();
-		$value = $this->calcvhprice($cmdnum, $prixtot);
+		$value = $this->calcvhprice($prixtot);
 
 		foreach ( $this->lines as $line ) {
-			if ($line->fk_product == $conf->global->VOLVO_TRUCK) {
+			$categ = product_all_categ($line->fk_product, 'array');
+			if (is_array($categ) && in_array($conf->global->VOLVO_VEHICULE, $categ)) {
 				$res = $this->updateline($line->id, $line->label, $value['prixvh'], $line->qty, $line->remise_percent, $line->tva_tx, 0, 0, 'HT', 0, '', '', 0, 0, 0, 0, $value['prixvh']);
 				if ($result < 0) {
 					array_push($this->errors, $cmd->error);
