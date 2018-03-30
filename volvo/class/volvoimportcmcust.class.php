@@ -361,7 +361,7 @@ class VolvoImportCMCust extends VolvoImport
 
 	/**
 	 *
-	 * @param unknown $matchColmunArray
+	 * @param array $matchColmunArray
 	 */
 	public function checkData($matchColmunArray = array()) {
 		global $langs;
@@ -812,7 +812,7 @@ class VolvoImportCMCust extends VolvoImport
 
 	/**
 	 *
-	 * @param unknown $matchColmunArray
+	 * @param array $matchColmunArray
 	 * @return number
 	 */
 	public function importData($matchColmunArray = array()) {
@@ -1026,7 +1026,7 @@ class VolvoImportCMCust extends VolvoImport
 
 	/**
 	 *
-	 * @param unknown $batch_number
+	 * @param array $batch_number
 	 * @param string $type
 	 */
 	public function getResultCnt($batch_number, $type = '') {
