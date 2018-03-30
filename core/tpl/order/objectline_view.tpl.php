@@ -63,7 +63,7 @@ if (empty($inputalsopricewithtax))
 if (empty($outputalsopricetotalwithtax))
 	$outputalsopricetotalwithtax = 0;
 
-$coldisplay = 0;
+
 print '<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->';
 if($line->rang%2==0){
 	$bc = 'class="drag drop pair"';
@@ -74,23 +74,21 @@ if($line->rang%2==0){
 
 
 print '<tr id="row-' . $line->id . '" ' . $bc . '>';
+// article
 print '<td class="linecoldescription" style="border-bottom-style: none; border-top: 1px solid black;" colspan="2">';
-$coldisplay++;
 print '<div id="line_' . $line->id . '"></div>';
 $format = $conf->global->MAIN_USE_HOURMIN_IN_DATE_RANGE ? 'dayhour' : 'day';
 print $form->textwithtooltip ( $text, $description, 3, '', '', $i, 0, (! empty ( $line->fk_parent_line ) ? img_picto ( '', 'rightarrow' ) : '') );
-
-// Show range
-print get_date_range ( $line->date_start, $line->date_end, $format );
 
 // Add description in form
 if (! empty ( $conf->global->PRODUIT_DESC_IN_FORM )) {
 	print (! empty ( $line->description ) && $line->description != $line->product_label) ? '<br>' . dol_htmlentitiesbr ( $line->description ) : '';
 }
 
+print '</td>';
 
-print '</td><td align="right" class="linecolqty nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-$coldisplay ++;
+//quantité
+print '<td align="right" class="linecolqty nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
 if ((($line->info_bits & 2) != 2) && $line->special_code != 3) {
 	print $line->qty;
 } else {
@@ -98,88 +96,70 @@ if ((($line->info_bits & 2) != 2) && $line->special_code != 3) {
 }
 print '</td>';
 
+// prix unitaire
 print '<td align="right" class="linecoluht nowrap"	style="border-bottom-style: none; border-top: 1px solid black;">';
-$coldisplay ++;
 print price ( $line->subprice );
 print '</td>';
 
+//prix achat
 print '<td align="right" class="linecolmargin1 nowrap margininfos"	style="border-bottom-style: none; border-top: 1px solid black;">';
-$coldisplay ++;
 print price ( $line->pa_ht );
 print '</td>';
 
+// prix réel
 print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-$coldisplay ++;
 // TODO recuperer le montant des factures fournisseurs
 //print price ( $line->array_options ["options_buyingprice_real"] );
 print '</td>';
 
-// TODO détecter factures fournisseur
-if (empty ( $line->array_options ["options_fk_supplier"] )) {
-	print '<td align="right" class="liencolht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay ++;
-	print price ( $line->total_ht - ($line->qty * $line->pa_ht) );
-	print '</td>';
-} else {
-	print '<td align="right" class="liencolht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay ++;
-	print price ( $line->total_ht - $line->array_options ["options_buyingprice_real"] );
-	print '</td>';
-}
+// prix réel
+print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
+// TODO recuperer le montant des factures fournisseurs
+//print price ( $line->array_options ["options_buyingprice_real"] );
+print '</td>';
 
 $soltrs1 = prepare_array ( 'VOLVO_VCM_LIST', 'array' );
 $soltrs2 = prepare_array ( 'VOLVO_PACK_LIST', 'array' );
 $soltrs = array_merge ( $soltrs1, $soltrs2 );
 
 if ($this->statut == 0 && $object_rights->creer) {
+	// editer
 	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay ++;
-	if (($line->info_bits & 2) == 2 || ! empty ( $disableedit )) {
-	} else {
+	if (empty ( $disableedit )) {
 		print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=editline&amp;lineid=' . $line->id . '#line_' . $line->id . '">' . img_edit () . '</a>';
 	}
 	print '</td>';
 	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay ++;
-	if ((($this->situation_counter == 1 || ! $this->situation_cycle_ref) && empty ( $disableremove ))) {
-		print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete () . '</a>';
+	print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete() . '</a>';
+	print '</td>';
+
+	print '<td class="linecolmove tdlineupdown" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	if ($i > 0) {
+		print '<a class="lineupdown" href="' . $_SERVER["PHP_SELF"].'?id='.$this->id.'&amp;action=up&amp;rowid='.$line->id .'">' . img_up('default',0,'imgupforline') .'</a>';
+	}
+	if ($i < $num-1) {
+		print '<a class="lineupdown" href="' . $_SERVER["PHP_SELF"].'?id='.$this->id.'&amp;action=down&amp;rowid='.$line->id .'">' . img_down('default',0,'imgupforline') .'</a>';
 	}
 	print '</td>';
-	if ($num > 1 && empty ( $conf->browser->phone ) && ($this->situation_counter == 1 || ! $this->situation_cycle_ref) && empty ( $disablemove )) {
-		print '<td align="center" class="linecolmove tdlineupdown" 	style="border-bottom-style: none; border-top: 1px solid black;">';
-		$coldisplay ++;
-		if ($i > 0) {
-			print '<a class="lineupdown" href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=up&amp;rowid=' . $line->id . '">' . img_up ( 'default', 0, 'imgupforline' ) . '</a>';
-		}
-		if ($i < $num - 1) {
-			print '<a class="lineupdown" href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=down&amp;rowid=' . $line->id . '">' . img_down ( 'default', 0, 'imgdownforline' ) . '</a>';
-		}
-		print '</td>';
-	} else {
-		print '<td align="center"' . ((empty ( $conf->browser->phone ) && empty ( $disablemove )) ? ' class="linecolmove tdlineupdown"' : ' class="linecolmove"') . ' style="border-bottom-style: none">';
-		$coldisplay ++;
-		print '</td>';
-	}
-} elseif (($this->statut > 0 && ($object_rights->creer)) && (in_array ( $line->product_ref, $soltrs ))) {
-	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay++;
-	if ($line->total_ht==0) {
 
-	} else {
+} elseif (($this->statut > 0 && ($object_rights->creer)) && (in_array ( $line->product_ref, $soltrs ))) {
+	// supprimer
+	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	if (!$line->total_ht==0) {
 		print '<a href="' . $_SERVER["PHP_SELF"].'?id='.$this->id.'&amp;action=editline&amp;lineid='.$line->id.'#line_'.$line->id. '">' . img_edit() . '</a>';
 	}
 	print '</td>';
 	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay++;
 	if ($line->total_ht == 0) {
 		print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete() . '</a>';
 	}
 	print '</td>';
-	print '<td></td>';
+	print '<td align="center" class="linecolmove tdlineupdown" style="border-bottom-style: none; border-top: 1px solid black;">';
+
+	print '</td>';
 
 } else {
 	print '<td colspan="3" style="border-bottom-style: none; border-top: 1px solid black;">';
-	$coldisplay=$coldisplay+3;
 	print '</td></tr>';
 }
 
@@ -187,17 +167,35 @@ if(!empty($line->desc)){
 	print '<tr id="row-'.$line->id.'" '.$bc.'>';
 	print '<td colspan="10" style="border-style: none"><b><span style="text-decoration: underline;">Commentaire:</span></b>' . $line->desc . '</td></tr>';
 }
-
-$cmdid = get_cmdidfromlineid($line->array_options['options_fk_supplierorderlineid']);
-if($cmdid>0){
+$cmd_fourn_line = New CommandeFournisseurLigne($line->db);
+if($line->array_options['options_fk_supplierorderlineid']>0){
+	$res_line = $cmd_fourn_line->fetch($line->array_options['options_fk_supplierorderlineid']);
+}else{
+	$res_line=0;
+}
+if($res_line>0){
 	dol_include_once('/fourn/class/fournisseur.commande.class.php');
 	$cmd_fourn = new CommandeFournisseur($line->db);
-	$res = $cmd_fourn->fetch($cmdid);
+	$res = $cmd_fourn->fetch($cmd_fourn_line->fk_commande);
 	if($res>0){
 		$ret = $langs->trans("SupplierOrder") . ' ';
 		$ret.= $cmd_fourn->getNomUrl(1) . ' ';
 		$ret.= dol_print_date($cmd_fourn->date,'day') . ' ';
 		$ret.= $cmd_fourn->getLibStatut(3);
+		$solde = $cmd_fourn_line->array_options['options_solde'];
+		if(!empty($solde)){
+			$txt = 'Soldé';
+			$img = img_picto($txt, 'statut4');
+		}elseif(empty($solde) && 1){
+			$txt = 'Partiellement soldé';
+			$img = img_picto($txt, 'statut3');
+		}else{
+			$txt = 'non soldé';
+			$img = img_picto($txt, 'statut0');
+		}
+
+		$ret.= ' - Statut: ' . $txt . ' ' . $img;
+
 	}else{
 		$ret = '';
 	}
@@ -207,8 +205,5 @@ if(!empty($ret)){
 	print '<tr id="row-'.$line->id.'" '.$bc.'>';
 	print '<td colspan="10" style="border-style: none">' . $ret . '</td></tr>';
 }
-
-// Line extrafield
-
 
 print '<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->';

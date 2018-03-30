@@ -685,16 +685,3 @@ function dol_banner_tab_perso($object, $paramid, $morehtml='', $shownav=1, $fiel
 	print '</div>';
 	print '<div class="underrefbanner clearboth"></div>';
 }
-
-function get_cmdidfromlineid($lineid){
-	global $db;
-
-	$sql = 'SELECT fk_commande FROM ' .MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE rowid=' .$lineid;
-	$res = $db->query($sql);
-	if($res){
-		$obj=$db->fetch_object($res);
-		return $obj->fk_commande;
-	}else{
-		return $sql;
-	}
-}
