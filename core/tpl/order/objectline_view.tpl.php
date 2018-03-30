@@ -65,7 +65,13 @@ if (empty($outputalsopricetotalwithtax))
 
 $coldisplay = 0;
 print '<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->';
-print '<tr id="row-' . $line->id . '" ' . $bcdd [$var] . '>';
+if($line->rang%2==0){
+	$bc = 'class="drag drop pair"';
+}else{
+	$bc = 'class="drag drop impair"';
+}
+
+print '<tr id="row-' . $line->id . '" ' . $bc . '>';
 print '<td class="linecoldescription" style="border-bottom-style: none" colspan="2">';
 $coldisplay++;
 print '<div id="line_' . $line->id . '"></div>';
@@ -172,21 +178,35 @@ if ($this->statut == 0 && $object_rights->creer) {
 } else {
 	print '<td colspan="3" style="border-bottom-style: none">';
 	$coldisplay=$coldisplay+3;
-	print '</td>';
+	print '</td></tr>';
 }
 
 if(!empty($line->desc)){
-	print '<tr id="row-'.$line->id.'" '.$bcdd[$var].'>';
+	print '<tr id="row-'.$line->id.'" '.$bc.'>';
 	print '<td colspan="10" style="border-style: none"><b><span style="text-decoration: underline;">Commentaire:</span></b>' . $line->desc . '</td></tr>';
 }
 
-// Line extrafield
-if (! empty($line->array_options["options_fk_supplier"]) || ! empty($line->array_options["options_fk_supplier"])) {
-	print '<tr id="row-'.$line->id.'" '.$bcdd[$var] .'>';
-	print '<td><b><span style="text-decoration: underline;">facture de:</span></b>' . $extrafieldsline->showOutputField("fk_supplier",$line->array_options["options_fk_supplier"]) .'</td>';
-	print '<td><b><span style="text-decoration: underline;">Reçue le:</span></b>' . $extrafieldsline->showOutputField("dt_invoice",$line->array_options["options_dt_invoice"]) . '</td>';
-	print '<td colspan="8"></td>';
-	print '</tr>';
+$cmdid = get_cmdidfromlineid($line->array_options['options_fk_supplierorderlineid']);
+if($cmdid>0){
+	dol_include_once('/fourn/class/fournisseur.commande.class.php');
+	$cmd_fourn = new CommandeFournisseur($line->db);
+	$res = $cmd_fourn->fetch($cmdid);
+	if($res>0){
+		$ret = $langs->trans("SupplierOrder") . ' ';
+		$ret.= $cmd_fourn->getNomUrl(1) . ' ';
+		$ret.= dol_print_date($cmd_fourn->date,'day') . ' ';
+		$ret.= $cmd_fourn->getLibStatut(3);
+	}else{
+		$ret = '';
+	}
 }
+
+if(!empty($ret)){
+	print '<tr id="row-'.$line->id.'" '.$bc.'>';
+	print '<td colspan="10" style="border-style: none">' . $ret . '</td></tr>';
+}
+
+// Line extrafield
+
 
 print '<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->';
