@@ -43,6 +43,7 @@ if (empty($object) || ! is_object($object)) {
 }
 
 global $forceall, $senderissupplier, $inputalsopricewithtax, $outputalsopricetotalwithtax;
+dol_include_once('/affaires/class/affaires.class.php');
 
 $usemargins = 0;
 if (! empty($conf->margin->enabled) && ! empty($object->element) && in_array($object->element, array(
@@ -108,14 +109,20 @@ print '</td>';
 
 // prix réel
 print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-// TODO recuperer le montant des factures fournisseurs
-//print price ( $line->array_options ["options_buyingprice_real"] );
+$affaires_det = New Affaires_det($line->db);
+$solde_amount_reel = $affaires_det->getSumFactFournLn($line->id,1);
+if($solde_amount_reel == -99999) $solde_amount_reel = '';
+print price ( $solde_amount_reel);
 print '</td>';
 
-// prix réel
+// écart
 print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-// TODO recuperer le montant des factures fournisseurs
-//print price ( $line->array_options ["options_buyingprice_real"] );
+if(!empty($solde_amount_reel)&& !$solde_amount_reel==-99999){
+	$ecart = $line->subprice - $solde_amount_reel;
+}else{
+	$ecart = $line->subprice - $line->pa_ht;
+}
+print price ( $ecart);
 print '</td>';
 
 $soltrs1 = prepare_array ( 'VOLVO_VCM_LIST', 'array' );
@@ -185,7 +192,6 @@ if($res_line>0){
 		$ret.= $cmd_fourn->getNomUrl(1) . ' ';
 		$ret.= dol_print_date($cmd_fourn->date,'day') . ' ';
 		$solde = $cmd_fourn_line->array_options['options_solde'];
-		dol_include_once('/affaires/class/affaires.class.php');
 		$affaires_det = New Affaires_det($line->db);
 		$solde_amount = $affaires_det->getSumFactFournLn($line->id,0);
 		if(!empty($solde)){
