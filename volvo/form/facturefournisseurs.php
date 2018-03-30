@@ -165,9 +165,11 @@ foreach ( $arrayfields as $keyf => $dataf ) {
 }
 
 // Do we click on purge search criteria ?
-if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) {
-	${$dataf['searchinputname']} = '';
-	$search_socid = '';
+if (GETPOST ( 'button_removefilter_x', 'alpha' ) || GETPOST ( 'button_removefilter.x', 'alpha' ) || GETPOST ( 'button_removefilter', 'alpha' )) {
+	foreach ( $arrayfields as $keyf => $dataf ) {
+		${$dataf ['searchinputname']} = '';
+		$search_socid = '';
+	}
 }
 
 // Affect search input
@@ -184,6 +186,7 @@ include DOL_DOCUMENT_ROOT . '/core/actions_changeselectedfields.inc.php';
 $option = '';
 $filter = array();
 $filter['cdete.solde'] = ' IS NULL ';
+$filter['c.fk_statut IN'] = '1,2,3,4';
 foreach ( $arrayfields as $keyf => $dataf ) {
 	if (! empty(${$dataf['searchinputname']})) {
 		$filter[$keyf] = ${$dataf['searchinputname']};
