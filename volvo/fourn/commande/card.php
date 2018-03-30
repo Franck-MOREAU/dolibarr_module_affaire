@@ -815,8 +815,19 @@ if (empty($reshook)) {
 						$error ++;
 					}
 				}
-			} else if ($reshook < 0)
+			} else if ($reshook < 0) {
 				$error ++;
+			}
+
+			if (!$error) {
+				dol_include_once('/affaires/class/affaires.class.php');
+				$aff=new Affaires($db);
+				$result=$aff->copyExtrafieldsValuesFromObjToObjLinked($object);
+				if ($result<0) {
+					setEventMessages(null,$aff->errors,'errors');
+				}
+			}
+
 		} else {
 			$action = 'edit_extras';
 		}

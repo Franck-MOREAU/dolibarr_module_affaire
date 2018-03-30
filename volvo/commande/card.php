@@ -866,71 +866,87 @@ if ($action == 'remove_file') {
 	}
 }
 
-if ($action == 'update_extras')	{
-	if (isset($_POST['options_vin'])){
-		$vin = GETPOST('options_vin','alpha');
+if ($action == 'update_extras') {
+	if (isset($_POST['options_vin'])) {
+		$vin = GETPOST('options_vin', 'alpha');
 	} else {
 		$vin = $object->array_options['options_vin'];
 	}
-	if (isset($_POST['options_immat'])){
-		$immat  = GETPOST('options_immat','alpha');
+	if (isset($_POST['options_immat'])) {
+		$immat = GETPOST('options_immat', 'alpha');
 	} else {
 		$immat = $object->array_options['options_immat'];
 	}
-	if (isset($_POST['options_numom'])){
-		$numom  = GETPOST('options_numom');
+	if (isset($_POST['options_numom'])) {
+		$numom = GETPOST('options_numom');
 	} else {
 		$numom = $object->array_options['options_numom'];
 	}
-	if (isset($_POST['options_ctm'])){
-		$ctm  = GETPOST('options_ctm','alpha');
+	if (isset($_POST['options_ctm'])) {
+		$ctm = GETPOST('options_ctm', 'alpha');
 	} else {
 		$ctm = $object->array_options['options_ctm'];
 	}
 
-	if ($object->array_options['options_vin'] != $vin || $object->array_options['options_immat'] != $immat|| $object->array_options['options_numom'] != $numom || $object->array_options['options_ctm'] != $ctm) {
-		if(!empty($object->array_options['options_ctm'])){
+	if ($object->array_options['options_vin'] != $vin || $object->array_options['options_immat'] != $immat || $object->array_options['options_numom'] != $numom || $object->array_options['options_ctm'] != $ctm) {
+		if (! empty($object->array_options['options_ctm'])) {
 			dol_include_once('/societe/class/societe.class.php');
-			$socctm = New Societe($db);
+			$socctm = new Societe($db);
 			$socctm->fetch($object->array_options['options_ctm']);
 			$note = 'Client: ' . $object->thirdparty->name . "\n";
-			$note.= 'Contremarque: ' . $socctm->name . "\n";
-			$note.= 'N° de Chassis :' . $vin . "\n";
-			$note.= 'Immatriculation :' . $immat . "\n";
-			$note.= 'Date de Livraison :' . dol_print_date($object->date_livraison, 'daytext');
+			$note .= 'Contremarque: ' . $socctm->name . "\n";
+			$note .= 'N° de Chassis :' . $vin . "\n";
+			$note .= 'Immatriculation :' . $immat . "\n";
+			$note .= 'Date de Livraison :' . dol_print_date($object->date_livraison, 'daytext');
 		} else {
 			$note = 'Client: ' . $object->thirdparty->name . "\n";
-			$note.= 'N° de Chassis :' . $vin . "\n";
-			$note.= 'Immatriculation :' . $immat . "\n";
-			$note.= 'Date de Livraison :' . dol_print_date($object->date_livraison, 'daytext');
+			$note .= 'N° de Chassis :' . $vin . "\n";
+			$note .= 'Immatriculation :' . $immat . "\n";
+			$note .= 'Date de Livraison :' . dol_print_date($object->date_livraison, 'daytext');
 		}
-		$object->update_note($note,'_public');
+		$object->update_note($note, '_public');
 		dol_include_once('/volvo/lib/volvo.lib.php');
-		//Update_vh_info_from_custorder($object->id,$vin , $immat,$numom,$ctm,$note,1,$oject->id);
+		// Update_vh_info_from_custorder($object->id,$vin , $immat,$numom,$ctm,$note,1,$oject->id);
 	}
 
 	// Fill array 'array_options' with data from update form
 	$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
 	$ret = $extrafields->setOptionalsFromPost($extralabels, $object, GETPOST('attribute'));
-	if ($ret < 0) $error++;
+	if ($ret < 0)
+		$error ++;
 
-	if (! $error){
+	if (! $error) {
 		// Actions on extra fields (by external module or standard code)
 		// TODO le hook fait double emploi avec le trigger !!
-		$hookmanager->initHooks(array('orderdao'));
-		$parameters = array('id' => $object->id);
+		$hookmanager->initHooks(array(
+				'orderdao'
+		));
+		$parameters = array(
+				'id' => $object->id
+		);
 		$reshook = $hookmanager->executeHooks('insertExtraFields', $parameters, $object, $action); // Note that $action and $object may have been modified by
-			                                                                                      // some hooks
+		                                                                                           // some hooks
 		if (empty($reshook)) {
 			$result = $object->insertExtraFields();
 			if ($result < 0) {
-				$error++;
+				$error ++;
 			}
 		} else if ($reshook < 0)
-			$error++;
-		}
+			$error ++;
+	}
 
-	if ($error) $action = 'edit_extras';
+	if (!$error) {
+		dol_include_once('/affaires/class/affaires.class.php');
+		$aff=new Affaires($db);
+		$result=$aff->copyExtrafieldsValuesFromObjToObjLinked($object);
+		if ($result<0) {
+			setEventMessages(null,$aff->errors,'errors');
+		}
+	}
+
+	if ($error) {
+		$action = 'edit_extras';
+	}
 }
 
 include DOL_DOCUMENT_ROOT.'/core/actions_printing.inc.php';

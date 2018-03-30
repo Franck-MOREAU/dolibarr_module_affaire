@@ -1,31 +1,125 @@
 <?php
-
 require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-
 class Affaires extends CommonObject
 {
 	public $db; // !< To store db handler
 	public $error; // !< To return error code (or message)
-	public $errors = array (); // !< To return several error codes (or messages)
+	public $errors = array(); // !< To return several error codes (or messages)
 	public $element = 'affaires'; // !< Id that identify managed objects
 	public $table_element = 'affaires';
-
-	public $fields=array(
-			'rowid'         =>array('type'=>'integer',      'label'=>'TechnicalID',      'enabled'=>1, 'visible'=>-2, 'notnull'=>1,  'index'=>1, 'position'=>1, 'comment'=>'Id'),
-			'ref'           =>array('type'=>'varchar(128)', 'label'=>'Ref',              'enabled'=>1, 'visible'=>1,  'notnull'=>1,  'showoncombobox'=>1, 'index'=>1, 'position'=>10, 'searchall'=>1, 'comment'=>'Reference of object'),
-			'fk_user_resp' => array('type'=>'integer:User:user/class/user.class.php', 'label'=>'userresp', 'visible'=>1, 'enabled'=>1, 'position'=>50, 'notnull'=>-1, 'index'=>1,),
-			'fk_soc' => array('type'=>'integer:Societe:societe/class/societe.class.php', 'label'=>'ThirdParty', 'visible'=>1, 'enabled'=>1, 'position'=>50, 'notnull'=>-1, 'index'=>1, 'searchall'=>1, 'help'=>"LinkToThirparty",),
-			'fk_ctm' => array('type'=>'integer:Societe:societe/class/societe.class.php', 'label'=>'ctm', 'visible'=>1, 'enabled'=>1, 'position'=>50, 'notnull'=>-1, 'index'=>1,),
-			'fk_c_type' => array('type'=>'integer', 'label'=>'cv', 'visible'=>1, 'enabled'=>1, 'position'=>50, 'notnull'=>-1, 'index'=>1,),
-			'year' => array('type'=>'integer', 'label'=>'year', 'visible'=>1, 'enabled'=>1, 'position'=>50, 'notnull'=>-1, 'index'=>1,),
-			'description' => array('type'=>'varchar(500)', 'label'=>'description', 'visible'=>1, 'enabled'=>1, 'position'=>50, 'notnull'=>-1, 'index'=>1,),
-			'datec' => array('type'=>'datetime', 'label'=>'DateCreation', 'visible'=>-2, 'enabled'=>1, 'position'=>500, 'notnull'=>1,),
-			'tms' => array('type'=>'timestamp', 'label'=>'DateModification', 'visible'=>-2, 'enabled'=>1, 'position'=>501, 'notnull'=>1,),
-			'fk_user_author' => array('type'=>'integer', 'label'=>'UserAuthor', 'visible'=>-2, 'enabled'=>1, 'position'=>510, 'notnull'=>1,),
-			'fk_user_mod' => array('type'=>'integer', 'label'=>'UserModif', 'visible'=>-2, 'enabled'=>1, 'position'=>511, 'notnull'=>-1,),
+	public $fields = array(
+			'rowid' => array(
+					'type' => 'integer',
+					'label' => 'TechnicalID',
+					'enabled' => 1,
+					'visible' => - 2,
+					'notnull' => 1,
+					'index' => 1,
+					'position' => 1,
+					'comment' => 'Id'
+			),
+			'ref' => array(
+					'type' => 'varchar(128)',
+					'label' => 'Ref',
+					'enabled' => 1,
+					'visible' => 1,
+					'notnull' => 1,
+					'showoncombobox' => 1,
+					'index' => 1,
+					'position' => 10,
+					'searchall' => 1,
+					'comment' => 'Reference of object'
+			),
+			'fk_user_resp' => array(
+					'type' => 'integer:User:user/class/user.class.php',
+					'label' => 'userresp',
+					'visible' => 1,
+					'enabled' => 1,
+					'position' => 50,
+					'notnull' => - 1,
+					'index' => 1
+			),
+			'fk_soc' => array(
+					'type' => 'integer:Societe:societe/class/societe.class.php',
+					'label' => 'ThirdParty',
+					'visible' => 1,
+					'enabled' => 1,
+					'position' => 50,
+					'notnull' => - 1,
+					'index' => 1,
+					'searchall' => 1,
+					'help' => "LinkToThirparty"
+			),
+			'fk_ctm' => array(
+					'type' => 'integer:Societe:societe/class/societe.class.php',
+					'label' => 'ctm',
+					'visible' => 1,
+					'enabled' => 1,
+					'position' => 50,
+					'notnull' => - 1,
+					'index' => 1
+			),
+			'fk_c_type' => array(
+					'type' => 'integer',
+					'label' => 'cv',
+					'visible' => 1,
+					'enabled' => 1,
+					'position' => 50,
+					'notnull' => - 1,
+					'index' => 1
+			),
+			'year' => array(
+					'type' => 'integer',
+					'label' => 'year',
+					'visible' => 1,
+					'enabled' => 1,
+					'position' => 50,
+					'notnull' => - 1,
+					'index' => 1
+			),
+			'description' => array(
+					'type' => 'varchar(500)',
+					'label' => 'description',
+					'visible' => 1,
+					'enabled' => 1,
+					'position' => 50,
+					'notnull' => - 1,
+					'index' => 1
+			),
+			'datec' => array(
+					'type' => 'datetime',
+					'label' => 'DateCreation',
+					'visible' => - 2,
+					'enabled' => 1,
+					'position' => 500,
+					'notnull' => 1
+			),
+			'tms' => array(
+					'type' => 'timestamp',
+					'label' => 'DateModification',
+					'visible' => - 2,
+					'enabled' => 1,
+					'position' => 501,
+					'notnull' => 1
+			),
+			'fk_user_author' => array(
+					'type' => 'integer',
+					'label' => 'UserAuthor',
+					'visible' => - 2,
+					'enabled' => 1,
+					'position' => 510,
+					'notnull' => 1
+			),
+			'fk_user_mod' => array(
+					'type' => 'integer',
+					'label' => 'UserModif',
+					'visible' => - 2,
+					'enabled' => 1,
+					'position' => 511,
+					'notnull' => - 1
+			)
 	);
-
 	public $id;
 	public $ref;
 	public $fk_user_resp;
@@ -39,21 +133,17 @@ class Affaires extends CommonObject
 	public $datec;
 	public $fk_user_mod;
 	public $tms;
-	public $lines = array ();
-	public $type = array ();
+	public $lines = array();
+	public $type = array();
 	public $affaires_det = array();
 	public $contremarque;
-
 	function __construct($db) {
-
 		$this->db = $db;
 
 		$result_type = $this->loadType();
 
 		return ($result_type);
-
 	}
-
 	private function loadType() {
 		global $langs;
 
@@ -107,9 +197,8 @@ class Affaires extends CommonObject
 		if (isset($this->description))
 			$this->description = trim($this->description);
 
-
-// Check parameters
-// Put here code to add control on parameters values
+		// Check parameters
+		// Put here code to add control on parameters values
 		if (empty($this->ref)) {
 			$error ++;
 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('AffairesRef'));
@@ -207,7 +296,7 @@ class Affaires extends CommonObject
 	 * @param int $id object
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function fetch($id,$nodetail=0) {
+	function fetch($id, $nodetail = 0) {
 		global $langs;
 		$sql = "SELECT";
 		$sql .= " t.rowid,";
@@ -246,7 +335,7 @@ class Affaires extends CommonObject
 				$this->tms = $this->db->jdate($obj->tms);
 				$this->type_label = $this->type[$this->fk_c_type];
 				$this->fetch_thirdparty($this->fk_soc);
-				if($this->fk_ctm >0){
+				if ($this->fk_ctm > 0) {
 					require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 					$soc = new Societe($this->db);
 					$soc->fetch($this->fk_ctm);
@@ -254,11 +343,13 @@ class Affaires extends CommonObject
 				}
 				if (empty($nodetail)) {
 					// loading affaires lines into affaires_det array of object
-					$det = New Affaires_det($this->db);
-					$det->fetch_all('ASC','fk_status, fk_commande',0,0,array('fk_affaires'=>$this->id));
-					$this->affaires_det=array();
-					foreach ($det->lines as $line){
-						$this->affaires_det[$line->id]=$line;
+					$det = new Affaires_det($this->db);
+					$det->fetch_all('ASC', 'fk_status, fk_commande', 0, 0, array(
+							'det.fk_affaires' => $this->id
+					));
+					$this->affaires_det = array();
+					foreach ( $det->lines as $line ) {
+						$this->affaires_det[$line->id] = $line;
 					}
 				}
 			}
@@ -272,7 +363,6 @@ class Affaires extends CommonObject
 		}
 	}
 
-
 	/**
 	 * Load object in memory from the database
 	 *
@@ -284,7 +374,7 @@ class Affaires extends CommonObject
 	 *
 	 * @return int <0 if KO, >0 if OK
 	 */
-	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array(),$nodetail=0) {
+	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array(), $nodetail = 0) {
 		global $langs;
 		$sql = "SELECT";
 		$sql .= " t.rowid,";
@@ -305,16 +395,17 @@ class Affaires extends CommonObject
 
 		if (is_array($filter)) {
 			foreach ( $filter as $key => $value ) {
-				if (($key == 't.fk_c_status') || ($key == 't.rowid') || ($key == 't.fk_soc') || ($key == 't.fk_ctm') ||($key == 't.fk_c_type') || ($key == 't.fk_user_resp')
-						|| ($key == 't.year')) {
-							$sql .= ' AND ' . $key . ' = ' . $value;
-						} elseif ($key == 't.fk_c_status !IN') {
-							$sql .= ' AND t.fk_c_status NOT IN (' . $value . ')';
-						} elseif ($key == 't.rowid !IN') {
-							$sql .= ' AND t.rowid NOT IN (' . $value . ')';
-						} else {
-							$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
-						}
+				if (!empty($value)) {
+					if (($key == 't.fk_c_status') || ($key == 't.rowid') || ($key == 't.fk_soc') || ($key == 't.fk_ctm') || ($key == 't.fk_c_type') || ($key == 't.fk_user_resp') || ($key == 't.year')) {
+						$sql .= ' AND ' . $key . ' = ' . $value;
+					} elseif ($key == 't.fk_c_status !IN') {
+						$sql .= ' AND t.fk_c_status NOT IN (' . $value . ')';
+					} elseif ($key == 't.rowid !IN') {
+						$sql .= ' AND t.rowid NOT IN (' . $value . ')';
+					} else {
+						$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
+					}
+				}
 			}
 		}
 
@@ -330,7 +421,7 @@ class Affaires extends CommonObject
 		$resql = $this->db->query($sql);
 
 		if ($resql) {
-			$this->lines = array ();
+			$this->lines = array();
 
 			$num = $this->db->num_rows($resql);
 
@@ -351,14 +442,17 @@ class Affaires extends CommonObject
 				$line->tms = $this->db->jdate($obj->tms);
 				$line->type_label = $this->type[$line->fk_c_type];
 				$line->fetch_thirdparty($this->fk_soc);
-				if($line->fk_ctm >0) $line->contremarque = $line->fetchObjectFrom('soci�t�', 'rowid', $line->ctm);
+				if ($line->fk_ctm > 0)
+					$line->contremarque = $line->fetchObjectFrom('societe', 'rowid', $line->ctm);
 
 				if (empty($nodetail)) {
 					// loading affaires lines into affaires_det array of object
-					$det = New Affaires_det($this->db);
-					$det->fetch_all('ASC','rowid',0,0,array('fk_affaires'=>$this->id));
-					foreach ($det->lines as $line_det){
-						$line->affaires_det[$line_det->id]=$line_det;
+					$det = new Affaires_det($this->db);
+					$det->fetch_all('ASC', 'rowid', 0, 0, array(
+							'det.fk_affaires' => $line->id
+					));
+					foreach ( $det->lines as $line_det ) {
+						$line->affaires_det[$line_det->id] = $line_det;
 					}
 				}
 				$this->lines[] = $line;
@@ -372,7 +466,6 @@ class Affaires extends CommonObject
 			return - 1;
 		}
 	}
-
 
 	/**
 	 * Update object into database
@@ -401,7 +494,6 @@ class Affaires extends CommonObject
 			$this->year = trim($this->year);
 		if (isset($this->description))
 			$this->description = trim($this->description);
-
 
 		// Check parameters
 		// Put here code to add control on parameters values
@@ -466,17 +558,17 @@ class Affaires extends CommonObject
 				// // End call triggers
 			}
 		}
-// 		if (! $error) {
-// 			foreach ($this->affaires_det as $affaires_det){
-// 				$res = $affaires_det->update($user);
-// 				if($res <1){
-// 					foreach ($affaires_det->errors as $det_error){
-// 						$this->errors[] = $det_error;
-// 						$error ++;
-// 					}
-// 				}
-// 			}
-// 		}
+		// if (! $error) {
+		// foreach ($this->affaires_det as $affaires_det){
+		// $res = $affaires_det->update($user);
+		// if($res <1){
+		// foreach ($affaires_det->errors as $det_error){
+		// $this->errors[] = $det_error;
+		// $error ++;
+		// }
+		// }
+		// }
+		// }
 
 		// Commit or rollback
 		if ($error) {
@@ -521,12 +613,12 @@ class Affaires extends CommonObject
 		}
 
 		if (! $error) {
-			foreach($this->affaires_det as $affaire_det){
+			foreach ( $this->affaires_det as $affaire_det ) {
 				$res = $affaire_det->delete($user);
 			}
-			if ($res< 1) {
+			if ($res < 1) {
 				$error ++;
-				foreach ($affaire_det->errors as $det_error){
+				foreach ( $affaire_det->errors as $det_error ) {
 					$this->errors[] = $det_error;
 				}
 			}
@@ -557,7 +649,6 @@ class Affaires extends CommonObject
 			return 1;
 		}
 	}
-
 	public function getNomUrl($withpicto = 0) {
 		global $langs;
 
@@ -571,11 +662,11 @@ class Affaires extends CommonObject
 
 		$result = $lien;
 
-		if ($withpicto == 0){
+		if ($withpicto == 0) {
 			$result .= $this->ref . $lienfin;
-		}elseif($withpicto == 1){
+		} elseif ($withpicto == 1) {
 			$result .= img_object($label, $picto) . $this->ref . $lienfin;
-		}else{
+		} else {
 			$result .= $this->ref . img_object($label, $picto) . $lienfin;
 		}
 		return $result;
@@ -587,39 +678,34 @@ class Affaires extends CommonObject
 	 *
 	 * @return void
 	 */
-	public function initAsSpecimen()
-	{
+	public function initAsSpecimen() {
 		$this->initAsSpecimenCommon();
 	}
 
 	/**
-	 *  Returns the reference to the following non used Proposal used depending on the active numbering module
-	 *  defined into PROPALE_ADDON
+	 * Returns the reference to the following non used Proposal used depending on the active numbering module
+	 * defined into PROPALE_ADDON
 	 *
-	 *  @return string      		Reference libre pour la propale
+	 * @return string Reference libre pour la propale
 	 */
-	function getNextNumRef()
-	{
-		global $conf,$langs;
+	function getNextNumRef() {
+		global $conf, $langs;
 		$langs->load("propal");
 
-		if (! empty($conf->global->AFFAIRES_ADDON))
-		{
-			$mybool=false;
+		if (! empty($conf->global->AFFAIRES_ADDON)) {
+			$mybool = false;
 
-			$file = $conf->global->AFFAIRES_ADDON.".php";
+			$file = $conf->global->AFFAIRES_ADDON . ".php";
 			$classname = $conf->global->AFFAIRES_ADDON;
 
 			// Include file with class
 			$dir = dol_buildpath('/affaires/core/modules/affaires/');
 
 			// Load file with numbering class (if found)
-			$mybool|=@include_once $dir.$file;
+			$mybool |= @include_once $dir . $file;
 
-
-			if (! $mybool)
-			{
-				dol_print_error('',"Failed to include file ".$file);
+			if (! $mybool) {
+				dol_print_error('', "Failed to include file " . $file);
 				return '';
 			}
 
@@ -627,35 +713,79 @@ class Affaires extends CommonObject
 			$numref = "";
 			$numref = $obj->getNextValue($this);
 
-			if ($numref != "")
-			{
+			if ($numref != "") {
 				return $numref;
-			}
-			else
-			{
-				$this->error=$obj->error;
-				//dol_print_error($db,"Propale::getNextNumRef ".$obj->error);
+			} else {
+				$this->error = $obj->error;
+				// dol_print_error($db,"Propale::getNextNumRef ".$obj->error);
 				return "";
 			}
-		}
-		else
-		{
+		} else {
 			$langs->load("errors");
-			print $langs->trans("Error")." ".$langs->trans("ErrorModuleSetupNotComplete");
+			print $langs->trans("Error") . " " . $langs->trans("ErrorModuleSetupNotComplete");
 			return "";
 		}
 	}
+	public function copyExtrafieldsValuesFromObjToObjLinked(CommonObject $srcobj, &$objtupdated = array()) {
+		require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
+		$extra = new ExtraFields($this->db);
 
+		$src_array_options = array();
+		$src_array_options = $extra->fetch_name_optionals_label($srcobj->table_element);
+
+		$srcobj->fetch_optionals();
+
+		$this->db->begin();
+		if (is_array($src_array_options) && count($src_array_options) > 0) {
+			$srcobj->fetchObjectLinked();
+			if (is_array($srcobj->linkedObjects) && count($srcobj->linkedObjects) > 0) {
+				foreach ( $srcobj->linkedObjects as $objectype => $objArray ) {
+					if (is_array($objArray) && count($objArray) > 0) {
+						foreach ( $objArray as $destobjid => $destobj ) {
+							if (! empty($destobj->table_element)) {
+								if (! array_key_exists($destobj->table_element, $objtupdated) || ! array_key_exists($destobj->id, $objtupdated[$destobj->table_element])) {
+									$dest_array_options = array();
+									$dest_array_options = $extra->fetch_name_optionals_label($destobj->table_element);
+									if (is_array($dest_array_options) && count($dest_array_options) > 0) {
+										$final_array = array_intersect_assoc($src_array_options, $dest_array_options);
+
+										if (is_array($final_array) && count($final_array) > 0) {
+											$destobj->fetch_optionals();
+											foreach ( $final_array as $colname => $colabel ) {
+												$destobj->array_options['options_' . $colname] = $srcobj->array_options['options_' . $colname];
+												$result = $destobj->insertExtraFields();
+												if ($result < 0) {
+													$this->errors[] = $destobj->error;
+													$error ++;
+												}
+											}
+											$objtupdated[$destobj->table_element][$destobj->id] = '';
+											$result = $this->copyExtrafieldsValuesFromObjToObjLinked($destobj, $objtupdated);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if (! $error) {
+			$this->db->commit();
+			return 1;
+		} else {
+			$this->db->rollback();
+			return - 1;
+		}
+	}
 }
-
 class Affaires_det extends CommonObject
 {
 	public $db; // !< To store db handler
 	public $error; // !< To return error code (or message)
-	public $errors = array (); // !< To return several error codes (or messages)
+	public $errors = array(); // !< To return several error codes (or messages)
 	public $element = 'affaires_det'; // !< Id that identify managed objects
 	public $table_element = 'affaires_det'; // !< Name of table without prefix where object is stored
-
 	public $id;
 	public $fk_affaires;
 	public $fk_gamme;
@@ -680,31 +810,27 @@ class Affaires_det extends CommonObject
 	public $status_label;
 	public $fk_marque_trt;
 	public $marque_trt_label;
-	public $marque_trt= array();
-	public $marque_trt_dict= array();
+	public $marque_trt = array();
+	public $marque_trt_dict = array();
 	public $fk_motifs;
-	public $fk_motifs_array= array();
-	public $motifs=array();
-	public $motifs_dict= array();
+	public $fk_motifs_array = array();
+	public $motifs = array();
+	public $motifs_dict = array();
 	public $spec;
 	public $fk_commande;
 	public $fk_user_author;
 	public $datec;
 	public $fk_user_mod;
 	public $tms;
-	public $lines = array ();
-
-	public $soc_url='';
-	public $ctm_url='';
-	public $ref_url='';
+	public $lines = array();
+	public $soc_url = '';
+	public $ctm_url = '';
+	public $ref_url = '';
 	public $year;
-	public $usrname='';
-	public $cv_type_label='';
-
-	public $listofreferent=array();
-
+	public $usrname = '';
+	public $cv_type_label = '';
+	public $listofreferent = array();
 	function __construct($db) {
-
 		global $conf;
 
 		$this->db = $db;
@@ -718,7 +844,7 @@ class Affaires_det extends CommonObject
 		$result_motifs = $this->loadMotifs();
 
 		if (! empty($conf->contrat->enabled)) {
-			$this->listofreferent['contract'] = array (
+			$this->listofreferent['contract'] = array(
 					'title' => "Contrat",
 					'class' => 'Contrat',
 					'table' => 'contrat',
@@ -726,7 +852,7 @@ class Affaires_det extends CommonObject
 			);
 		}
 		if (! empty($conf->commande->enabled)) {
-			$this->listofreferent['orders'] = array (
+			$this->listofreferent['orders'] = array(
 					'title' => "Commande",
 					'class' => 'Commande',
 					'table' => 'commande',
@@ -734,7 +860,7 @@ class Affaires_det extends CommonObject
 			);
 		}
 
-		return ($result_status&&$result_carrosserie&&$result_gamme&&$result_genre&&$result_marques&&$result_motifs&&$result_silhouette);
+		return ($result_status && $result_carrosserie && $result_gamme && $result_genre && $result_marques && $result_motifs && $result_silhouette);
 	}
 
 	/**
@@ -770,7 +896,6 @@ class Affaires_det extends CommonObject
 	 * Load gamme array
 	 */
 	private function loadGamme() {
-
 		$sql = "SELECT rowid, gamme, cv, active FROM " . MAIN_DB_PREFIX . "c_affaires_gamme WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_gamme sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
@@ -793,7 +918,6 @@ class Affaires_det extends CommonObject
 	 * Load silhouette array
 	 */
 	private function loadSilhouette() {
-
 		$sql = "SELECT rowid, silhouette, cv, active FROM " . MAIN_DB_PREFIX . "c_affaires_silhouette WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_silhouette sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
@@ -816,7 +940,6 @@ class Affaires_det extends CommonObject
 	 * Load genre array
 	 */
 	private function loadGenre() {
-
 		$sql = "SELECT rowid, genre, cv, active FROM " . MAIN_DB_PREFIX . "c_affaires_genre WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_genre sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
@@ -839,7 +962,6 @@ class Affaires_det extends CommonObject
 	 * Load carrosserie array
 	 */
 	private function loadCarrosserie() {
-
 		$sql = "SELECT rowid, carrosserie, active FROM " . MAIN_DB_PREFIX . "c_affaires_carrosserie WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_carrosserie sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
@@ -862,7 +984,6 @@ class Affaires_det extends CommonObject
 	 * Load marque_trt array
 	 */
 	private function loadMarques() {
-
 		$sql = "SELECT rowid, marque, active FROM " . MAIN_DB_PREFIX . "c_affaires_marques WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_marques sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
@@ -885,7 +1006,6 @@ class Affaires_det extends CommonObject
 	 * Load motifs array
 	 */
 	private function loadMotifs() {
-
 		$sql = "SELECT rowid, motif, active FROM " . MAIN_DB_PREFIX . "c_affaires_motif_perte_affaires WHERE active=1";
 		dol_syslog(get_class($this) . "::_load_marques sql=" . $sql, LOG_DEBUG);
 		$resql = $this->db->query($sql);
@@ -905,11 +1025,11 @@ class Affaires_det extends CommonObject
 	}
 
 	/* Create object into database
-	*
-	* @param User $user that creates
-	* @param int $notrigger triggers after, 1=disable triggers
-	* @return int <0 if KO, Id of created object if OK
-	*/
+	 *
+	 * @param User $user that creates
+	 * @param int $notrigger triggers after, 1=disable triggers
+	 * @return int <0 if KO, Id of created object if OK
+	 */
 	function create($user, $notrigger = 0) {
 		global $conf, $langs;
 		$error = 0;
@@ -934,7 +1054,6 @@ class Affaires_det extends CommonObject
 			$this->spec = trim($this->spec);
 		if (isset($this->fk_commande))
 			$this->fk_commande = trim($this->fk_commande);
-
 
 		// Check parameters
 		// Put here code to add control on parameters values
@@ -967,13 +1086,13 @@ class Affaires_det extends CommonObject
 			$error ++;
 			$this->errors[] = $langs->trans('ErrorFieldRequired', $langs->transnoentities('Status'));
 		}
-		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
-			$this->fk_motifs=implode(',',$this->fk_motifs_array);
+		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array) > 0) {
+			$this->fk_motifs = implode(',', $this->fk_motifs_array);
 		}
 
 		if (! $error) {
 			// Insert request
-			$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element."(";
+			$sql = "INSERT INTO " . MAIN_DB_PREFIX . $this->table_element . "(";
 
 			$sql .= "fk_affaires,";
 			$sql .= "fk_gamme,";
@@ -1097,8 +1216,8 @@ class Affaires_det extends CommonObject
 				$this->fk_status = $obj->fk_status;
 				$this->fk_marque_trt = $obj->fk_marque_trt;
 				$this->fk_motifs = $obj->fk_motifs;
-				if (!empty($this->fk_motifs)) {
-					$this->fk_motifs_array= explode(',',$obj->fk_motifs);
+				if (! empty($this->fk_motifs)) {
+					$this->fk_motifs_array = explode(',', $obj->fk_motifs);
 				}
 				$this->spec = $obj->spec;
 				$this->fk_commande = $obj->fk_commande;
@@ -1114,26 +1233,26 @@ class Affaires_det extends CommonObject
 				$this->status_label = $this->status[$this->fk_c_status];
 				$this->marque_trt_label = $this->marque_trt[$this->fk_marque_trt]->marque;
 
-				$this->soc_url='';
-				if (!empty($obj->socid)) {
-					$socstatic= new Societe($this->db);
+				$this->soc_url = '';
+				if (! empty($obj->socid)) {
+					$socstatic = new Societe($this->db);
 					$socstatic->fetch($obj->socid);
-					$this->soc_url=$socstatic->getNomUrl();
+					$this->soc_url = $socstatic->getNomUrl();
 				}
-				$this->ctm_url='';
-				if (!empty($obj->ctmid)) {
-					$socstatic= new Societe($this->db);
+				$this->ctm_url = '';
+				if (! empty($obj->ctmid)) {
+					$socstatic = new Societe($this->db);
 					$socstatic->fetch($obj->ctmid);
-					$this->ctm_url=$socstatic->getNomUrl();
+					$this->ctm_url = $socstatic->getNomUrl();
 				}
 
-				$affstatic= new Affaires($this->db);
-				$affstatic->fetch($obj->fk_affaires,1);
-				$this->ref_url=$affstatic->getNomUrl();
+				$affstatic = new Affaires($this->db);
+				$affstatic->fetch($obj->fk_affaires, 1);
+				$this->ref_url = $affstatic->getNomUrl();
 				$this->cv_type_label = $affstatic->type_label;
 
-				$this->year=$affstatic->year;
-				$this->usrname=$obj->usrname;
+				$this->year = $affstatic->year;
+				$this->usrname = $obj->usrname;
 			}
 			$this->db->free($resql);
 
@@ -1144,7 +1263,6 @@ class Affaires_det extends CommonObject
 			return - 1;
 		}
 	}
-
 
 	/**
 	 * Load object in memory from the database
@@ -1158,8 +1276,7 @@ class Affaires_det extends CommonObject
 	 * @return int <0 if KO, >0 if OK
 	 */
 	function fetch_all($sortorder, $sortfield, $limit, $offset, $filter = array()) {
-
-		require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';
+		require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 
 		global $langs;
 		$sql = "SELECT DISTINCT ";
@@ -1198,16 +1315,16 @@ class Affaires_det extends CommonObject
 
 		if (is_array($filter)) {
 			foreach ( $filter as $key => $value ) {
-				if (($key == 'det.fk_affaires') || ($key == 'det.rowid') || ($key == 'det.fk_gamme') || ($key == 'det.fk_silhouette') || ($key == 'det.fk_genre')
-						|| ($key == 'det.fk_carrosserie') || ($key == 't.fk_status')|| ($key == 'det.fk_marque_trt')
-						|| ($key == 'det.fk_commande') || $key == 't.fk_c_type' || $key == 't.year') {
-					$sql .= ' AND ' . $key . ' = ' . $value;
-				} elseif ($key == 'det.fk_status !IN') {
-					$sql .= ' AND det.fk_status NOT IN (' . $value . ')';
-				} elseif ($key == 'det.rowid !IN') {
-					$sql .= ' AND det.rowid NOT IN (' . $value . ')';
-				}else {
-					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
+				if (! empty($value)) {
+					if (($key == 'det.fk_affaires') || ($key == 'det.rowid') || ($key == 'det.fk_gamme') || ($key == 'det.fk_silhouette') || ($key == 'det.fk_genre') || ($key == 'det.fk_carrosserie') || ($key == 't.fk_status') || ($key == 'det.fk_marque_trt') || ($key == 'det.fk_commande') || $key == 't.fk_c_type' || $key == 't.year') {
+						$sql .= ' AND ' . $key . ' = ' . $value;
+					} elseif ($key == 'det.fk_status !IN') {
+						$sql .= ' AND det.fk_status NOT IN (' . $value . ')';
+					} elseif ($key == 'det.rowid !IN') {
+						$sql .= ' AND det.rowid NOT IN (' . $value . ')';
+					} else {
+						$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
+					}
 				}
 			}
 		}
@@ -1220,13 +1337,13 @@ class Affaires_det extends CommonObject
 			$sql .= ' ' . $this->db->plimit($limit + 1, $offset);
 		}
 
-		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
+		dol_syslog(get_class($this) . "::" . __METHOD__, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 
 		if ($resql) {
-			$this->lines = array ();
+			$this->lines = array();
 			$num = $this->db->num_rows($resql);
-			if ($num>0) {
+			if ($num > 0) {
 				while ( $obj = $this->db->fetch_object($resql) ) {
 					$line = new Affaires_det($this->db);
 					$line->id = $obj->rowid;
@@ -1238,8 +1355,8 @@ class Affaires_det extends CommonObject
 					$line->fk_status = $obj->fk_status;
 					$line->fk_marque_trt = $obj->fk_marque_trt;
 					$line->fk_motifs = $obj->fk_motifs;
-					if (!empty($this->fk_motifs)) {
-						$this->fk_motifs_array= explode(',',$obj->fk_motifs);
+					if (! empty($this->fk_motifs)) {
+						$this->fk_motifs_array = explode(',', $obj->fk_motifs);
 					}
 					$line->fk_commande = $obj->fk_commande;
 					$line->spec = $obj->spec;
@@ -1256,28 +1373,26 @@ class Affaires_det extends CommonObject
 					$line->marque_trt_label = $line->marque_trt[$line->fk_marque_trt]->marque;
 					$line->status_label = $line->status[$line->fk_status];
 
-					$line->soc_url='';
-					if (!empty($obj->socid)) {
-						$socstatic= new Societe($this->db);
+					$line->soc_url = '';
+					if (! empty($obj->socid)) {
+						$socstatic = new Societe($this->db);
 						$socstatic->fetch($obj->socid);
-						$line->soc_url=$socstatic->getNomUrl();
+						$line->soc_url = $socstatic->getNomUrl();
 					}
-					$line->ctm_url='';
-					if (!empty($obj->ctmid)) {
-						$socstatic= new Societe($this->db);
+					$line->ctm_url = '';
+					if (! empty($obj->ctmid)) {
+						$socstatic = new Societe($this->db);
 						$socstatic->fetch($obj->ctmid);
-						$line->ctm_url=$socstatic->getNomUrl();
+						$line->ctm_url = $socstatic->getNomUrl();
 					}
 
-					$affstatic= new Affaires($this->db);
-					$affstatic->fetch($obj->fk_affaires,1);
-					$line->ref_url=$affstatic->getNomUrl();
+					$affstatic = new Affaires($this->db);
+					$affstatic->fetch($obj->fk_affaires, 1);
+					$line->ref_url = $affstatic->getNomUrl();
 					$line->cv_type_label = $affstatic->type_label;
 
-					$line->year=$affstatic->year;
-					$line->usrname=$obj->usrname;
-
-
+					$line->year = $affstatic->year;
+					$line->usrname = $obj->usrname;
 
 					$this->lines[] = $line;
 				}
@@ -1324,7 +1439,6 @@ class Affaires_det extends CommonObject
 		if (isset($this->spec))
 			$this->spec = trim($this->spec);
 
-
 		// Check parameters
 		// Put here code to add control on parameters values
 
@@ -1360,14 +1474,14 @@ class Affaires_det extends CommonObject
 
 		$objstatic = new self($this->db);
 		$objstatic->fetch($this->id);
-		if (!empty($objstatic->fk_commande)) {
+		if (! empty($objstatic->fk_commande)) {
 			$error ++;
 			$this->errors[] = "un chassis commandé ne peut etre modifié";
 		}
 		unset($objstatic);
 
-		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array)>0) {
-			$this->fk_motifs=implode(',',$this->fk_motifs_array);
+		if (is_array($this->fk_motifs_array) && count($this->fk_motifs_array) > 0) {
+			$this->fk_motifs = implode(',', $this->fk_motifs_array);
 		}
 
 		if (! $error) {
@@ -1380,10 +1494,10 @@ class Affaires_det extends CommonObject
 			$sql .= " fk_genre=" . (isset($this->fk_genre) ? "'" . $this->db->escape($this->fk_genre) . "'" : "null") . ",";
 			$sql .= " fk_carrosserie=" . (isset($this->fk_carrosserie) ? "'" . $this->db->escape($this->fk_carrosserie) . "'" : "null") . ",";
 			$sql .= " fk_status=" . (isset($this->fk_status) ? "'" . $this->db->escape($this->fk_status) . "'" : "null") . ",";
-			$sql .= " fk_marque_trt=" . (!empty($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
-			$sql .= " fk_motifs=" . (!empty($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
-			$sql .= " fk_commande=" . (!empty($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
-			$sql .= " spec=" . (!empty($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
+			$sql .= " fk_marque_trt=" . (! empty($this->fk_marque_trt) ? "'" . $this->db->escape($this->fk_marque_trt) . "'" : "null") . ",";
+			$sql .= " fk_motifs=" . (! empty($this->fk_motifs) ? "'" . $this->db->escape($this->fk_motifs) . "'" : "null") . ",";
+			$sql .= " fk_commande=" . (! empty($this->fk_commande) ? "'" . $this->db->escape($this->fk_commande) . "'" : "null") . ",";
+			$sql .= " spec=" . (! empty($this->spec) ? "'" . $this->db->escape($this->spec) . "'" : "null") . ",";
 			$sql .= " fk_user_mod=" . $user->id . ",";
 			$sql .= " tms='" . $this->db->idate(dol_now()) . "'";
 
@@ -1425,7 +1539,6 @@ class Affaires_det extends CommonObject
 			$this->db->commit();
 			return 1;
 		}
-
 	}
 
 	/**
@@ -1441,7 +1554,7 @@ class Affaires_det extends CommonObject
 
 		$this->db->begin();
 
-		if (!empty($this->fk_commande)) {
+		if (! empty($this->fk_commande)) {
 			$error ++;
 			$this->errors[] = "un chassis commandé ne peut etre supprimé";
 		}
@@ -1485,84 +1598,81 @@ class Affaires_det extends CommonObject
 			return 1;
 		}
 	}
-
-	public function vh_tile($whithcustomerdetails=0,$withlinktoaffaire=0){
-
-
+	public function vh_tile($whithcustomerdetails = 0, $withlinktoaffaire = 0) {
 		global $user;
 
-		if($this->fk_genre==1){
+		if ($this->fk_genre == 1) {
 			$img = img_picto('porteur', 'porteur.png@affaires');
-		}elseif($this->fk_genre==2){
+		} elseif ($this->fk_genre == 2) {
 			$img = img_picto('porteur', 'tracteur.png@affaires');
 		}
-		if($this->fk_status == 5){
+		if ($this->fk_status == 5) {
 			$color = '#56ff56';
-			$color2= '#00ff00';
-		}elseif($this->fk_status== 7){
+			$color2 = '#00ff00';
+		} elseif ($this->fk_status == 7) {
 			$color = '#ff5656';
-			$color2= '#ff0000';
-		}elseif($this->fk_status== 11){
+			$color2 = '#ff0000';
+		} elseif ($this->fk_status == 11) {
 			$color = '#ffaa56';
-			$color2= '#ff7f00';
-		}elseif($this->fk_status== 6 && $this->fk_commande>0){
+			$color2 = '#ff7f00';
+		} elseif ($this->fk_status == 6 && $this->fk_commande > 0) {
 			$color = '#aad4ff';
-			$color2= '#56aaff';
-		}elseif($this->fk_status== 6 && $this->fk_commande<1){
+			$color2 = '#56aaff';
+		} elseif ($this->fk_status == 6 && $this->fk_commande < 1) {
 			$color = '#aa56ff';
-			$color2= '#7f00ff';
-		}else{
+			$color2 = '#7f00ff';
+		} else {
 			$color = '#cccccc';
-			$color2= '#b2b2b2';
+			$color2 = '#b2b2b2';
 		}
 
- 		$return = '<div id="vh_'. $this->id . '" style="background:' . $color .'; ';
- 		$return.= ' background: -webkit-gradient(linear, left top, left bottom, from('.$color.'), to('.$color2.')); ';
- 		$return.= ' border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
+		$return = '<div id="vh_' . $this->id . '" style="background:' . $color . '; ';
+		$return .= ' background: -webkit-gradient(linear, left top, left bottom, from(' . $color . '), to(' . $color2 . ')); ';
+		$return .= ' border-radius:6px; margin-bottom: 3px; width:100%; height:23px; padding-left:10px; padding-top:5px">';
 
- 		//Info veh
- 		$return .= '<div style="display: inline-block; ">';
- 		if (!empty($withlinktoaffaire)) {
- 			$objectstaaff = new Affaires($this->db);
- 			$ret = $objectstaaff->fetch($this->fk_affaires,1);
- 			if ($ret < 0) {
- 				setEventMessage(null,$object->errors,'errors');
- 			} else {
- 				$return.=$objectstaaff->getNomUrl(). ' - ';
- 			}
- 		}
- 		//var_dump($this->silhouette_label);
- 		$return.= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
- 		if($this->fk_status==6){
- 			$return.= ' - Spécification: ' . $this->spec;
- 			if($this->fk_commande > 0){
- 				dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
- 				$cmd = new CommandeVolvo($this->db);
- 				$cmd->fetch($this->fk_commande);
- 				$return.= ' - Commande: ' . $cmd->getNomUrl(0) . ' du ' . dol_print_date($cmd->date,'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
- 			}
- 		}
- 		$return.= '</div>';
+		// Info veh
+		$return .= '<div style="display: inline-block; ">';
+		if (! empty($withlinktoaffaire)) {
+			$objectstaaff = new Affaires($this->db);
+			$ret = $objectstaaff->fetch($this->fk_affaires, 1);
+			if ($ret < 0) {
+				setEventMessage(null, $object->errors, 'errors');
+			} else {
+				$return .= $objectstaaff->getNomUrl() . ' - ';
+			}
+		}
+		// var_dump($this->silhouette_label);
+		$return .= $img . ' ' . $this->gamme_label . ' - ' . $this->silhouette_label . ' - ' . $this->carrosserie_label;
+		if ($this->fk_status == 6) {
+			$return .= ' - Spécification: ' . $this->spec;
+			if ($this->fk_commande > 0) {
+				dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
+				$cmd = new CommandeVolvo($this->db);
+				$cmd->fetch($this->fk_commande);
+				$return .= ' - Commande: ' . $cmd->getNomUrl(0) . ' du ' . dol_print_date($cmd->date, 'day') . ' - ' . $cmd->LibStatut($cmd->statut, $cmd->billed, 2);
+			}
+		}
+		$return .= '</div>';
 
- 		//Button
- 		$return.= '<div style="display: inline-block; float:right;">';
- 		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
- 		}
- 		if ($user->rights->affaires->write && $this->fk_status== 6 && $this->fk_commande<1) {
- 			$return.= '<a href="javascript:popCreateOrder('.$this->id.')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
- 		}
- 		if ($user->rights->affaires->write && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			$return.= '<a href="javascript:popCreateAffaireDet('.$this->id.')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
- 		}
- 		if ($user->admin && !($this->fk_status== 6 && $this->fk_commande>0)) {
- 			$return.= '<a href="'.dol_buildpath('/affaires/form/card.php',2) . '?id=' . $this->fk_affaires. '&vehid='.$this->id.'&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
- 		}
- 		$return.='</div>';
+		// Button
+		$return .= '<div style="display: inline-block; float:right;">';
+		if ($user->rights->affaires->write && ! ($this->fk_status == 6 && $this->fk_commande > 0)) {
+			$return .= '<a href="' . dol_buildpath('/affaires/form/card.php', 2) . '?id=' . $this->fk_affaires . '&vehid=' . $this->id . '&action=classveh" style="color:black"><i class="fa fa-money paddingright"></i></a>';
+		}
+		if ($user->rights->affaires->write && $this->fk_status == 6 && $this->fk_commande < 1) {
+			$return .= '<a href="javascript:popCreateOrder(' . $this->id . ')" style="color:black"><i class="fa fa-truck paddingright"></i></a>';
+		}
+		if ($user->rights->affaires->write && ! ($this->fk_status == 6 && $this->fk_commande > 0)) {
+			$return .= '<a href="javascript:popCreateAffaireDet(' . $this->id . ')" style="color:black"><i class="fa fa-pencil-square paddingright"></i></a>';
+		}
+		if ($user->admin && ! ($this->fk_status == 6 && $this->fk_commande > 0)) {
+			$return .= '<a href="' . dol_buildpath('/affaires/form/card.php', 2) . '?id=' . $this->fk_affaires . '&vehid=' . $this->id . '&action=deleteveh" style="color:black"><i class="fa fa-trash paddingright"></i></a>';
+		}
+		$return .= '</div>';
 
- 		$return.= '</div>';
+		$return .= '</div>';
 
-//		$return = var_dump($this);
+		// $return = var_dump($this);
 
 		return $return;
 	}
@@ -1572,10 +1682,10 @@ class Affaires_det extends CommonObject
 	 * @param int $vehid
 	 * @return number
 	 */
-	public function getAmountOrder($vehid=0) {
-		$staticself=new self($this->db);
+	public function getAmountOrder($vehid = 0) {
+		$staticself = new self($this->db);
 		$staticself->fetch($vehid);
-		if($staticself->fk_commande > 0){
+		if ($staticself->fk_commande > 0) {
 			dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 			$cmd = new CommandeVolvo($this->db);
 			$cmd->fetch($staticself->fk_commande);
@@ -1583,11 +1693,7 @@ class Affaires_det extends CommonObject
 		} else {
 			return 0;
 		}
-
 	}
-
-
-
 	public function getReglementid() {
 		if ($this->fk_genre == 1) {
 			return 11;
@@ -1603,15 +1709,14 @@ class Affaires_det extends CommonObject
 	 * @param int $vehid
 	 * @return number
 	 */
-	public function getMarginReelDate($vehid=0) {
-		$asssts=new self($this->db);
+	public function getMarginReelDate($vehid = 0) {
+		$asssts = new self($this->db);
 		$asssts->fetch($vehid);
-		if (!empty($asssts->fk_commande)) {
-			return $asssts->getSumFactFourn($asssts->fk_commande,1);
+		if (! empty($asssts->fk_commande)) {
+			return $asssts->getSumFactFourn($asssts->fk_commande, 1);
 		} else {
 			return 0;
 		}
-
 	}
 
 	/**
@@ -1619,51 +1724,49 @@ class Affaires_det extends CommonObject
 	 * @param int $vehid
 	 * @return number
 	 */
-	public function getMarginDate($vehid=0) {
-		$asssts=new self($this->db);
+	public function getMarginDate($vehid = 0) {
+		$asssts = new self($this->db);
 		$asssts->fetch($vehid);
-		if (!empty($asssts->fk_commande)) {
-			return $asssts->getSumFactFourn($asssts->fk_commande,0);
+		if (! empty($asssts->fk_commande)) {
+			return $asssts->getSumFactFourn($asssts->fk_commande, 0);
 		} else {
 			return 0;
 		}
 	}
-
-	public function getSumFactFournLn($orderlineid=0,$solde=0) {
-
+	public function getSumFactFournLn($orderlineid = 0, $solde = 0) {
 		if (empty($orderlineid)) {
-			$this->errors[] =get_class($this).'::'.__METHOD__. ' Missing $orderlineid';
+			$this->errors[] = get_class($this) . '::' . __METHOD__ . ' Missing $orderlineid';
 			$error ++;
 		}
 
-		$sumtotalht=0;
+		$sumtotalht = 0;
 
-		$sql ='SELECT SUM(fd.total_ht) as sumtotalht';
-		$sql .=' FROM '.MAIN_DB_PREFIX.'commande as c';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d ON d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de ON de.fk_object=d.rowid';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as cfd ON de.fk_supplierorderlineid=cfd.rowid';
-		if (!empty($solde)) {
-			$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cfde ON cfde.fk_object=cfd.rowid';
-			$sql .= ' AND cfde.solde='.$solde;
+		$sql = 'SELECT SUM(fd.total_ht) as sumtotalht';
+		$sql .= ' FROM ' . MAIN_DB_PREFIX . 'commande as c';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commandedet as d ON d.fk_commande=c.rowid AND d.rowid=' . $orderlineid;
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commandedet_extrafields as de ON de.fk_object=d.rowid';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet as cfd ON de.fk_supplierorderlineid=cfd.rowid';
+		if (! empty($solde)) {
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet_extrafields as cfde ON cfde.fk_object=cfd.rowid';
+			$sql .= ' AND cfde.solde=' . $solde;
 		}
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=cfd.rowid';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det as fd ON fd.rowid=fde.fk_object';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn as ff ON ff.rowid=fd.fk_facture_fourn';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=cfd.rowid';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'facture_fourn_det as fd ON fd.rowid=fde.fk_object';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'facture_fourn as ff ON ff.rowid=fd.fk_facture_fourn';
 
-		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
+		dol_syslog(get_class($this) . "::" . __METHOD__, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 
 		if ($resql) {
-			$this->lines = array ();
+			$this->lines = array();
 			$num = $this->db->num_rows($resql);
-			if ($num>0) {
+			if ($num > 0) {
 				$obj = $this->db->fetch_object($resql);
 				$sumtotalht = $obj->sumtotalht;
 			}
 		} else {
 			$error ++;
-			$this->errors[]=$this->db->lasterror;
+			$this->errors[] = $this->db->lasterror;
 		}
 
 		if (! $error) {
@@ -1675,30 +1778,28 @@ class Affaires_det extends CommonObject
 			return - 99999;
 		}
 	}
-
-	public function getSumFactFourn($orderid=0,$solde=0) {
-
+	public function getSumFactFourn($orderid = 0, $solde = 0) {
 		if (empty($orderid)) {
-			$this->errors[] =get_class($this).'::'.__METHOD__. ' Missing $$orderid';
+			$this->errors[] = get_class($this) . '::' . __METHOD__ . ' Missing $$orderid';
 			$error ++;
 		}
 
-		$sumtotalht=0;
+		$sumtotalht = 0;
 
-		$sql ='SELECT DISTINCT d.rowid ';
-		$sql .=' FROM '.MAIN_DB_PREFIX.'commande as c';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d ON d.fk_commande=c.rowid AND c.rowid='.$orderid;
+		$sql = 'SELECT DISTINCT d.rowid ';
+		$sql .= ' FROM ' . MAIN_DB_PREFIX . 'commande as c';
+		$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commandedet as d ON d.fk_commande=c.rowid AND c.rowid=' . $orderid;
 
-		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
+		dol_syslog(get_class($this) . "::" . __METHOD__, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 
 		if ($resql) {
-			$this->lines = array ();
+			$this->lines = array();
 			$num = $this->db->num_rows($resql);
-			if ($num>0) {
-				while ($obj = $this->db->fetch_object($resql)) {
-					$result=$this->getSumFactFournLn($obj->rowid,$solde);
-					if ($result===-99999) {
+			if ($num > 0) {
+				while ( $obj = $this->db->fetch_object($resql) ) {
+					$result = $this->getSumFactFournLn($obj->rowid, $solde);
+					if ($result === - 99999) {
 						return $result;
 					} else {
 						$sumtotalht += $result;
@@ -1707,7 +1808,7 @@ class Affaires_det extends CommonObject
 			}
 		} else {
 			$error ++;
-			$this->errors[]=$this->db->lasterror;
+			$this->errors[] = $this->db->lasterror;
 		}
 
 		if (! $error) {
@@ -1718,11 +1819,7 @@ class Affaires_det extends CommonObject
 			}
 			return - 1 * $error;
 		}
-
 	}
-
-
-
 	public function createcmd() {
 		global $conf;
 
@@ -1733,8 +1830,8 @@ class Affaires_det extends CommonObject
 		$object = new Affaires($this->db);
 		$ret = $object->fetch($this->fk_affaires);
 		if ($ret < 0) {
-			$this->errors=$object->errors;
-			return -1;
+			$this->errors = $object->errors;
+			return - 1;
 		}
 		$object->fetch_thirdparty();
 
@@ -1750,211 +1847,211 @@ class Affaires_det extends CommonObject
 		$cmd->date_livraison = $this->datelivprev;
 		$cmd->array_options['options_vnac'] = 0;
 		$cmd->array_options['options_ctm'] = $object->fk_ctm;
-		if(!empty($cmd->array_options['options_ctm'])){
+		if (! empty($cmd->array_options['options_ctm'])) {
 			dol_include_once('/societe/class/societe.class.php');
 			$socctm = new Societe($this->db);
 			$socctm->fetch($cmd->array_options['options_ctm']);
 			$cmd->note_public = 'Contremarque: ' . $socctm->name . "\n";
 		}
-		$cmd->cond_reglement_id=$this->getReglementid();
-		$rang =1;
+		$cmd->cond_reglement_id = $this->getReglementid();
+		$rang = 1;
 		$gamme = $this->gamme_label;
 		$produit = new Product($this->db);
-		$produit->fetch('',$gamme);
+		$produit->fetch('', $gamme);
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->subprice = 0;
 		$line->qty = 1;
 		$line->tva_tx = 0;
 		$line->fk_product = $produit->id;
 		$line->pa_ht = 0;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
 		if (count($this->obligatoire) > 0) {
 			foreach ( $this->obligatoire as $art ) {
 				$product->fetch($art);
-				$line = New OrderLine($db);
+				$line = new OrderLine($db);
 				$line->subprice = $product->price;
 				$line->qty = 1;
 				$line->tva_tx = 0;
 				$line->fk_product = $product->id;
 				$line->pa_ht = $product->cost_price;
-				$line->rang=$rang;
-				$rang++;
+				$line->rang = $rang;
+				$rang ++;
 				$cmd->lines[] = $line;
 			}
 		}
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->desc = 'Sous-Total Véhicule';
 		$line->subprice = 0;
 		$line->qty = 99;
 		$line->product_type = 9;
 		$line->special_code = 104777;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->desc = 'Travaux Interne';
 		$line->subprice = 0;
 		$line->qty = 1;
 		$line->product_type = 9;
 		$line->special_code = 104777;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
 		if (count($this->interne) > 0) {
 			foreach ( $this->interne as $art ) {
 				$product->fetch($art);
-				$line = New OrderLine($db);
+				$line = new OrderLine($db);
 				$line->subprice = $product->price;
 				$line->qty = 1;
 				$line->tva_tx = 0;
 				$line->fk_product = $product->id;
 				$line->pa_ht = $product->cost_price;
-				$line->rang=$rang;
-				$rang++;
+				$line->rang = $rang;
+				$rang ++;
 				$cmd->lines[] = $line;
 			}
 		}
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->desc = 'Sous-Total Travaux Interne';
 		$line->subprice = 0;
 		$line->qty = 99;
 		$line->product_type = 9;
 		$line->special_code = 104777;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
 		if (count($this->externe) > 0) {
-			$line = New OrderLine($db);
+			$line = new OrderLine($db);
 			$line->desc = 'Travaux Externe';
 			$line->subprice = 0;
 			$line->qty = 1;
 			$line->product_type = 9;
 			$line->special_code = 104777;
-			$line->rang=$rang;
-			$rang++;
+			$line->rang = $rang;
+			$rang ++;
 			$cmd->lines[] = $line;
 
 			foreach ( $this->externe as $art ) {
 				$product->fetch($art);
-				$line = New OrderLine($db);
+				$line = new OrderLine($db);
 				$line->subprice = $product->price;
 				$line->qty = 1;
 				$line->tva_tx = 0;
 				$line->fk_product = $product->id;
 				$line->pa_ht = $product->cost_price;
-				$line->rang=$rang;
-				$rang++;
+				$line->rang = $rang;
+				$rang ++;
 				$cmd->lines[] = $line;
 			}
-			$line = New OrderLine($db);
+			$line = new OrderLine($db);
 			$line->desc = 'Sous-Total Travaux Externe';
 			$line->subprice = 0;
 			$line->qty = 99;
 			$line->product_type = 9;
 			$line->special_code = 104777;
-			$line->rang=$rang;
-			$rang++;
+			$line->rang = $rang;
+			$rang ++;
 			$cmd->lines[] = $line;
 		}
 
 		if (count($this->divers) > 0) {
-			$line = New OrderLine($db);
+			$line = new OrderLine($db);
 			$line->desc = 'Divers';
 			$line->subprice = 0;
 			$line->qty = 1;
 			$line->product_type = 9;
 			$line->special_code = 104777;
-			$line->rang=$rang;
-			$rang++;
+			$line->rang = $rang;
+			$rang ++;
 			$cmd->lines[] = $line;
 
 			foreach ( $this->divers as $art ) {
 				$product->fetch($art);
-				$line = New OrderLine($db);
+				$line = new OrderLine($db);
 				$line->subprice = $product->price;
 				$line->qty = 1;
 				$line->tva_tx = 0;
 				$line->fk_product = $product->id;
 				$line->pa_ht = $product->cost_price;
-				$line->rang=$rang;
-				$rang++;
+				$line->rang = $rang;
+				$rang ++;
 				$cmd->lines[] = $line;
 			}
-			$line = New OrderLine($db);
+			$line = new OrderLine($db);
 			$line->desc = 'Sous-Total Divers';
 			$line->subprice = 0;
 			$line->qty = 99;
 			$line->product_type = 9;
 			$line->special_code = 104777;
-			$line->rang=$rang;
-			$rang++;
+			$line->rang = $rang;
+			$rang ++;
 			$cmd->lines[] = $line;
 		}
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->desc = 'Commission Volvo';
 		$line->subprice = 0;
 		$line->qty = 1;
 		$line->product_type = 9;
 		$line->special_code = 104777;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->subprice = $this->commission;
 		$line->qty = 1;
 		$line->tva_tx = 0;
 		$line->fk_product = $conf->global->VOLVO_COM;
 		$line->pa_ht = 0;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
-		$line = New OrderLine($db);
+		$line = new OrderLine($db);
 		$line->desc = 'Sous-Total Commission Volvo';
 		$line->subprice = 0;
 		$line->qty = 99;
 		$line->product_type = 9;
 		$line->special_code = 104777;
-		$line->rang=$rang;
-		$rang++;
+		$line->rang = $rang;
+		$rang ++;
 		$cmd->lines[] = $line;
 
 		$this->db->begin();
 		$idcommande = $cmd->create($user);
 		if ($idcommande < 0) {
-			array_push($this->errors,$cmd->error);
+			array_push($this->errors, $cmd->error);
 			$this->db->rollback();
-			return -1;
+			return - 1;
 		} else {
 
 			$result = $cmd->updatevhpriceandvnc($this->prixvente);
 			if ($result < 0) {
-				array_push($this->errors,$cmd->error);
+				array_push($this->errors, $cmd->error);
 				$this->db->rollback();
-				return -1;
+				return - 1;
 			}
 			$result = $this->add_object_linked("commande", $cmd->id);
 			if ($result == 0) {
 				$this->db->rollback();
-				return -3;
+				return - 3;
 			}
 
 			$this->fk_commande = $cmd->id;
 			$res = $this->update($user);
 			if ($res < 0) {
 				$this->db->rollback();
-				return -4;
+				return - 4;
 			}
 		}
 		$this->db->commit();
@@ -1969,10 +2066,10 @@ class Affaires_det extends CommonObject
 	 *
 	 * @return int if KO, >0 if OK
 	 */
-	public function  fetchAffairesDetLink($id, $tablename) {
+	public function fetchAffairesDetLink($id, $tablename) {
 		global $langs;
 
-		$this->doclines = array ();
+		$this->doclines = array();
 
 		$sql = "SELECT";
 		$sql .= " t.rowid,";
@@ -2006,22 +2103,20 @@ class Affaires_det extends CommonObject
 		}
 	}
 
-
-
 	/**
-	 *	Load an object from its id and create a new one in database
+	 * Load an object from its id and create a new one in database
 	 *
-	 *	@param		int			$socid			Id of thirdparty
-	 *	@return		int							New id of clone
+	 * @param int $socid Id of thirdparty
+	 * @return int New id of clone
 	 */
 	function createFromClone() {
 		global $user, $hookmanager;
 
 		$error = 0;
 
-		$this->context ['createfromclone'] = 'createfromclone';
+		$this->context['createfromclone'] = 'createfromclone';
 
-		$this->db->begin ();
+		$this->db->begin();
 
 		// Load source object
 		$objFrom = clone $this;
@@ -2030,22 +2125,22 @@ class Affaires_det extends CommonObject
 
 		// Clear fields
 		$this->fk_user_author = $user->id;
-		$this->datec = dol_now ();
+		$this->datec = dol_now();
 		$this->fk_user_mod = $user->id;
 		unset($this->fk_commande);
 
 		// Create clone
-		$result = $this->create ( $user );
+		$result = $this->create($user);
 		if ($result < 0)
 			$error ++;
 
 		// End
 		if (! $error) {
-			unset ( $this->context ['createfromclone'] );
-			$this->db->commit ();
+			unset($this->context['createfromclone']);
+			$this->db->commit();
 			return $this->id;
 		} else {
-			$this->db->rollback ();
+			$this->db->rollback();
 			return - 1;
 		}
 	}
