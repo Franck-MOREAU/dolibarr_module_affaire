@@ -15,17 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$res = @include ("../../main.inc.php"); // For root directory
+$res = @include ("../../../main.inc.php"); // For root directory
 if (! $res)
-	$res = @include ("../../../main.inc.php"); // For "custom" directory
+	$res = @include ("../../../../main.inc.php"); // For "custom" directory
 if (! $res)
 	die("Include of main fails");
 
-require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-require_once '../class/volvoimportom.class.php';
-require_once '../class/html.formvolvo.class.php';
+dol_include_once('/core/lib/files.lib.php');
+dol_include_once('/affaires/volvo/class/volvoimportom.class.php');
+dol_include_once('affaires/class/html.formaffaires.class.php');
 
-if (! $user->rights->volvo->om)
+if (! $user->rights->affaires->volvo->om)
 	accessforbidden();
 
 $langs->load("exports");
@@ -47,7 +47,7 @@ $offset = $limit * $page;
 
 $importobject = new VolvoImportom($db);
 
-$dir = $conf->volvo->dir_output . '/import/om';
+$dir = $conf->affaires->dir_output . '/volvo/import/om';
 
 if($todo == 'set_numon'){
 	foreach ( $_POST as $key => $data ) {
@@ -247,7 +247,7 @@ llxHeader('', $title);
 dol_fiche_head($head, 'business', $title, 0, 'iron02@volvo');
 
 $form = new Form($db);
-$html_volvo = new FormVolvo($db);
+$html_volvo = new FormAffaires($db);
 
 if ($step == 1 || $step == 2) {
 

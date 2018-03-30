@@ -109,6 +109,7 @@ class modAffaires extends DolibarrModules
 			'/affaires/volvo',
 			'/affaires/volvo/import',
 			'/affaires/volvo/import/fdd',
+				'/affaires/volvo/import/om',
 			'/affaires/volvo/import/immat',
 			'/affaires/volvo/modelpdf',
 			'/affaires/volvo/import/cm',
