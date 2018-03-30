@@ -19,3 +19,5 @@ ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_2 FOREIGN KEY (fk_c_ty
 
 ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_fk_soc (fk_soc);
 ALTER TABLE llx_affaires ADD CONSTRAINT llx_affaires_ibfk_3 FOREIGN KEY (fk_soc) REFERENCES llx_societe (rowid);
+
+ALTER TABLE llx_affaires ADD INDEX idx_llx_affaires_ref (ref);
