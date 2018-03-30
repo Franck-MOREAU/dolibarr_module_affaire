@@ -176,9 +176,9 @@ class InterfaceAffaires
 				$sql = 'SELECT DISTINCT fk_commande FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE rowid=' . $object->id;
 				$resql = $this->db->query($sql);
 				if (! $resql) {
-					$this->error = $this->db->lasterror;
+					$object->error = $this->db->lasterror;
 
-					dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+					dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $object->error, LOG_ERR);
 					return - 1;
 				} else {
 					$num = $this->db->num_rows($resql);
@@ -187,8 +187,8 @@ class InterfaceAffaires
 						$sql1 = 'SELECT DISTINCT rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE fk_commande=' . $obj->fk_commande;
 						$resql1 = $this->db->query($sql1);
 						if (! $resql1) {
-							$this->error = $this->db->lasterror;
-							dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+							$object->error = $this->db->lasterror;
+							dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $object->error, LOG_ERR);
 							return - 1;
 						} else {
 							$num1 = $this->db->num_rows($resql1);
@@ -196,20 +196,25 @@ class InterfaceAffaires
 								$sql2 = 'SELECT DISTINCT d.rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet as d';
 								$sql2 .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet_extrafields as e ON e.fk_object=d.rowid ';
 								$sql2 .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseur as c ON c.rowid=d.fk_commande';
-								$sql2 .= ' AND d.fk_commande=' . $obj->fk_commande . ' AND e.solde=1 AND c.fk_soc=' . $conf->global->VOLVO_FOURN_NOTREAT;
+								$sql2 .= ' AND d.fk_commande=' . $obj->fk_commande . ' AND e.solde=1 AND c.fk_soc NOT IN (' . $conf->global->VOLVO_FOURN_NOTREAT.')';
 								$resql2 = $this->db->query($sql2);
 								if (! $resql2) {
-									$this->error = $this->db->lasterror;
-									dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+									$object->error = $this->db->lasterror;
+									dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $object->error, LOG_ERR);
 									return - 1;
 								} else {
-									require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
-									$cmdsup = new CommandeFournisseur($this->db);
-									$cmdsup->fetch($obj->fk_commande);
-									$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_RECEIVED_COMPLETELY);
-									if ($result < 0) {
-										$this->errors = $cmdsup->error;
-										return - 1;
+									$num2 = $this->db->num_rows($resql2);
+									if ($num1==$num2) {
+										require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
+										$cmdsup = new CommandeFournisseur($this->db);
+										$cmdsup->fetch($obj->fk_commande);
+										if ($cmdsup->id) {
+											$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_RECEIVED_COMPLETELY);
+											if ($result < 0) {
+												$object->error = $cmdsup->error;
+												return - 1;
+											}
+										}
 									}
 								}
 							}
