@@ -52,8 +52,8 @@ class AffairesFactureFourn
 					$sql .= ' AND ' . $key . ' = \'' . $this->db->escape($value) . '\'';
 				} elseif ($key == 'cdete.solde') {
 					$sql .= ' AND ' . $key . $value;
-				} elseif ($key=='c.fk_statut IN'){
-					$sql .= ' AND ' . $key . ' (' .$value . ')';
+				} elseif ($key == 'c.fk_statut IN') {
+					$sql .= ' AND ' . $key . ' (' . $value . ')';
 				} else {
 					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
 				}
@@ -133,7 +133,7 @@ class AffairesFactureFourn
 
 		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.facture.class.php';
 		require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
-		// require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.product.class.php';
+		require_once DOL_DOCUMENT_ROOT . '/core/lib/price.lib.php';
 
 		if (count($linesid) == 0) {
 			$this->errors[] = 'Missing line id array';
@@ -172,9 +172,9 @@ class AffairesFactureFourn
 									'desc' => $obj->description,
 									'tva' => $obj->tva_tx,
 									'bits' => $obj->info_bits,
-									'fk_product'=>$obj->fk_product,
-									'qty'=>$obj->qty,
-									'type'=>$obj->product_type,
+									'fk_product' => $obj->fk_product,
+									'qty' => $obj->qty,
+									'type' => $obj->product_type
 							);
 						}
 					}
@@ -188,42 +188,57 @@ class AffairesFactureFourn
 
 			$factsup->linked_objects["order_supplier"] = $orderid;
 
-			foreach ( $linesid as $key => $val ) {
-
-				$line = new SupplierInvoiceLine($this->db);
-				$line->description = $lineorderidinfo[$val]['description'];
-				$line->pu_ht=$amount[$val];
-				$line->tva_tx=$lineorderidinfo[$val]['tva'];
-				$line->localtax1_tx=0;
-				$line->localtax2_tx=0;
-				$line->qty=$lineorderidinfo[$val]['qty'];
-				$line->fk_product=$lineorderidinfo[$val]['fk_product'];
-				$line->info_bits=$lineorderidinfo[$val]['bits'];
-				$line->product_type=$lineorderidinfo[$val]['type'];
-
-				$line->array_options['options_fk_supplierorderlineid']=$val;
-
-				$factsup->lines[]=$line;
-			}
-
 			$invoiceid = $factsup->create($user);
 			if ($invoiceid < 0) {
 				$this->errors[] = $factsup->error;
 				$error ++;
 			}
+
+			$factsup->fetch_thirdparty($socid);
 		}
 
-		//Update supplier oerder line with status solde
+		if (empty($error)) {
+			foreach ( $linesid as $key => $val ) {
+
+				$line = new SupplierInvoiceLine($this->db);
+				$line->fk_facture_fourn = $invoiceid;
+				$line->description = $lineorderidinfo[$val]['description'];
+				$line->pu_ht = $amount[$val] / $lineorderidinfo[$val]['qty'];
+				$line->tva_tx = $lineorderidinfo[$val]['tva'];
+				$line->localtax1_tx = 0;
+				$line->localtax2_tx = 0;
+				$line->qty = $lineorderidinfo[$val]['qty'];
+				$line->fk_product = $lineorderidinfo[$val]['fk_product'];
+				$line->info_bits = $lineorderidinfo[$val]['bits'];
+				$line->product_type = $lineorderidinfo[$val]['type'];
+
+				$tabprice = calcul_price_total($lineorderidinfo[$val]['qty'], $amount[$val] / $lineorderidinfo[$val]['qty'], 0, $lineorderidinfo[$val]['tva'], 0, 0, 0, 'HT', $lineorderidinfo[$val]['bits'], $lineorderidinfo[$val]['type'], $factsup->thirdparty, array(), 100, 0, 0);
+
+				$line->total_ht = $tabprice[0];
+				$line->total_tva = $tabprice[1];
+				$line->total_ttc = $tabprice[2];
+
+				$line->array_options['options_fk_supplierorderlineid'] = $val;
+
+				$result = $line->insert();
+				if ($result < 0) {
+					$this->errors[] = $line->error;
+					$error ++;
+				}
+			}
+		}
+
+		// Update supplier oerder line with status solde
 		if (empty($error)) {
 			foreach ( $solde as $key => $val ) {
 				$orderline = new CommandeFournisseurLigne($this->db);
-				$result=$orderline->fetch($val);
+				$result = $orderline->fetch($val);
 				if ($result < 0) {
 					$this->errors[] = $orderline->error;
 					$error ++;
 				} else {
-					$orderline->array_options['options_solde']=1;
-					$result=$orderline->update();
+					$orderline->array_options['options_solde'] = 1;
+					$result = $orderline->update();
 					if ($result < 0) {
 						$this->errors[] = $orderline->error;
 						$error ++;
