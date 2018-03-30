@@ -1604,7 +1604,7 @@ class Affaires_det extends CommonObject
 	 * @return number
 	 */
 	public function getMarginReelDate($vehid=0) {
-		return 0;
+		return $this->getSumFactFourn($vehid,1);
 	}
 
 	/**
@@ -1613,7 +1613,7 @@ class Affaires_det extends CommonObject
 	 * @return number
 	 */
 	public function getMarginDate($vehid=0) {
-		return 0;
+		return $this->getSumFactFourn($vehid,0);
 	}
 
 	public function getSumFactFournLn($orderlineid=0,$solde=0) {
@@ -1626,8 +1626,8 @@ class Affaires_det extends CommonObject
 		$sumtotalht=0;
 
 		$sql ='SELECT SUM(fd.total_ht) as sumtotalht';
-		$sql .=' FROM '.MAIN_DB_PREFIX.'commande a c';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet a d INNER JOIN d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
+		$sql .=' FROM '.MAIN_DB_PREFIX.'commande as c';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d INNER JOIN d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de INNER JOIN de.fk_object=d.rowid';
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as fd ON de.fk_supplierorderlineid=fd.rowid';
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cde ON cde.fk_object=fd.rowid';
@@ -1672,9 +1672,9 @@ class Affaires_det extends CommonObject
 
 		$sumtotalht=0;
 
-		$sql ='SELECT DISTINCT cd.rowid ';
-		$sql .=' FROM '.MAIN_DB_PREFIX.'commande a c';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet a d INNER JOIN d.fk_commande=c.rowid AND c.rowid='.$orderid;
+		$sql ='SELECT DISTINCT d.rowid ';
+		$sql .=' FROM '.MAIN_DB_PREFIX.'commande as c';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d ON d.fk_commande=c.rowid AND c.rowid='.$orderid;
 
 		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
 		$resql = $this->db->query($sql);
