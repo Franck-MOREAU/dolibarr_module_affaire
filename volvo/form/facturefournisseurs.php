@@ -47,8 +47,8 @@ $contextpage = GETPOST('contextpage', 'aZ') ? GETPOST('contextpage', 'aZ') : 'fa
 // Socid is fill when come from thirdparty tabs
 $search_socid = GETPOST('search_socid', 'int');
 
-$ref_fact_fourn = GETPOST('ref_factfourn', 'san_alpha');
-$date_fact_fourn = dol_mktime(0, 0, 0, GETPOST('date_fact_fourn_month', 'int'), GETPOST('date_fact_fourn_day', 'int'), GETPOST('date_fact_fourn_year', 'int'));
+$ref_fact_fourn = GETPOST('ref_fact_fourn', 'san_alpha');
+$date_fact_fourn = dol_mktime(0, 0, 0, GETPOST('date_fact_fournmonth', 'int'), GETPOST('date_fact_fournday', 'int'), GETPOST('date_fact_fournyear', 'int'));
 
 /*
  * Actions
@@ -68,8 +68,10 @@ if ($action == 'createsupplierinvoice') {
 	foreach($_POST as $key=>$value) {
 		if (strpos($key,'lineid_')===0) {
 			$orderlineid_array[]=$value;
-			$orderlineid_amount_array[$value]=price2num(GETPOST('lineidamount_'.$value,'int'));
-			$orderlineid_solde_array[$value]=price2num(GETPOST('solde_lineid_'.$value,'int'));
+			$orderlineid_amount_array[$value]=price2num(GETPOST('lineidamount_'.$value));
+			if (GETPOST('solde_lineid_'.$value)) {
+				$orderlineid_solde_array[$value]=GETPOST('solde_lineid_'.$value);
+			}
 		}
 	}
 	if (count($orderlineid_array)==0){
@@ -81,6 +83,9 @@ if ($action == 'createsupplierinvoice') {
 		$result=$object->createFactureFourn($search_socid,$ref_fact_fourn,$date_fact_fourn,$orderlineid_array,$orderlineid_solde_array,$orderlineid_amount_array);
 		if ($result<0) {
 			setEventMessages(null, $object->errors,'errors');
+		} else {
+			//header('Location: ' . dol_buildpath('/fourn/facture/card.php',2) . '?facid='.$result);
+			//exit;
 		}
 	}
 }
