@@ -171,6 +171,7 @@ require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
 $cmd_fourn_line = New CommandeFournisseurLigne($line->db);
 if($line->array_options['options_fk_supplierorderlineid']>0){
 	$res_line = $cmd_fourn_line->fetch($line->array_options['options_fk_supplierorderlineid']);
+	$cmd_fourn_line->fetch_optionals($cmd_fourn_line->id);
 }else{
 	$res_line=0;
 }
