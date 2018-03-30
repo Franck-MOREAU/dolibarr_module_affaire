@@ -94,7 +94,7 @@ class modAffaires extends DolibarrModules
 			'tpl' => 1,
 			'js'=>'/affaires/volvo/js/jquery.flot.orderBars.js',
 		// Set this to relative path of css if module has its own css file
-		// 'css' => '/affaires/css/mycss.css.php',
+			'css' => '/affaires/css/affaires.css.php',
 		// Set here all hooks context managed by module
 			'hooks' => array('commonobject','searchform','ordercard','ordersuppliercard','thirdpartycard'),
 		// Set here all workflow context managed by module

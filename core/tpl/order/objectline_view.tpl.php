@@ -71,8 +71,10 @@ if($line->rang%2==0){
 	$bc = 'class="drag drop impair"';
 }
 
+
+
 print '<tr id="row-' . $line->id . '" ' . $bc . '>';
-print '<td class="linecoldescription" style="border-bottom-style: none" colspan="2">';
+print '<td class="linecoldescription" style="border-bottom-style: none; border-top: 1px solid black;" colspan="2">';
 $coldisplay++;
 print '<div id="line_' . $line->id . '"></div>';
 $format = $conf->global->MAIN_USE_HOURMIN_IN_DATE_RANGE ? 'dayhour' : 'day';
@@ -87,7 +89,7 @@ if (! empty ( $conf->global->PRODUIT_DESC_IN_FORM )) {
 }
 
 
-print '</td><td align="right" class="linecolqty nowrap" style="border-bottom-style: none">';
+print '</td><td align="right" class="linecolqty nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
 $coldisplay ++;
 if ((($line->info_bits & 2) != 2) && $line->special_code != 3) {
 	print $line->qty;
@@ -96,17 +98,17 @@ if ((($line->info_bits & 2) != 2) && $line->special_code != 3) {
 }
 print '</td>';
 
-print '<td align="right" class="linecoluht nowrap"	style="border-bottom-style: none">';
+print '<td align="right" class="linecoluht nowrap"	style="border-bottom-style: none; border-top: 1px solid black;">';
 $coldisplay ++;
 print price ( $line->subprice );
 print '</td>';
 
-print '<td align="right" class="linecolmargin1 nowrap margininfos"	style="border-bottom-style: none">';
+print '<td align="right" class="linecolmargin1 nowrap margininfos"	style="border-bottom-style: none; border-top: 1px solid black;">';
 $coldisplay ++;
 print price ( $line->pa_ht );
 print '</td>';
 
-print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none">';
+print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
 $coldisplay ++;
 // TODO recuperer le montant des factures fournisseurs
 //print price ( $line->array_options ["options_buyingprice_real"] );
@@ -114,12 +116,12 @@ print '</td>';
 
 // TODO détecter factures fournisseur
 if (empty ( $line->array_options ["options_fk_supplier"] )) {
-	print '<td align="right" class="liencolht nowrap" style="border-bottom-style: none">';
+	print '<td align="right" class="liencolht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay ++;
 	print price ( $line->total_ht - ($line->qty * $line->pa_ht) );
 	print '</td>';
 } else {
-	print '<td align="right" class="liencolht nowrap" style="border-bottom-style: none">';
+	print '<td align="right" class="liencolht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay ++;
 	print price ( $line->total_ht - $line->array_options ["options_buyingprice_real"] );
 	print '</td>';
@@ -130,21 +132,21 @@ $soltrs2 = prepare_array ( 'VOLVO_PACK_LIST', 'array' );
 $soltrs = array_merge ( $soltrs1, $soltrs2 );
 
 if ($this->statut == 0 && $object_rights->creer) {
-	print '<td class="linecoledit" align="center" style="border-bottom-style: none">';
+	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay ++;
 	if (($line->info_bits & 2) == 2 || ! empty ( $disableedit )) {
 	} else {
 		print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=editline&amp;lineid=' . $line->id . '#line_' . $line->id . '">' . img_edit () . '</a>';
 	}
 	print '</td>';
-	print '<td class="linecoldelete" align="center" style="border-bottom-style: none">';
+	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay ++;
 	if ((($this->situation_counter == 1 || ! $this->situation_cycle_ref) && empty ( $disableremove ))) {
 		print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete () . '</a>';
 	}
 	print '</td>';
 	if ($num > 1 && empty ( $conf->browser->phone ) && ($this->situation_counter == 1 || ! $this->situation_cycle_ref) && empty ( $disablemove )) {
-		print '<td align="center" class="linecolmove tdlineupdown" 	style="border-bottom-style: none">';
+		print '<td align="center" class="linecolmove tdlineupdown" 	style="border-bottom-style: none; border-top: 1px solid black;">';
 		$coldisplay ++;
 		if ($i > 0) {
 			print '<a class="lineupdown" href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=up&amp;rowid=' . $line->id . '">' . img_up ( 'default', 0, 'imgupforline' ) . '</a>';
@@ -159,7 +161,7 @@ if ($this->statut == 0 && $object_rights->creer) {
 		print '</td>';
 	}
 } elseif (($this->statut > 0 && ($object_rights->creer)) && (in_array ( $line->product_ref, $soltrs ))) {
-	print '<td class="linecoledit" align="center" style="border-bottom-style: none">';
+	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay++;
 	if ($line->total_ht==0) {
 
@@ -167,7 +169,7 @@ if ($this->statut == 0 && $object_rights->creer) {
 		print '<a href="' . $_SERVER["PHP_SELF"].'?id='.$this->id.'&amp;action=editline&amp;lineid='.$line->id.'#line_'.$line->id. '">' . img_edit() . '</a>';
 	}
 	print '</td>';
-	print '<td class="linecoldelete" align="center" style="border-bottom-style: none">';
+	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay++;
 	if ($line->total_ht == 0) {
 		print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete() . '</a>';
@@ -176,7 +178,7 @@ if ($this->statut == 0 && $object_rights->creer) {
 	print '<td></td>';
 
 } else {
-	print '<td colspan="3" style="border-bottom-style: none">';
+	print '<td colspan="3" style="border-bottom-style: none; border-top: 1px solid black;">';
 	$coldisplay=$coldisplay+3;
 	print '</td></tr>';
 }

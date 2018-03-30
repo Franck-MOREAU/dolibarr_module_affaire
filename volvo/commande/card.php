@@ -1526,7 +1526,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 			include DOL_DOCUMENT_ROOT . '/core/tpl/ajaxrow.tpl.php';
 		}
 
-		print '<table id="tablelines" class="nobordernopadding noshadow" width="100%">';
+		print '<table id="tablelines" class="noborderaffaires noshadow" width="100%">';
 
 		// Show object lines
 		if (! empty($object->lines))
