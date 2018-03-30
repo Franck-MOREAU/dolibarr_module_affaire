@@ -232,11 +232,12 @@ if ($step == 7 && $action == 'importdata') {
 		$step = 8;
 		$action = 'result';
 		$batch_number = $result;
-		// setEventMessage($langs->trans('VolvoImportSucces'), 'mesgs');
+		//setEventMessage($langs->trans('VolvoImportSucces'), 'mesgs');
 		// header('Location:' . dol_buildpath('/volvo/volvo/vehicule/list.php?import_key='.$result, 1));
 	} else {
 		$step = 6;
 		$action = 'reviewdata';
+		print $error;
 	}
 }
 
@@ -714,7 +715,7 @@ if ($step == 8 && $action == 'result') {
 		print '<td colspan="2">' . $langs->trans('VolvoImportImmatFailed', $cnt_failed) . '</td>';
 		print '</tr>';
 	} else {
-		dol_delete_file($dir . '/' . $filetoimport);
+		//dol_delete_file($dir . '/' . $filetoimport);
 		$result = $importobject->dropTempTable();
 		if ($result < O) {
 			setEventMessages(null, $importobject->errors, 'errors');

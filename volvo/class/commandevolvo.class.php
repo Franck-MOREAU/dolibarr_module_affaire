@@ -1190,8 +1190,8 @@ class CommandeVolvo extends Commande
 				$sql = "SELECT MAX(datep) as dt ";
 				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
 				$sql .= "WHERE fk_element =" . $this->id . " ";
-				$sql .= "AND elementtype = 'order' ";
-				$sql .= "AND label LIKE '%Commande V% classée Payée%'";
+				$sql .= "AND elementtype = 'commande' ";
+				$sql .= "AND label LIKE '%Commande ' . $this->ref . ' classée Payée%'";
 				break;
 
 			case 'dt_liv' :
@@ -1207,16 +1207,16 @@ class CommandeVolvo extends Commande
 				$sql = "SELECT MAX(datep) as dt ";
 				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
 				$sql .= "WHERE fk_element =" . $this->id . " ";
-				$sql .= "AND elementtype = 'order' ";
-				$sql .= "AND label LIKE '%Commande V% classée Livrée%'";
+				$sql .= "AND elementtype = 'commande' ";
+				$sql .= "AND label LIKE '%Commande ' . $this->ref . ' classée Livrée%'";
 				break;
 
 			case 'dt_bill' :
 				$sql = "SELECT MAX(datep) as dt_bill ";
 				$sql .= "FROM " . MAIN_DB_PREFIX . "actioncomm ";
 				$sql .= "WHERE fk_element =" . $this->id . " ";
-				$sql .= "AND elementtype = 'order' ";
-				$sql .= "AND label LIKE '%Commande V% classée Payée%'";
+				$sql .= "AND elementtype = 'commande' ";
+				$sql .= "AND label LIKE '%Commande ' . $this->ref . ' classée Facturée%'";
 				break;
 		}
 
