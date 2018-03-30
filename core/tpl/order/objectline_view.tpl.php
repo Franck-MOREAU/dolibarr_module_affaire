@@ -190,7 +190,7 @@ if($res_line>0){
 		if(!empty($solde)){
 			$txt = 'Soldé';
 			$img = img_picto($txt, 'statut4');
-		}elseif(empty($solde) && ($solde_amount<>0 || $solde_amount==99999)){
+		}elseif(empty($solde) && !($solde_amount==0 || $solde_amount==-99999)){
 			$txt = 'Partiellement soldé';
 			$img = img_picto($txt, 'statut3');
 			$txt2 = ', Montant enregistré: ' . price($solde_amount) . ' €';
