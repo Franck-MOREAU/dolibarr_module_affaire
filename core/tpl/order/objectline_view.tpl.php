@@ -112,7 +112,7 @@ print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: n
 $affaires_det = New Affaires_det($line->db);
 $solde_amount_reel = $affaires_det->getSumFactFournLn($line->id,1);
 if($solde_amount_reel == -99999) $solde_amount_reel = '';
-print price ( $solde_amount_reel);
+print price ($solde_amount_reel);
 print '</td>';
 
 // écart
