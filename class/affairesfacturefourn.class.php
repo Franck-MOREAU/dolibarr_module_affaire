@@ -203,7 +203,7 @@ class AffairesFactureFourn
 				$line = new SupplierInvoiceLine($this->db);
 				$line->fk_facture_fourn = $invoiceid;
 				$line->description = $lineorderidinfo[$val]['description'];
-				$line->pu_ht = $amount[$val] / $lineorderidinfo[$val]['qty'];
+				$line->subprice = $amount[$val] / $lineorderidinfo[$val]['qty'];
 				$line->tva_tx = $lineorderidinfo[$val]['tva'];
 				$line->localtax1_tx = 0;
 				$line->localtax2_tx = 0;
@@ -212,8 +212,7 @@ class AffairesFactureFourn
 				$line->info_bits = $lineorderidinfo[$val]['bits'];
 				$line->product_type = $lineorderidinfo[$val]['type'];
 
-				$tabprice = calcul_price_total($lineorderidinfo[$val]['qty'], $amount[$val] / $lineorderidinfo[$val]['qty'], 0, $lineorderidinfo[$val]['tva'], 0, 0, 0, 'HT', $lineorderidinfo[$val]['bits'], $lineorderidinfo[$val]['type'], $factsup->thirdparty, array(), 100, 0, 0);
-
+				$tabprice = calcul_price_total($line->qty, $line->subprice, 0, $line->tva_tx, 0, 0, 0, 'HT', $line->info_bits, $line->product_type, $factsup->thirdparty, array(), 100, 0, 0);
 				$line->total_ht = $tabprice[0];
 				$line->total_tva = $tabprice[1];
 				$line->total_ttc = $tabprice[2];

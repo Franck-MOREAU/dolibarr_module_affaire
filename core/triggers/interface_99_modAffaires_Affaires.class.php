@@ -224,6 +224,10 @@ class InterfaceAffaires
 			}
 		}
 
+		if ($action=='LINEBILL_SUPPLIER_DELETE') {
+
+		}
+
 		return 0;
 	}
 }

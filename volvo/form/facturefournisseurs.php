@@ -218,7 +218,7 @@ if (empty($sortfield)) {
 	$sortfield = "cdet.rowid";
 }
 
-$title = $langs->trans('Create de factures fournisseurs');
+$title = $langs->trans('Création de factures fournisseurs');
 
 llxHeader('', $title);
 

@@ -321,4 +321,14 @@ class ActionsAffaires // extends CommonObject
 		return 0;
 	}
 
+	function insertExtraFields($parameters, &$object, &$action, $hookmanager) {
+		global $langs, $conf, $user, $db, $bc;
+
+		$current_context = explode(':', $parameters['context']);
+
+		if (in_array('orderdao', $current_context)) {
+			$sql='UPDATE '.MAIN_DB_PREFIX.'';
+		}
+	}
+
 }
