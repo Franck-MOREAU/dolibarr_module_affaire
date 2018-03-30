@@ -897,7 +897,7 @@ if ($action == 'update_extras')	{
 		}
 		$object->update_note($note,'_public');
 		dol_include_once('/volvo/lib/volvo.lib.php');
-		Update_vh_info_from_custorder($object->id,$vin , $immat,$numom,$ctm,$note,1,$oject->id);
+		//Update_vh_info_from_custorder($object->id,$vin , $immat,$numom,$ctm,$note,1,$oject->id);
 	}
 
 	// Fill array 'array_options' with data from update form

@@ -52,6 +52,8 @@ class AffairesFactureFourn
 					$sql .= ' AND ' . $key . ' = \'' . $this->db->escape($value) . '\'';
 				} elseif ($key == 'cdete.solde') {
 					$sql .= ' AND ' . $key . $value;
+				} elseif ($key=='c.fk_statut IN'){
+					$sql .= ' AND ' . $key . ' (' .$value . ')';
 				} else {
 					$sql .= ' AND ' . $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
 				}
