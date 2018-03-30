@@ -1638,7 +1638,7 @@ class Affaires_det extends CommonObject
 
 		$sumtotalht=0;
 
-		$sql ='SELECT SUM(cfd.total_ht) as sumtotalht';
+		$sql ='SELECT SUM(fd.total_ht) as sumtotalht';
 		$sql .=' FROM '.MAIN_DB_PREFIX.'commande as c';
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d ON d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de ON de.fk_object=d.rowid';
