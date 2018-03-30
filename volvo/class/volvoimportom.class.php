@@ -555,7 +555,7 @@ class VolvoImportom extends VolvoImport
 	 */
 	public function importData($matchColmunArray = array()) {
 		global $langs, $conf,$user;
-		dol_include_once('/volvo/class/commandevolvo.class.php');
+		dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
 		dol_include_once('/fourn/class/fournisseur.class.php');
 
 		$error = 0;
@@ -732,7 +732,7 @@ class VolvoImportom extends VolvoImport
 	 */
 	public function getResultCnt($batch_number, $type = '') {
 		if ($type == 'create' || $type == 'update') {
-			$sql = 'SELECT count(rowid) as cnt FROM ' . MAIN_DB_PREFIX . 'immat WHERE import_key=\'' . $this->db->escape($batch_number) . '\'';
+			$sql = 'SELECT count(rowid) as cnt FROM ' . MAIN_DB_PREFIX . 'commande WHERE import_key=\'' . $this->db->escape($batch_number) . '\'';
 			dol_syslog(get_class($this) . '::' . __METHOD__ . '', LOG_DEBUG);
 			$resql = $this->db->query($sql);
 			if (! $resql) {

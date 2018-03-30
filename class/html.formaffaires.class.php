@@ -409,4 +409,21 @@ class FormAffaires extends Form
 
 		return $out;
 	}
+
+	public function select_src_column($key, $columndef = array(), $srccolumn = array()) {
+		global $langs;
+		$out .= '<select id="volvocol_' . $key . '" class="flat" name="volvocol_' . $key . '">';
+		$out .= '<option value=-1"></option>';
+		foreach ( $srccolumn as $key => $column ) {
+			if ($columndef['filecolumntitle'] == $column['label'] || $columndef['forcetmpcolumnname'] == $column['name']) {
+				$out .= '<option value="' . $column['name'] . '" selected="selected">' . $column['label'] . '</option>';
+			} else {
+				$out .= '<option value="' . $column['name'] . '">' . $column['label'] . '</option>';
+			}
+		}
+
+		$out .= '</select>';
+
+		return $out;
+	}
 }
