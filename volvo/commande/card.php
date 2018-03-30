@@ -111,7 +111,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_lineupdown.inc.php';	// Must be include
 
 // Action Recalc
 if($action=='recalc') {
-	$object->updatevhpriceandvnc($object->id,GETPOST('prixtot','int'));
+	$object->updatevhpriceandvnc(GETPOST('prixtot','int'));
 	$action = '';
 	header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $object->id);
 }
@@ -1642,7 +1642,7 @@ if ($action == 'create' && $user->rights->commande->creer)
 					$out .= '</script>';
 					print $out;
 				}
-				if ($object->statut == Commande::STATUS_DRAFT && $user->rights->volvo->update_cost) {
+				if ($object->statut == Commande::STATUS_DRAFT && $user->rights->affaires->volvo->update_cost) {
 					print '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=update_pv">Modifier le Prix de vente</a></div>';
 				}
 

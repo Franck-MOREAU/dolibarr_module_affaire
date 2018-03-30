@@ -117,7 +117,7 @@ print '</td>';
 
 // écart
 print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
-if(!empty($solde_amount_reel)&& !$solde_amount_reel==-99999){
+if(!empty($solde_amount_reel)){
 	$ecart = $line->subprice - $solde_amount_reel;
 }else{
 	$ecart = $line->subprice - $line->pa_ht;
