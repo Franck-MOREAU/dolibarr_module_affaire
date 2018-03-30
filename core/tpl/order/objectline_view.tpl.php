@@ -167,6 +167,7 @@ if(!empty($line->desc)){
 	print '<tr id="row-'.$line->id.'" '.$bc.'>';
 	print '<td colspan="10" style="border-style: none"><b><span style="text-decoration: underline;">Commentaire:</span></b>' . $line->desc . '</td></tr>';
 }
+require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
 $cmd_fourn_line = New CommandeFournisseurLigne($line->db);
 if($line->array_options['options_fk_supplierorderlineid']>0){
 	$res_line = $cmd_fourn_line->fetch($line->array_options['options_fk_supplierorderlineid']);
