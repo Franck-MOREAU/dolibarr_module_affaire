@@ -233,7 +233,8 @@ class VolvoImport
 				".",
 				"(",
 				")",
-				"%"
+				"%",
+				"+"
 		);
 		$forbidden_chars_to_remove = array ();
 		if (is_array($badcharstoreplace))
@@ -348,6 +349,12 @@ class VolvoImport
 				return 'NULL';
 			} else {
 				return $value;
+			}
+		} elseif ($type == 'address') {
+			if ($value == '') {
+				return 'NULL';
+			} else {
+				return "\"" . $this->db->escape($value) . "\"";
 			}
 		}
 	}

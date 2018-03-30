@@ -852,24 +852,19 @@ class VolvoImportCMCust extends VolvoImport
 			$sqlcol[] = 'status';
 			$sqlvalue[] = 1;
 
-			//$sqlcol[] = 'canvas';
-			//$sqlvalue[] = '\'volvosociete@volvo\'';
-
 			foreach ( $this->targetInfoArray as $key => $col ) {
 				if ($col['table'] == MAIN_DB_PREFIX . 'societe') {
 					if (! array_key_exists('noinsert', $col)) {
 
 						$columnTmpName = $matchColmunArray[$key];
-						var_dump($col,$key,$columnTmpName);
-
 						if (array_key_exists('tmpcolumnname', $col) && ! empty($col['tmpcolumnname'])) {
 							$columnTmpName = $col['tmpcolumnname'];
+
 						}
 
 						//var_dump($columnTmpName);
 
 						if (! empty($columnTmpName)) {
-							var_dump($line->$columnTmpName);
 							$sqlcol[] = $col['column'];
 
 							if (array_key_exists('dict', $col)) {
@@ -895,7 +890,7 @@ class VolvoImportCMCust extends VolvoImport
 					}
 				}
 			}
-			exit;
+
 
 			$sql = 'INSERT INTO ' . MAIN_DB_PREFIX . 'societe(' . implode(',', $sqlcol) . ',import_key) VALUES (' . implode(',', $sqlvalue) . ',\'' . $now . '\')';
 			dol_syslog(get_class($this) . '::' . __METHOD__, LOG_DEBUG);

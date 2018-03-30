@@ -209,3 +209,4 @@ VolvoImportStep4=Etape 4 - Import des données
 VolvoImportStep5=Etape 5 - Mise à jour des dates de livraison
 VolvoImportStep6=Etape 6 - Résumé
 VolvoNoBlockingError=Pas d'erreur bloquante
+VolvoRejectReason=Raison du rejet de la ligne

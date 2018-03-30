@@ -204,7 +204,6 @@ if ($step == 7 && $action == 'importdata') {
 
 	$match_column_str = html_entity_decode(GETPOST('match_column'), ENT_COMPAT);
 	$match_column = json_decode($match_column_str, true);
-	var_dump($match_column);
 	$result = $importobject->importData($match_column);
 	if ($result < O) {
 		setEventMessages(null, $importobject->errors, 'errors');
@@ -226,7 +225,7 @@ $title = $langs->trans('VolvoImport') . '-' . $langs->trans('VolvoImportCMCust')
 
 llxHeader('', $title);
 
-dol_fiche_head($head, 'business', $title, 0, 'volvo@volvo');
+dol_fiche_head($head, 'business', $title, 0);
 
 $form = new Form($db);
 $html_volvo = new FormAffaires($db);
