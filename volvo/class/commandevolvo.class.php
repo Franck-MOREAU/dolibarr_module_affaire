@@ -505,6 +505,9 @@ class CommandeVolvo extends Commande
 									$cmdsup->socid = $fournid;
 									$cmdsup->source = $this->id;
 									$cmdsup->array_options['options_ctm'] = $this->array_options['options_ctm'];
+									$cmdsup->array_options['options_vin'] = $this->array_options['options_vin'];
+									$cmdsup->array_options['options_immat'] = $this->array_options['options_immat'];
+
 
 									$cmdsup->linked_objects["commande"] = $this->id;
 
