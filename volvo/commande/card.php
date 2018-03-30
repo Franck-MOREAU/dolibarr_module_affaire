@@ -45,6 +45,7 @@ dol_include_once('/core/lib/functions2.lib.php');
 dol_include_once('/core/class/extrafields.class.php');
 dol_include_once('/core/class/doleditor.class.php');
 dol_include_once('/affaires/class/html.formaffairesproduct.class.php');
+dol_include_once('/affaires/class/affaires.class.php');
 
 $langs->load('orders');
 $langs->load('sendings');
@@ -116,30 +117,38 @@ if($action=='recalc') {
 	header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $object->id);
 }
 
-// if($action=='create_contrat') {
-// 	dol_include_once('/contrat/class/contrat.class.php');
-// 	$ct = New Contrat($db);
-// 	$object->fetch_lines();
-// 	$soltrs1 = $leadext->prepare_array('VOLVO_VCM_LIST','array');
-// 	$soltrs2 = $leadext->prepare_array('VOLVO_PACK_LIST','array');
-// 	$soltrs = array_merge($soltrs1,$soltrs2);
-// 	$action = '';
-// 	foreach ($object->lines as $ligne){
-// 		if(in_array($ligne->product_ref, $soltrs)){
-// 			$ct->ref = '(PROV)' .$object->ref . '-' . $ligne->id;
-// 			$ct->ref_customer = $object->array_options['options_immat'];
-// 			$ct->ref_supplier = substr($object->array_options['options_vin'], -7);
-// 			$ct->socid = $object->socid;
-// 			$ct->commercial_signature_id = $user->id;
-// 			$ct->commercial_suivi_id = $user->id;
-// 			$ct->date_contrat = dol_now();
-// 			$ct->create($user);
-// 			$ct->add_object_linked('commande',$object->id);
-// 			$ct->addline('', $ligne->pa_ht, $ligne->qty, $ligne->tva_tx, 0, 0, $ligne->fk_product, 0, '', '');
-// 		}
-// 	}
-// 	header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $object->id);
-// }
+if($action=='create_contrat') {
+	dol_include_once('/contrat/class/contrat.class.php');
+	$ct = New Contrat($db);
+	$object->fetch_lines();
+	$soltrs1 = prepare_array('VOLVO_VCM_LIST','array');
+	$soltrs2 = prepare_array('VOLVO_PACK_LIST','array');
+	$soltrs = array_merge($soltrs1,$soltrs2);
+	$action = '';
+	$affaires=new Affaires($db);
+	$filterarray = array('t.ref'=>$object->ref_client);
+	$res = $affaires->fetch_all('ASC', 't.rowid', 1, 0,$filterarray);
+	if($res>0){
+		$commercial = $affaires->lines[0]->fk_user_resp;
+	}else{
+		$commercial = $user->id;
+	}
+	foreach ($object->lines as $ligne){
+		if(in_array($ligne->product_ref, $soltrs)){
+			$ct->ref = '(PROV)' .$object->ref . '-' . $ligne->id;
+			$ct->ref_customer = $object->array_options['options_immat'];
+			$ct->ref_supplier = substr($object->array_options['options_vin'], -7);
+			$ct->socid = $object->socid;
+			$ct->commercial_signature_id = $user->id;
+			$ct->commercial_suivi_id = $commercial;
+			$ct->date_contrat = dol_now();
+			$ct->create($user);
+			$ct->add_object_linked('commande',$object->id);
+			$ct->addline('', $ligne->pa_ht, $ligne->qty, $ligne->tva_tx, 0, 0, $ligne->fk_product, 0, '', '');
+		}
+	}
+	header('Location: ' . $_SERVER['PHP_SELF'] . '?id=' . $object->id);
+}
 
 // Action clone object
 if ($action == 'confirm_clone' && $confirm == 'yes' && $user->rights->commande->creer) {
@@ -1671,17 +1680,17 @@ if ($action == 'create' && $user->rights->commande->creer)
 					print '<div class="inline-block divButAction"><a class="butAction" href="card.php?id=' . $object->id . '&amp;action=modif">' . $langs->trans('Modify') . '</a></div>';
 				}
 
-				// Create contract
-// 				$ok = 0;
+				//Create contract
+				$ok = 0;
 
-// 				//$ok = $leadext->contrat_needed($object->id);
-// 				if ($conf->contrat->enabled && $ok>0 && ($object->statut == Commande::STATUS_VALIDATED || $object->statut == Commande::STATUS_ACCEPTED || $object->statut == Commande::STATUS_CLOSED)) {
-// 				    $langs->load("contracts");
+				$ok = contrat_needed($object->id);
+				if ($conf->contrat->enabled && $ok>0 && ($object->statut == Commande::STATUS_VALIDATED || $object->statut == Commande::STATUS_ACCEPTED || $object->statut == Commande::STATUS_CLOSED)) {
+				    $langs->load("contracts");
 
-// 				    if ($user->rights->contrat->creer) {
-// 				        print '<div class="inline-block divButAction"><a class="butAction" href="card.php?id=' . $object->id . '&amp;action=create_contrat">Créer Contrat</a></div>';
-// 				    }
-// 				}
+				    if ($user->rights->contrat->creer) {
+				        print '<div class="inline-block divButAction"><a class="butAction" href="card.php?id=' . $object->id . '&amp;action=create_contrat">Créer Contrat</a></div>';
+				    }
+				}
 
 				// Clone
 				if ($user->rights->commande->creer) {

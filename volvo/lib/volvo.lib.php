@@ -685,3 +685,22 @@ function dol_banner_tab_perso($object, $paramid, $morehtml='', $shownav=1, $fiel
 	print '</div>';
 	print '<div class="underrefbanner clearboth"></div>';
 }
+
+function contrat_needed($cmdid){
+	global $db;
+	$soltrs = prepare_array('VOLVO_VCM_LIST', 'sql');
+	$soltrs.= prepare_array('VOLVO_PACK_LIST', 'sql');
+
+	$sql = "SELECT IFNULL(COUNT(det.rowid),0) as nb_contrat ";
+	$sql.= "FROM " . MAIN_DB_PREFIX . "commandedet AS det ";
+	$sql.= "LEFT JOIN ".MAIN_DB_PREFIX . "product AS p ON p.rowid=det.fk_product ";
+	$sql.= "WHERE det.fk_commande =" . $cmdid . " ";
+	$sql.= "AND p.ref IN (" . $soltrs . ") ";
+	$resql = $db->query($sql);
+	if ($resql) {
+		$obj = $db->fetch_object($resql);
+		return $obj->nb_contrat;
+	}else{
+		return $sql;
+	}
+}
