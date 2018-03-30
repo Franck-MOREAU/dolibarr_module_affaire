@@ -507,7 +507,10 @@ class CommandeVolvo extends Commande
 									$cmdsup->array_options['options_ctm'] = $this->array_options['options_ctm'];
 									$cmdsup->array_options['options_vin'] = $this->array_options['options_vin'];
 									$cmdsup->array_options['options_immat'] = $this->array_options['options_immat'];
-
+									$cmdsup->array_options['options_dt_liv_maj'] = $this->array_options['options_dt_liv_maj'];
+									$cmdsup->array_options['options_dt_blockupdate'] = $this->array_options['options_dt_blockupdate'];
+									$cmdsup->array_options['options_dt_lim_annul'] = $this->array_options['options_dt_lim_annul'];
+									$cmdsup->array_options['options_client'] = $this->socid;
 
 									$cmdsup->linked_objects["commande"] = $this->id;
 
