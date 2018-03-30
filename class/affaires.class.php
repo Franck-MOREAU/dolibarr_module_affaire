@@ -1220,7 +1220,7 @@ class Affaires_det extends CommonObject
 			$sql .= ' ' . $this->db->plimit($limit + 1, $offset);
 		}
 
-		dol_syslog(get_class($this) . "::fetch_all sql=" . $sql, LOG_DEBUG);
+		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
 		$resql = $this->db->query($sql);
 
 		if ($resql) {
@@ -1586,14 +1586,7 @@ class Affaires_det extends CommonObject
 
 	}
 
-	/**
-	 *
-	 * @param int $vehid
-	 * @return number
-	 */
-	public function getMarginDate($vehid=0) {
-		return 0;
-	}
+
 
 	public function getReglementid() {
 		if ($this->fk_genre == 1) {
@@ -1613,6 +1606,109 @@ class Affaires_det extends CommonObject
 	public function getMarginReelDate($vehid=0) {
 		return 0;
 	}
+
+	/**
+	 *
+	 * @param int $vehid
+	 * @return number
+	 */
+	public function getMarginDate($vehid=0) {
+		return 0;
+	}
+
+	public function getSumFactFournLn($orderlineid=0,$solde=0) {
+
+		if (empty($orderlineid)) {
+			$this->errors[] =get_class($this).'::'.__METHOD__. ' Missing $orderlineid';
+			$error ++;
+		}
+
+		$sumtotalht=0;
+
+		$sql ='SELECT SUM(fd.total_ht) as sumtotalht';
+		$sql .=' FROM '.MAIN_DB_PREFIX.'commande a c';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet a d INNER JOIN d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de INNER JOIN de.fk_object=d.rowid';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as fd ON de.fk_supplierorderlineid=fd.rowid';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cde ON cde.fk_object=fd.rowid';
+		if (!empty($solde)) {
+			$sql .= 'AND cde.solde='.$solde;
+		}
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=fd.rowid';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det as fd ON fd.rowid=fde.fk_object';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn as ff ON f.rowid=fd.fk_commande';
+
+		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+
+		if ($resql) {
+			$this->lines = array ();
+			$num = $this->db->num_rows($resql);
+			if ($num>0) {
+				$obj = $this->db->fetch_object($resql);
+				$sumtotalht = $obj->sumtotalht;
+			}
+		} else {
+			$error ++;
+			$this->errors[]=$this->db->lasterror;
+		}
+
+		if (! $error) {
+			return $sumtotalht;
+		} else {
+			foreach ( $this->errors as $errmsg ) {
+				dol_syslog(get_class($this) . "::" . __METHOD__ . ' ' . $errmsg, LOG_ERR);
+			}
+			return - 99999;
+		}
+	}
+
+	public function getSumFactFourn($orderid=0,$solde=0) {
+
+		if (empty($orderid)) {
+			$this->errors[] =get_class($this).'::'.__METHOD__. ' Missing $$orderid';
+			$error ++;
+		}
+
+		$sumtotalht=0;
+
+		$sql ='SELECT DISTINCT cd.rowid ';
+		$sql .=' FROM '.MAIN_DB_PREFIX.'commande a c';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet a d INNER JOIN d.fk_commande=c.rowid AND c.rowid='.$orderid;
+
+		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
+		$resql = $this->db->query($sql);
+
+		if ($resql) {
+			$this->lines = array ();
+			$num = $this->db->num_rows($resql);
+			if ($num>0) {
+				while ($obj = $this->db->fetch_object($resql)) {
+					$result=$this->getSumFactFournLn($obj->rowid,$solde);
+					if ($result===-99999) {
+						return $result;
+					} else {
+						$sumtotalht += $result;
+					}
+				}
+			}
+		} else {
+			$error ++;
+			$this->errors[]=$this->db->lasterror;
+		}
+
+		if (! $error) {
+			return $sumtotalht;
+		} else {
+			foreach ( $this->errors as $errmsg ) {
+				dol_syslog(get_class($this) . "::" . __METHOD__ . ' ' . $errmsg, LOG_ERR);
+			}
+			return - 1 * $error;
+		}
+
+	}
+
+
 
 	public function createcmd() {
 		global $conf;
