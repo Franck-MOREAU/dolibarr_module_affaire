@@ -174,8 +174,7 @@ class VolvoImport
 		$this->startcell = $startcell;
 
 		$error = 0;
-
-		if ($tab_to_treat == '') {
+		if ($tab_to_treat === '') {
 			$this->errors[] = $langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("VolvoTabsAvailable"));
 			$error ++;
 		}

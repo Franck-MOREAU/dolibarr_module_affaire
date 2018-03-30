@@ -15,17 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$res = @include ("../../../main.inc.php"); // For root directory
+$res = @include ("../../main.inc.php"); // For root directory
 if (! $res)
-	$res = @include ("../../../../main.inc.php"); // For "custom" directory
+	$res = @include ("../../../main.inc.php"); // For "custom" directory
 if (! $res)
 	die("Include of main fails");
 
 require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-require_once '../../class/volvoimportcmcust.class.php';
-require_once '../../class/html.formvolvo.class.php';
+require_once '../class/volvoimportcmcust.class.php';
+require_once '../../class/html.formaffaires.class.php';
 
-if (! $user->rights->volvo->import->customer)
+if (! $user->rights->affaires->volvo->om)
 	accessforbidden();
 
 $langs->load("exports");
@@ -42,7 +42,7 @@ $temptable = GETPOST('temptable');
 
 $importobject = new VolvoImportCMCust($db);
 
-$dir = $conf->volvo->dir_output . '/import/cmcust';
+$dir = $conf->affaires->dir_output . '/volvo/import/cm';
 
 if ($step == 2 && $action == 'sendit') {
 
@@ -229,7 +229,7 @@ llxHeader('', $title);
 dol_fiche_head($head, 'business', $title, 0, 'volvo@volvo');
 
 $form = new Form($db);
-$html_volvo = new FormVolvo($db);
+$html_volvo = new FormAffaires($db);
 
 if ($step == 1 || $step == 2) {
 
@@ -237,7 +237,7 @@ if ($step == 1 || $step == 2) {
 	 * Confirm delete file
 	 */
 	if ($action == 'delete') {
-		$ret = $form->form_confirm($_SERVER["PHP_SELF"] . '?urlfile=' . urlencode(GETPOST('urlfile')) . $param, $langs->trans('DeleteFile'), $langs->trans('ConfirmDeleteFile'), 'confirm_deletefile', '', 0, 1);
+		$ret = $form->formconfirm($_SERVER["PHP_SELF"] . '?urlfile=' . urlencode(GETPOST('urlfile')) . $param, $langs->trans('DeleteFile'), $langs->trans('ConfirmDeleteFile'), 'confirm_deletefile', '', 0, 1);
 	}
 
 	print '<form name="userfile" action="' . $_SERVER["PHP_SELF"] . '" enctype="multipart/form-data" METHOD="POST">';
@@ -251,7 +251,7 @@ if ($step == 1 || $step == 2) {
 	$var = true;
 
 	print '<tr><td colspan="6">' . $langs->trans("ChooseFileToImport", img_picto('', 'filenew')) . '</td></tr>';
-	print '<tr><td colspan="6">' . $langs->trans("VolvoSampleFile") . ': <a href="sample/cmcust.xlsx">' . img_picto('', 'file') . '</a></td></tr>';
+	//print '<tr><td colspan="6">' . $langs->trans("VolvoSampleFile") . ': <a href="sample/cmcust.xlsx">' . img_picto('', 'file') . '</a></td></tr>';
 
 	print '<tr class="liste_titre"><td colspan="6">' . $langs->trans("FileWithDataToImport") . '</td></tr>';
 
