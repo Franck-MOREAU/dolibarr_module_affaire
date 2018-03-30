@@ -246,6 +246,14 @@ class AffairesFactureFourn
 			}
 		}
 
+		if (empty($error)) {
+			$result = $factsup->validate($user);
+			if ($result < 0) {
+				$this->errors[] = $factsup->error;
+				$error ++;
+			}
+		}
+
 		if (! $error) {
 			$this->db->commit();
 			return $invoiceid;
