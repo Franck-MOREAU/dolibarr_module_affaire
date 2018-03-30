@@ -95,9 +95,9 @@ if ($action == 'updateMask') {
 		$error ++;
 	}
 
-	$truck = GETPOST('VOLVO_TRUCK', 'int');
-	if (! empty($truck)) {
-		$res = dolibarr_set_const($db, 'VOLVO_TRUCK', $truck, 'chaine', 0, '', $conf->entity);
+	$socid = GETPOST('VOLVO_FOURN_NOTREAT', 'int');
+	if (! empty($socid)) {
+		$res = dolibarr_set_const($db, 'VOLVO_FOURN_NOTREAT', $socid, 'chaine', 0, '', $conf->entity);
 	}
 	if (! $res > 0) {
 		$error ++;
@@ -254,9 +254,9 @@ print '<input type="text" name="VOLVO_LOCK_DELAI" value="' . $conf->global->VOLV
 print '</tr>';
 
 // Article Véhicule VOLVO
-print '<tr class="impair"><td>Article Véhiule Volvo</td>';
+print '<tr class="impair"><td>Fournisseur non soumis au classement livré auto des commande fournisseur sur "solde"</td>';
 print '<td align="left">';
-print $form->select_produits($conf->global->VOLVO_TRUCK,'VOLVO_TRUCK');
+print $form->select_thirdparty_list($conf->global->VOLVO_FOURN_NOTREAT,'VOLVO_FOURN_NOTREAT','s.fournisseur=1',$langs->trans('None'));
 print '</tr>';
 
 // Article Surestimation VO

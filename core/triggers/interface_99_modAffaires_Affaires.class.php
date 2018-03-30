@@ -24,7 +24,8 @@
 /**
  * Class of triggers Agefodd
  */
-class InterfaceAffaires {
+class InterfaceAffaires
+{
 	var $db;
 
 	/**
@@ -40,7 +41,7 @@ class InterfaceAffaires {
 		$this->description = "Volvo Triggers";
 		$this->version = 'dolibarr'; // 'development', 'experimental', 'dolibarr' or version
 		$this->picto = 'technic';
-		$this->errors = array ();
+		$this->errors = array();
 	}
 
 	/**
@@ -107,8 +108,8 @@ class InterfaceAffaires {
 
 			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
 			$sql = 'SELECT DISTINCT sdet.fk_commande FROM ' . MAIN_DB_PREFIX . 'commandedet_extrafields as dete ';
-			$sql .=' INNER JOIN ' . MAIN_DB_PREFIX . 'commandedet as det ON det.rowid=dete.fk_object AND det.fk_commande='.$object->id;
-			$sql .=' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet as sdet ON sdet.rowid=dete.fk_supplierorderlineid';
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commandedet as det ON det.rowid=dete.fk_object AND det.fk_commande=' . $object->id;
+			$sql .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet as sdet ON sdet.rowid=dete.fk_supplierorderlineid';
 			$resql = $this->db->query($sql);
 			if (! $resql) {
 				$this->error = $this->db->lasterror;
@@ -116,22 +117,22 @@ class InterfaceAffaires {
 				return - 1;
 			} else {
 				require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
-				while ($obj = $this->db->fetch_object($resql)) {
+				while ( $obj = $this->db->fetch_object($resql) ) {
 					$cmdsup = new CommandeFournisseur($this->db);
 					$result = $cmdsup->fetch($obj->fk_commande);
 					if ($result < 0) {
 						$this->errors = $cmdsup->error;
-						return -1;
+						return - 1;
 					}
 					$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_DRAFT);
 					if ($result < 0) {
 						$this->errors = $cmdsup->error;
-						return -1;
+						return - 1;
 					}
 					$result = $cmdsup->delete($user);
 					if ($result < 0) {
 						$this->errors = $cmdsup->error;
-						return -1;
+						return - 1;
 					}
 				}
 			}
@@ -142,7 +143,7 @@ class InterfaceAffaires {
 		if ($action == 'ORDER_SUPPLIER_DELETE') {
 			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
 			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commandedet_extrafields SET fk_supplierorderlineid=NULL WHERE fk_supplierorderlineid IN ';
-			$sql .=' (SELECT rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE fk_commande ='. $object->id.')';
+			$sql .= ' (SELECT rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE fk_commande =' . $object->id . ')';
 			$resql = $this->db->query($sql);
 			if (! $resql) {
 				$this->error = $this->db->lasterror;
@@ -156,7 +157,7 @@ class InterfaceAffaires {
 
 		if ($action == 'LINEORDER_SUPPLIER_DELETE') {
 			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
-			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commandedet_extrafields SET fk_supplierorderlineid=NULL WHERE fk_supplierorderlineid ='.$object->id;
+			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commandedet_extrafields SET fk_supplierorderlineid=NULL WHERE fk_supplierorderlineid =' . $object->id;
 			$resql = $this->db->query($sql);
 			if (! $resql) {
 				$this->error = $this->db->lasterror;
@@ -166,6 +167,56 @@ class InterfaceAffaires {
 			}
 
 			return 1;
+		}
+
+		if ($action == 'LINEORDER_SUPPLIER_UPDATE') {
+			if (! empty($conf->global->VOLVO_FOURN_NOTREAT)) {
+				dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
+				// Find if all lines of this supplier order are solde
+				$sql = 'SELECT DISTINCT fk_commande FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE rowid=' . $object->id;
+				$resql = $this->db->query($sql);
+				if (! $resql) {
+					$this->error = $this->db->lasterror;
+
+					dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+					return - 1;
+				} else {
+					$num = $this->db->num_rows($resql);
+					if ($num > 0) {
+						$obj = $this->db->fetch_object($resql);
+						$sql1 = 'SELECT DISTINCT rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet WHERE fk_commande=' . $obj->fk_commande;
+						$resql1 = $this->db->query($sql1);
+						if (! $resql1) {
+							$this->error = $this->db->lasterror;
+							dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+							return - 1;
+						} else {
+							$num1 = $this->db->num_rows($resql1);
+							if ($num1 > 0) {
+								$sql2 = 'SELECT DISTINCT d.rowid FROM ' . MAIN_DB_PREFIX . 'commande_fournisseurdet as d';
+								$sql2 .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseurdet_extrafields as e ON e.fk_object=d.rowid ';
+								$sql2 .= ' INNER JOIN ' . MAIN_DB_PREFIX . 'commande_fournisseur as c ON c.rowid=d.fk_commande';
+								$sql2 .= ' AND d.fk_commande=' . $obj->fk_commande . ' AND e.solde=1 AND c.fk_soc=' . $conf->global->VOLVO_FOURN_NOTREAT;
+								$resql2 = $this->db->query($sql2);
+								if (! $resql2) {
+									$this->error = $this->db->lasterror;
+									dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+									return - 1;
+								} else {
+									require_once DOL_DOCUMENT_ROOT . '/fourn/class/fournisseur.commande.class.php';
+									$cmdsup = new CommandeFournisseur($this->db);
+									$cmdsup->fetch($obj->fk_commande);
+									$result = $cmdsup->setStatus($user, CommandeFournisseur::STATUS_RECEIVED_COMPLETELY);
+									if ($result < 0) {
+										$this->errors = $cmdsup->error;
+										return - 1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 		return 0;
