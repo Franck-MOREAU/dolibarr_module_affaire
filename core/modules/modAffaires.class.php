@@ -111,6 +111,7 @@ class modAffaires extends DolibarrModules
 			'/affaires/volvo/import/fdd',
 			'/affaires/volvo/import/immat',
 			'/affaires/volvo/modelpdf',
+			'/affaires/volvo/import/cm',
 
 		);
 
@@ -1097,6 +1098,22 @@ class modAffaires extends DolibarrModules
 				'mainmenu' => 'volvo',
 				'leftmenu' => 'om',
 				'url' => '/affaires/volvo/import/import_om.php?step=1',
+				'langs' => '',
+				'position' => 100+$r,
+				'enabled' => '$user->rights->affaires->volvo->om',
+				'perms' => '$user->rights->affaires->volvo->om',
+				'target' => '',
+				'user' => 0
+		);
+		$r ++;
+
+		$this->menu[$r] = array(
+				'fk_menu' => 'fk_mainmenu=volvo,fk_leftmenu=imports',
+				'type' => 'left',
+				'titre' => 'Import cm client',
+				'mainmenu' => 'volvo',
+				'leftmenu' => 'om',
+				'url' => '/affaires/volvo/import/import_cmcust.php?step=1',
 				'langs' => '',
 				'position' => 100+$r,
 				'enabled' => '$user->rights->affaires->volvo->om',
