@@ -204,7 +204,7 @@ if ($step == 7 && $action == 'importdata') {
 
 	$match_column_str = html_entity_decode(GETPOST('match_column'), ENT_COMPAT);
 	$match_column = json_decode($match_column_str, true);
-
+	var_dump($match_column);
 	$result = $importobject->importData($match_column);
 	if ($result < O) {
 		setEventMessages(null, $importobject->errors, 'errors');

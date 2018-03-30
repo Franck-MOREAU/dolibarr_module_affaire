@@ -175,3 +175,37 @@ AffairesDateRelance=Date de relance
 affairesRelanceEvent=Relance sur une affaire %s
 ImpossibleToCreateEventAffaires=Impossible de créer l'évènement de relance
 
+
+
+#
+# Import CM Cust
+#
+VolvoNextStep=Etape suivante
+VolvoImportCMCust=CM Client
+VolvoCMCust=CM Client
+VolvoImportCMCustStep1=Etape 1 - Import des Clients
+VolvoCheckFilesCorrect=Vérification des fichiers
+VolvoWrongFileExtentionZip=Vous devez charger un fichier Zip (archive zip). Vérifier que votre fichier correspond bien à l'exemple)
+VolvoCannotExtractZipFile=Impossilbe de décompresser le fichier Zip (archive) 
+VolvoCannotCreateTempDir=Probléme technique de création de repertoire temporaire
+VolvoHeaderFilesNoAllTheSame=Les colonnes ne sont pas les mêmes dans tout les fichiers, les colonnes doivent avoir le même titre et être dans le même ordre)
+VolvoCustCMNoFoundError=Les lignes sont cohérentes
+VolvoCustCMNoAttentionVehicule=Toutes les informations sont des informations existantes (ou pas de différence avec les informations existantes) 
+VolvoImportCMCustCreate=Liste des clients où les informations ont été créés : 
+VolvoImportCMCustUpdate=Liste des clients où les informations ont été mises à jour :
+VolvoImportCMCustFailed=Nombre de client(s) où les informations n'ont pas été importées : %s
+VolvoImportSelectCustomer=Selection client cible
+VolvoImportSelectAction=Selection action
+VolvoImportDataFindEquals=%s identique
+VolvoImportUpdateCustomer=Mettre a jour le client selectionné  %s avec les informations du fichier
+VolvoImportUpdateCDBOnly=Ajouter le CDB au client selectionné %s
+VolvoImportAction=Action selectionnée
+VolvoImportCreation=Création
+VolvoFieldTooLong=Le champ %s ne peux pas faire plus de %s caractéres
+VolvoImportStep1=Etape 1 - Import des CDB
+VolvoImportStep2=Etape 2 - Erreur Bloquante
+VolvoImportStep3=Etape 3 - Différences entre les informations du fichier et de l'application 
+VolvoImportStep4=Etape 4 - Import des données
+VolvoImportStep5=Etape 5 - Mise à jour des dates de livraison
+VolvoImportStep6=Etape 6 - Résumé
+VolvoNoBlockingError=Pas d'erreur bloquante

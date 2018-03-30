@@ -270,6 +270,8 @@ class VolvoImport
 			foreach ( $filter as $key => $value ) {
 				if ($key == 'integration_status' || $key == 'integration_status_module') {
 					$sqlwhere[] = $key . ' IN (' . $this->db->escape($value) . ')';
+				} else if ($key=='!likeintegration_action') {
+					$sqlwhere[] = ' (integration_action NOT LIKE \'%' . $this->db->escape($value) . '%\' OR integration_action  IS NULL) ';
 				} else {
 					$sqlwhere[] = $key . ' LIKE \'%' . $this->db->escape($value) . '%\'';
 				}

@@ -77,13 +77,12 @@ class VolvoImportCMCust extends VolvoImport
 				'editable' => 0
 		);
 		$this->targetInfoArray[] = array(
-				'column' => 'num_cdb',
+				'column' => 'code_client',
 				'type' => 'text',
 				'columntrans' => $langs->trans('VolvoCDB'),
-				'table' => MAIN_DB_PREFIX . 'volvo_societe_cdb',
+				'table' => MAIN_DB_PREFIX . 'societe',
 				'tabletrans' => $langs->trans('Societe'),
 				'filecolumntitle' => 'No de client CDB',
-				'tmpcolumnname' => 'num_cdb',
 				'editable' => 0,
 				'isunique' => 1,
 				'noinsert' => 1
@@ -265,7 +264,7 @@ class VolvoImportCMCust extends VolvoImport
 			$sql .= 'thirdparty_id integer DEFAULT NULL,';
 			$sql .= 'realaddress varchar(255) DEFAULT NULL,';
 			$sql .= 'num_cdb varchar(255) DEFAULT NULL,';
-			foreach ( $this->columnArray as $data ) {
+			foreach ( $this->columnArray 	as $data ) {
 				$sql .= $data['name'] . ' varchar(500),';
 			}
 			$sql .= 'tms timestamp NOT NULL';
@@ -380,7 +379,7 @@ class VolvoImportCMCust extends VolvoImport
 		// Find CDB column
 		$compare_column = array();
 		foreach ( $this->targetInfoArray as $key => $data ) {
-			if (array_key_exists('isunique', $data) && ! empty($data['isunique']) && strpos($data['column'], 'num_cdb') !== false) {
+			if (array_key_exists('isunique', $data) && ! empty($data['isunique']) && strpos($data['column'], 'code_client') !== false) {
 				$columnTmpName = $matchColmunArray[$key];
 				$colnumcdb_tmptable = $columnTmpName;
 				$colnumcdb_forcetmptable = $data['tmpcolumnname'];
@@ -485,26 +484,6 @@ class VolvoImportCMCust extends VolvoImport
 				$this->errors[] = $this->db->lasterror;
 				$error ++;
 			}
-		}
-
-		if (! empty($colnumcdb_tmptable)) {
-			// update adresse realfields column
-			$sql = 'UPDATE ' . $this->tempTable . '  SET ' . $colnumcdb_forcetmptable . '=' . $colnumcdb_tmptable;
-			dol_syslog(get_class($this) . '::' . __METHOD__ . ' update cdb', LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if (! $resql) {
-				$this->errors[] = $this->db->lasterror;
-				$error ++;
-			}
-		}
-
-		// Delete temp record with no cdb
-		$sql = 'DELETE FROM ' . $this->tempTable . ' WHERE ' . $colnumcdb_forcetmptable . ' IS NULL';
-		dol_syslog(get_class($this) . '::' . __METHOD__ . ' delete line where there is no CDB', LOG_DEBUG);
-		$resql = $this->db->query($sql);
-		if (! $resql) {
-			$this->errors[] = $this->db->lasterror;
-			$error ++;
 		}
 
 		// check too long phone
@@ -614,8 +593,8 @@ class VolvoImportCMCust extends VolvoImport
 		}
 
 		// update thirdparty_id column
-		$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'volvo_societe_cdb as src,' . $this->tempTable . ' as dest SET dest.thirdparty_id=src.fk_thirdparty ';
-		$sql .= ' WHERE src.num_cdb=dest.' . $colnumcdb_forcetmptable . ' AND dest.thirdparty_id IS NULL AND dest.integration_status IS NULL';
+		$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'societe as src,' . $this->tempTable . ' as dest SET dest.thirdparty_id=src.rowid ';
+		$sql .= ' WHERE src.code_client=dest.' . $colnumcdb_tmptable . ' AND dest.thirdparty_id IS NULL AND dest.integration_status IS NULL';
 		dol_syslog(get_class($this) . '::' . __METHOD__ . ' update thirdparty_id', LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if (! $resql) {
@@ -845,7 +824,7 @@ class VolvoImportCMCust extends VolvoImport
 
 		// Find cdb column
 		foreach ( $this->targetInfoArray as $key => $data ) {
-			if (array_key_exists('isunique', $data) && ! empty($data['isunique']) && strpos($data['column'], 'num_cdb') !== false) {
+			if (array_key_exists('isunique', $data) && ! empty($data['isunique']) && strpos($data['column'], 'code_client') !== false) {
 				$colnumcdb_tmptable = $matchColmunArray[$key];
 				$colnumcdb_forcetmptable = $data['tmpcolumnname'];
 				$colnumcdb_desttable = $data['column'];
@@ -873,18 +852,24 @@ class VolvoImportCMCust extends VolvoImport
 			$sqlcol[] = 'status';
 			$sqlvalue[] = 1;
 
-			$sqlcol[] = 'canvas';
-			$sqlvalue[] = '\'volvosociete@volvo\'';
+			//$sqlcol[] = 'canvas';
+			//$sqlvalue[] = '\'volvosociete@volvo\'';
 
 			foreach ( $this->targetInfoArray as $key => $col ) {
 				if ($col['table'] == MAIN_DB_PREFIX . 'societe') {
 					if (! array_key_exists('noinsert', $col)) {
 
 						$columnTmpName = $matchColmunArray[$key];
+						var_dump($col,$key,$columnTmpName);
+
 						if (array_key_exists('tmpcolumnname', $col) && ! empty($col['tmpcolumnname'])) {
 							$columnTmpName = $col['tmpcolumnname'];
 						}
+
+						//var_dump($columnTmpName);
+
 						if (! empty($columnTmpName)) {
+							var_dump($line->$columnTmpName);
 							$sqlcol[] = $col['column'];
 
 							if (array_key_exists('dict', $col)) {
@@ -910,17 +895,9 @@ class VolvoImportCMCust extends VolvoImport
 					}
 				}
 			}
+			exit;
 
 			$sql = 'INSERT INTO ' . MAIN_DB_PREFIX . 'societe(' . implode(',', $sqlcol) . ',import_key) VALUES (' . implode(',', $sqlvalue) . ',\'' . $now . '\')';
-			dol_syslog(get_class($this) . '::' . __METHOD__, LOG_DEBUG);
-			$resql = $this->db->query($sql);
-			if (! $resql) {
-				$this->errors[] = $this->db->lasterror;
-				$error ++;
-			}
-
-			$sql = 'INSERT INTO ' . MAIN_DB_PREFIX . 'volvo_societe_cdb(fk_thirdparty,num_cdb,fk_user_author,datec,fk_user_mod) ';
-			$sql .= ' VALUES (' . $this->db->last_insert_id(MAIN_DB_PREFIX . 'societe') . ',\'' . $this->db->escape($cdb_val) . '\',' . $user->id . ',' . "'" . $this->db->idate($now) . "'" . ',' . $user->id . ')';
 			dol_syslog(get_class($this) . '::' . __METHOD__, LOG_DEBUG);
 			$resql = $this->db->query($sql);
 			if (! $resql) {
@@ -930,7 +907,6 @@ class VolvoImportCMCust extends VolvoImport
 		}
 
 		// Update existing societe
-
 		$this->columnArray[]=array('name'=>'realaddress','label'=>'Adresse');
 		array_unshift($this->columnArray, array(
 				'name' => 'thirdparty_id'
@@ -1031,15 +1007,6 @@ class VolvoImportCMCust extends VolvoImport
 			} else if ($action == 'updateadress') {
 				$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'societe SET ' . implode(',', $sql_upd_col_adress) . ',import_key=\'' . $now . 'm\' WHERE rowid=' . $socid;
 				dol_syslog(get_class($this) . '::updateadress' . __METHOD__, LOG_DEBUG);
-				$resql = $this->db->query($sql);
-				if (! $resql) {
-					$this->errors[] = $this->db->lasterror;
-					$error ++;
-				}
-			} else if ($action == 'updatecdb') {
-				$sql = 'INSERT INTO ' . MAIN_DB_PREFIX . 'volvo_societe_cdb(fk_thirdparty,num_cdb,fk_user_author,datec,fk_user_mod) ';
-				$sql .= ' VALUES (' . $socid . ',\'' . $this->db->escape($cdb_val) . '\',' . $user->id . ',' . "'" . $this->db->idate($now) . "'" . ',' . $user->id . ')';
-				dol_syslog(get_class($this) . '::updatecdb' . __METHOD__, LOG_DEBUG);
 				$resql = $this->db->query($sql);
 				if (! $resql) {
 					$this->errors[] = $this->db->lasterror;

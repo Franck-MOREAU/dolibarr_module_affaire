@@ -648,4 +648,160 @@ class FormAffaires extends Form
 		}
 	}
 
+	/**
+	 *
+	 * @param number $rowid
+	 * @param string $integration_comment
+	 * @return string
+	 */
+	public function selectImportCmCustCustomer($rowid = 0, $integration_comment = '', $tableName = '') {
+		global $langs;
+
+		$out = '<script>' . "\n";
+		$out .= '$(document).ready(function () { ' . "\n";
+		$out .= '	var url = \'' . dol_buildpath('/affaires/volvo/import/ajax/update_temp_table.php', 2) . '\';' . "\n";
+		$out .= '	$(\'#save_' . $rowid . '\').click(function(){' . "\n";
+		$out .= '		var valuecust=$(\'#cutomer_' . $rowid . '\').val();' . "\n";
+		$out .= '		var valueaction=$(\'#actioncutomer_' . $rowid . '\').val();' . "\n";
+		$out .= '		if (valuecust!=\'\' && valueaction!=\'\' && valueaction!=\'createcustomer\') {' . "\n";
+		$out .= '			var value=valuecust+\'$\'+valueaction;' . "\n";
+		$out .= '			$.get( url,' . "\n";
+		$out .= '				{' . "\n";
+		$out .= '					rowid: \'' . $rowid . '\',' . "\n";
+		$out .= '					columname: \'integration_action\',' . "\n";
+		$out .= '					tablename: \'' . $tableName . '\',' . "\n";
+		$out .= '					value: value' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.done(function( data ) {' . "\n";
+		$out .= '					if (data==1) {' . "\n";
+		$out .= '						$(\'#actionline_' . $rowid . '\').prop(\'checked\', "true");' . "\n";
+		$out .= '					} else {alert("Error "+ data)}' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.fail(function( data ) {' . "\n";
+		$out .= '				  alert( "Error ");' . "\n";
+		$out .= '				});' . "\n";
+		$out .= '		} else if (valuecust==\'\' && valueaction==\'createcustomer\') {' . "\n";
+		$out .= '			$.get( url,' . "\n";
+		$out .= '				{' . "\n";
+		$out .= '					rowid: \'' . $rowid . '\',' . "\n";
+		$out .= '					columname: \'integration_status\',' . "\n";
+		$out .= '					tablename: \'' . $tableName . '\',' . "\n";
+		$out .= '					value: 1' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.done(function( data ) {' . "\n";
+		$out .= '					if (data==1) {' . "\n";
+		$out .= '						$(\'#actionline_' . $rowid . '\').prop(\'checked\', "true");' . "\n";
+		$out .= '					} else {alert("Error "+ data)}' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.fail(function( data ) {' . "\n";
+		$out .= '				  alert( "Error ");' . "\n";
+		$out .= '				});' . "\n";
+		$out .= '			$.get( url,' . "\n";
+		$out .= '				{' . "\n";
+		$out .= '					rowid: \'' . $rowid . '\',' . "\n";
+		$out .= '					columname: \'integration_comment\',' . "\n";
+		$out .= '					tablename: \'' . $tableName . '\',' . "\n";
+		$out .= '					value: \'NULL\'' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.done(function( data ) {' . "\n";
+		$out .= '					if (data==1) {' . "\n";
+		$out .= '						$(\'#actionline_' . $rowid . '\').prop(\'checked\', "true");' . "\n";
+		$out .= '					} else {alert("Error "+ data)}' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.fail(function( data ) {' . "\n";
+		$out .= '				  alert( "Error ");' . "\n";
+		$out .= '				});' . "\n";
+		$out .= '		} else {' . "\n";
+		$out .= '			$(\'#actionline_' . $rowid . '\').removeAttr(\'checked\');' . "\n";
+		$out .= '			$.get( url,' . "\n";
+		$out .= '				{' . "\n";
+		$out .= '					rowid: \'' . $rowid . '\',' . "\n";
+		$out .= '					columname: \'integration_action\',' . "\n";
+		$out .= '					tablename: \'' . $tableName . '\',' . "\n";
+		$out .= '					value: \'NULL\'' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.done(function( data ) {' . "\n";
+		$out .= '					if (data==1) {' . "\n";
+		$out .= '					} else {alert("Error "+ data)}' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.fail(function( data ) {' . "\n";
+		$out .= '				  alert( "Error ");' . "\n";
+		$out .= '				});' . "\n";
+		$out .= '			$.get( url,' . "\n";
+		$out .= '				{' . "\n";
+		$out .= '					rowid: \'' . $rowid . '\',' . "\n";
+		$out .= '					columname: \'integration_status\',' . "\n";
+		$out .= '					tablename: \'' . $tableName . '\',' . "\n";
+		$out .= '					value: \'0\'' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.done(function( data ) {' . "\n";
+		$out .= '					if (data==1) {' . "\n";
+		$out .= '					} else {alert("Error "+ data)}' . "\n";
+		$out .= '				})' . "\n";
+		$out .= '				.fail(function( data ) {' . "\n";
+		$out .= '				  alert( "Error ");' . "\n";
+		$out .= '				});' . "\n";
+		$out .= '		} ' . "\n";
+		$out .= '	});' . "\n";
+		$out .= '});' . "\n";
+		$out .= '</script>' . "\n";
+
+		$out .= '<select id="cutomer_' . $rowid . '" class="flat" name="cutomer_' . $htmlname . '">';
+		$out .= '<option value=""></option>';
+		$current_comment_array = json_decode($integration_comment, true);
+		if (is_array($current_comment_array) && count($current_comment_array) > 0 && is_array($current_comment_array[0]) && count($current_comment_array[0]) > 0) {
+			foreach ( $current_comment_array as $current_comment ) {
+				foreach ( $current_comment as $socid => $message ) {
+					if (! empty($socid)) {
+						$sql = 'SELECT nom FROM ' . MAIN_DB_PREFIX . 'societe WHERE rowid=' . $socid;
+						$resql = $this->db->query($sql);
+						if (! $resql) {
+							setEventMessage($this->db->lasterror, 'errors');
+						} else {
+							if ($obj = $this->db->fetch_object($resql)) {
+								$out .= '<option value="' . $socid . '" '.(count($current_comment)==1?' selected ':'').'>' . $obj->nom . ' (' . implode(',', $message) . ')</option>';
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$out .= '</select>';
+		$out .= '<br>';
+		$out .= '<select id="actioncutomer_' . $rowid . '" class="flat" name="cutomer_' . $htmlname . '">';
+		$out .= '<option value=""></option>';
+		$out .= '<option value="updatecustomer">' . $langs->trans('VolvoImportUpdateCustomer') . '</option>';
+		$out .= '<option value="updatecdb">' . $langs->trans('VolvoImportUpdateCDBOnly') . '</option>';
+		$out .= '<option value="createcustomer">' . $langs->trans('VolvoImportCreation') . '</option>';
+		$out .= '</select>';
+		$out .= '<br>';
+		$out .= img_picto($langs->trans('Save'), 'tick', ' name="save_' . $rowid . '" id="save_' . $rowid . '"');
+
+		return $out;
+	}
+	public function displayActionImportCmCust($line) {
+		global $langs;
+		if ($line->integration_status == 1) {
+			$out = $langs->trans('VolvoImportCreation');
+		} elseif ($line->integration_status == 2) {
+			$action_array = explode('$', $line->integration_action);
+			$socid = $action_array[0];
+			$sql = 'SELECT nom FROM ' . MAIN_DB_PREFIX . 'societe WHERE rowid=' . $socid;
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				setEventMessage($this->db->lasterror, 'errors');
+			} else {
+				if ($obj = $this->db->fetch_object($resql)) {
+					if ($action_array[1] == 'updatecustomer') {
+						$out = $langs->trans('VolvoImportUpdateCustomer', $obj->nom);
+					} elseif ($action_array[1] == 'updatecdb') {
+						$out = $langs->trans('VolvoImportUpdateCDBOnly', $obj->nom);
+					}
+				}
+			}
+		}
+		return $out;
+	}
+
 }
