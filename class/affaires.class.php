@@ -1625,18 +1625,18 @@ class Affaires_det extends CommonObject
 
 		$sumtotalht=0;
 
-		$sql ='SELECT SUM(fd.total_ht) as sumtotalht';
+		$sql ='SELECT SUM(cfd.total_ht) as sumtotalht';
 		$sql .=' FROM '.MAIN_DB_PREFIX.'commande as c';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d INNER JOIN d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de INNER JOIN de.fk_object=d.rowid';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as fd ON de.fk_supplierorderlineid=fd.rowid';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cde ON cde.fk_object=fd.rowid';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d ON d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de ON de.fk_object=d.rowid';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as cfd ON de.fk_supplierorderlineid=cfd.rowid';
+		$sql .=' LEFT JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cfde ON cfde.fk_object=cfd.rowid';
 		if (!empty($solde)) {
-			$sql .= 'AND cde.solde='.$solde;
+			$sql .= 'AND cfde.solde='.$solde;
 		}
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=fd.rowid';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=cfd.rowid';
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det as fd ON fd.rowid=fde.fk_object';
-		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn as ff ON f.rowid=fd.fk_commande';
+		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn as ff ON ff.rowid=fd.fk_facture_fourn';
 
 		dol_syslog(get_class($this) . "::".__METHOD__, LOG_DEBUG);
 		$resql = $this->db->query($sql);
