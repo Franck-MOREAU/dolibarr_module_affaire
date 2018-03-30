@@ -609,24 +609,11 @@ class CommandeVolvo extends Commande
 		// Ecart
 		print '<td class="linecolht" align="right">' . $langs->trans('Ecart') . '</td>';
 
-		print '<td class="linecoledit"></td>'; // No width to allow autodim
+		print '<td class="linecoledit"></td>';
 
-		print '<td class="linecoldelete" width="10"></td>';
+		print '<td class="linecoldelete"></td>';
 
-		print '<td class="linecolmove" width="10"></td>';
-
-		print "</tr>";
-		print '<tr class="liste_titre nodrag nodrop">';
-
-		// fournisseur
-		print '<td class="linecolqty" align="left">' . $langs->trans('Fournisseur') . '</td>';
-
-		// date
-		print '<td class="linecolqty" align="left" colspan="2">' . $langs->trans('Date de facture') . '</td>';
-
-		print '<td colspan="7"></td>';
-
-		print "</tr>";
+		print '<td class="linecolmove"></td>';
 
 		$num = count($this->lines);
 		$var = true;
