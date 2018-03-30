@@ -426,4 +426,226 @@ class FormAffaires extends Form
 
 		return $out;
 	}
+
+	/**
+	 *
+	 * @param unknown $arrayColumnDef
+	 * @param string $columnName
+	 * @param string $value
+	 */
+	public function importFieldData($arrayColumnDef = array(), $matchColmunArray = array(), $columnName = '', $value = '', $rowid = 0, $tableName = '', $integration_comment = '', $currentaction = '') {
+		global $langs;
+
+		$this->resPrint = '';
+		$out_html_after = '';
+
+		/*var_dump($arrayColumnDef);
+		 var_dump($matchColmunArray);
+		 var_dump($columnName);*/
+		$coldata = $arrayColumnDef[array_search($columnName, $matchColmunArray)];
+		$actualvalue = '';
+		// Find column error
+		if (! empty($integration_comment)) {
+			$integration_comment_array = json_decode($integration_comment, true);
+			if (! is_array($integration_comment_array)) {
+				$error ++;
+				$this->error[] = 'CannotConvertIntegrationCommentIntoArray';
+			} elseif (count($integration_comment_array > 0)) {
+				foreach ( $integration_comment_array as $info_error ) {
+					if ($info_error['column'] == $columnName && ! empty($info_error['outputincell'])) {
+						$out_html = '<div name="' . $columnName . '_integrationpb_' . $rowid . '" id="' . $columnName . '_integrationpb_' . $rowid . '" style="white-space: nowrap;color:' . $info_error['color'] . '">';
+						$out_html .= '<p>' . dol_html_entity_decode($info_error['message'], ENT_QUOTES, 'UTF-8') . '</p>';
+						$out_html .= '</div>';
+					}
+					if ($info_error['column'] == $columnName && array_key_exists('actualvalue', $info_error)) {
+						$actualvalue = $info_error['actualvalue'];
+					}
+				}
+			}
+		}
+
+		if (! empty($coldata['editable'])) {
+			$outputbutton = true;
+			require_once DOL_DOCUMENT_ROOT . '/core/class/html.form.class.php';
+			$form = new Form($this->db);
+
+			$out_js_head = '<script>' . "\n";
+			$out_js_head .= '$(document).ready(function () { ' . "\n";
+			$out_js_head .= '	var url = \'' . dol_buildpath('/volvo/volvo/import/ajax/update_temp_table.php', 2) . '\';' . "\n";
+			$out_js_head .= '	var urlnumcdb = \'' . dol_buildpath('/volvo/volvo/import/ajax/update_cdb.php', 2) . '\';' . "\n";
+			$out_js_head .= '	var urlconvercust = \'' . dol_buildpath('/volvo/volvo/import/ajax/convert_cust.php', 2) . '\';' . "\n";
+			$out_js_head .= '	var urlfindprodref = \'' . dol_buildpath('/volvo/volvo/import/ajax/findprodref.php', 2) . '\';' . "\n";
+			$out_js_head .= '	var rowid = \'' . $rowid . '\';' . "\n";
+			$out_js_head .= '	var columname=\'' . $columnName . '\';' . "\n";
+			$out_js_head .= '' . "\n";
+			$out_js_head .= '	$(\'#' . $columnName . '_editmode_' . $rowid . '\').click(function(){' . "\n";
+			$out_js_head .= '		$(\'#' . $columnName . '_view_' . $rowid . '\').toggle();' . "\n";
+			$out_js_head .= '		$(\'#' . $columnName . '_edit_' . $rowid . '\').toggle();' . "\n";
+			$out_js_head .= '		$(\'[name*="_editmode_"]\').toggle();';
+			$out_js_head .= '	});' . "\n";
+			$out_js_head .= '	$(\'#' . $columnName . '_cancel_' . $rowid . '\').click(function(){' . "\n";
+			$out_js_head .= '		$(\'#' . $columnName . '_view_' . $rowid . '\').toggle();' . "\n";
+			$out_js_head .= '		$(\'#' . $columnName . '_edit_' . $rowid . '\').toggle();' . "\n";
+			$out_js_head .= '		$(\'[name*="_editmode_"]\').toggle();';
+			$out_js_head .= '	});' . "\n";
+
+			$out_js_footer = '});' . "\n";
+			$out_js_footer .= '</script>' . "\n";
+
+			$out_html .= '<div name="' . $columnName . '_edit_' . $rowid . '" id="' . $columnName . '_edit_' . $rowid . '" style="display:none; width:100%">';
+
+			// Output diffrent htl input according data type
+			if ($coldata['type'] == 'text' && ! array_key_exists('dict', $coldata)) {
+				$out_html .= '<input type="text" value="' . $value . '" name="' . $columnName . '_input_' . $rowid . '" id="' . $columnName . '_input_' . $rowid . '" />';
+			} elseif ($coldata['type'] == 'date' && ! array_key_exists('dict', $coldata)) {
+
+				try {
+					$datetime = new DateTime($value);
+					$out_html .= $form->select_date($datetime->getTimestamp(), $columnName . '_input_' . $rowid, 0, 0, 0, "", 1, 1, 1);
+				} catch ( Exception $e ) {
+					$out_html .= $form->select_date('', $columnName . '_input_' . $rowid, 0, 0, 0, "", 1, 1, 1);
+				}
+			} elseif (array_key_exists('dict', $coldata)) {
+				if ($coldata['dict'] != 'country') {
+					$out_html .= $this->select_dict($coldata['dict'], $columnName . '_input_' . $rowid, $value, 'html', 'code', 'code');
+				} else {
+					$out_html .= $this->select_dict($coldata['dict'], $columnName . '_input_' . $rowid, $value, 'html', 'label', 'label');
+				}
+			} elseif (array_key_exists('fk_table', $coldata) && $coldata['fk_table'] == 'societe') {
+				$out_html .= $langs->trans('VolvoAddCDBToCustomer', $value) . $form->select_company('', $columnName . '_input_' . $rowid, 's.client = 1 OR s.client = 3', 1, 0, 0, array(), 0, 'minwidth300', '');
+			} elseif (array_key_exists('fk_table', $coldata) && $coldata['fk_table'] == 'user') {
+				$out_html .= $langs->trans('VolvoContactAdminToSolveThisLogin', $value);
+				$outputbutton = false;
+			} elseif (array_key_exists('module', $coldata) && $coldata['module'] == 1) {
+				$sql = 'SELECT ' . $columnName . '_' . $coldata['column'] . ' as prodid, ' . $columnName . '_' . $coldata['column'] . '_base_duration as baseduration FROM ' . $tableName . ' WHERE rowid=' . $rowid;
+				dol_syslog(get_class($this) . "::" . __METHOD__, LOG_DEBUG);
+				$resql = $this->db->query($sql);
+				if ($resql) {
+					if ($obj = $this->db->fetch_object($resql)) {
+						$product_id = $obj->prodid;
+						$baseduration = $obj->baseduration;
+					}
+				} else {
+					setEventMessage(get_class($this) . "::" . __METHOD__ . " Error=" . $this->db->lasterror(), 'errors');
+				}
+
+				$out_html .= $form->select_produits_list($product_id, $columnName . '_input_' . $rowid, '', 20, 0, '', 1, 2, 0, 0, 1, 0, 'minwidth300');
+				$out_html .= '<input type="text" value="' . $baseduration . '" name="' . $columnName . '_input_' . $rowid . '_base_duration" id="' . $columnName . '_input_' . $rowid . '_base_duration" size="2" />';
+			}
+
+			if ($outputbutton) {
+				$out_html .= '&nbsp;&nbsp;&nbsp;' . img_picto($langs->trans('Save'), 'tick', ' name="' . $columnName . '_save_' . $rowid . '" id="' . $columnName . '_save_' . $rowid . '"');
+			}
+			$out_html .= '&nbsp;&nbsp;&nbsp;' . img_picto($langs->trans('Cancel'), 'editdelete', ' name="' . $columnName . '_cancel_' . $rowid . '" id="' . $columnName . '_cancel_' . $rowid . '"');
+			$out_html .= '</div>';
+			// $out_html .= '<div style="display: inline;">';
+			$out_html .= '<div id="' . $columnName . '_view_' . $rowid . '" name="' . $columnName . '_view_' . $rowid . '" style="display: inline; float: left;">';
+			$out_html .= '<span id="' . $columnName . '_value_' . $rowid . '" name="' . $columnName . '_value_' . $rowid . '">' . $value . '</span>';
+			if (! empty($actualvalue)) {
+				$out_html .= '<span style="white-space: nowrap;color:red"> / ' . $actualvalue . '</span>';
+			}
+			$out_html .= img_picto($langs->trans('Edit'), 'edit', ' name="' . $columnName . '_editmode_' . $rowid . '" id="' . $columnName . '_editmode_' . $rowid . '"');
+			$out_html .= '</div>';
+			// $out_html .= '</div>';
+
+			$out_js_action = '		$.get( url,' . "\n";
+			$out_js_action .= '			{' . "\n";
+			$out_js_action .= '				rowid: rowid,' . "\n";
+			$out_js_action .= '				columname: columname,' . "\n";
+			$out_js_action .= '				tablename: \'' . $tableName . '\',' . "\n";
+			$out_js_action .= '				datatype: \'' . $coldata['type'] . '\',' . "\n";
+			$out_js_action .= '				value: value' . "\n";
+			$out_js_action .= '			})' . "\n";
+			$out_js_action .= '			.done(function( data ) {' . "\n";
+			$out_js_action .= '				if (data==1) {' . "\n";
+			$out_js_action .= '					$(\'#' . $columnName . '_view_' . $rowid . '\').toggle();' . "\n";
+			$out_js_action .= '					$(\'#' . $columnName . '_edit_' . $rowid . '\').toggle();' . "\n";
+
+			// Output diffrent htl input according data type
+			if ($coldata['type'] == 'text' && ! array_key_exists('dict', $coldata)) {
+				$out_js_action .= '					$(\'#' . $columnName . '_value_' . $rowid . '\').text(value);' . "\n";
+			} elseif ($coldata['type'] == 'date' && ! array_key_exists('dict', $coldata)) {
+				$out_js_action .= '					$(\'#' . $columnName . '_value_' . $rowid . '\').text(value);' . "\n";
+			} elseif (array_key_exists('dict', $coldata)) {
+				$out_js_action .= '					$(\'#' . $columnName . '_value_' . $rowid . '\').text(value);' . "\n";
+			} elseif (array_key_exists('fk_table', $coldata) && $coldata['fk_table'] == 'societe') {
+				$out_js_action .= '					$(\'#' . $columnName . '_value_' . $rowid . '\').text(value);' . "\n";
+			} elseif (array_key_exists('module', $coldata) && $coldata['module'] == 1) {
+				$out_js_action .= '					$(\'#' . $columnName . '_value_' . $rowid . '\').text(value);' . "\n";
+			}
+			$out_js_action .= '					$(\'[name*="_editmode_"]\').toggle();';
+			$out_js_action .= '					$(\'#recheck\').show();';
+			$out_js_action .= '					$(\'#importdata\').hide();';
+			$out_js_action .= '					$(\'#action\').val(\'' . $currentaction . '\');';
+			$out_js_action .= '					$(\'#step\').val(\'6\');';
+			$out_js_action .= '					$(\'#recheck\').show();';
+			$out_js_action .= '				} else {alert("Error "+data)}' . "\n";
+			$out_js_action .= '			})' . "\n";
+			$out_js_action .= '			.fail(function( data ) {' . "\n";
+			$out_js_action .= '			  alert( "Error ");' . "\n";
+			$out_js_action .= '			});' . "\n";
+
+			$out_js = '	$(\'#' . $columnName . '_save_' . $rowid . '\').click(function(){' . "\n";
+
+			// Output diffrent htl input according data type
+			if ($coldata['type'] == 'text' && ! array_key_exists('dict', $coldata)) {
+				$out_js .= '	var value=$(\'#' . $columnName . '_input_' . $rowid . '\').val();' . "\n";
+				$out_js .= $out_js_action;
+			} elseif ($coldata['type'] == 'date') {
+				$out_js .= ' 	var dt = new Date($(\'#' . $columnName . '_input_' . $rowid . 'year\').val(),$(\'#' . $columnName . '_input_' . $rowid . 'month\').val()-1,$(\'#' . $columnName . '_input_' . $rowid . 'day\').val());' . "\n";
+				$out_js .= '	var value=formatDate(dt, \'yyyyMMdd\');' . "\n";
+				$out_js .= $out_js_action;
+			} elseif (array_key_exists('dict', $coldata)) {
+				$out_js .= '	var value=$(\'#' . $columnName . '_input_' . $rowid . '\').val();' . "\n";
+				$out_js .= $out_js_action;
+			} elseif (array_key_exists('fk_table', $coldata) && $coldata['fk_table'] == 'societe') {
+				// Ajax call to ass num cdb to wished customer
+				$out_js .= '	var fk_thirdparty=$(\'#' . $columnName . '_input_' . $rowid . '\').val();' . "\n";
+				$out_js .= '	var value=$(\'#' . $columnName . '_value_' . $rowid . '\').text();' . "\n";
+				$out_js .= '		$.get( urlnumcdb,' . "\n";
+				$out_js .= '			{' . "\n";
+				$out_js .= '				numcdb: value,' . "\n";
+				$out_js .= '				fk_thirdparty: fk_thirdparty,' . "\n";
+				$out_js .= '			})' . "\n";
+				$out_js .= '			.done(function( data ) {' . "\n";
+				$out_js .= '				if (data!=1) {alert("Error "+data)}' . "\n";
+				$out_js .= '			})' . "\n";
+				$out_js .= '			.fail(function( data ) {' . "\n";
+				$out_js .= '			  alert( "Error ");' . "\n";
+				$out_js .= '			});' . "\n";
+				$out_js .= $out_js_action;
+			} elseif (array_key_exists('module', $coldata) && $coldata['module'] == 1) {
+				$out_js .= '	var productid=$(\'#' . $columnName . '_input_' . $rowid . '\').val();' . "\n";
+				$out_js .= '	var baseduration=$(\'#' . $columnName . '_input_' . $rowid . '_base_duration\').val();' . "\n";
+				$out_js .= '	var value=\'\';' . "\n";
+				$out_js .= '		$.get( urlfindprodref,' . "\n";
+				$out_js .= '			{' . "\n";
+				$out_js .= '				productid: productid,' . "\n";
+				$out_js .= '			})' . "\n";
+				$out_js .= '			.done(function( data ) {' . "\n";
+				$out_js .= '				if (data.substr(2)==\'-1\') {alert("Error "+data)} else {' . "\n";
+				$out_js .= '					value=data+baseduration;' . "\n";
+				$out_js .= $out_js_action;
+				$out_js .= '				}' . "\n";
+				$out_js .= '			})' . "\n";
+				$out_js .= '			.fail(function( data ) {' . "\n";
+				$out_js .= '			  alert( "Error ");' . "\n";
+				$out_js .= '			});' . "\n";
+			}
+
+			$out_js .= '	});' . "\n";
+		} else {
+			$out_html .= $value;
+		}
+
+		$out = $out_js_head . $out_js . $out_js_footer . $out_html;
+		$this->resPrint = $out;
+
+		if (empty($error)) {
+			return 1;
+		} else {
+			return - 1 * $error;
+		}
+	}
+
 }
