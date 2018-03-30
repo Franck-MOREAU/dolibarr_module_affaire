@@ -1643,8 +1643,8 @@ class Affaires_det extends CommonObject
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet as d ON d.fk_commande=c.rowid AND d.rowid='.$orderlineid;
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commandedet_extrafields as de ON de.fk_object=d.rowid';
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet as cfd ON de.fk_supplierorderlineid=cfd.rowid';
-		$sql .=' LEFT JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cfde ON cfde.fk_object=cfd.rowid';
 		if (!empty($solde)) {
+			$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'commande_fournisseurdet_extrafields as cfde ON cfde.fk_object=cfd.rowid';
 			$sql .= ' AND cfde.solde='.$solde;
 		}
 		$sql .=' INNER JOIN '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as fde ON fde.fk_supplierorderlineid=cfd.rowid';
