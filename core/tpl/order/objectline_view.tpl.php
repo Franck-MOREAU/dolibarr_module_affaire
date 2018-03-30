@@ -178,23 +178,27 @@ if($res_line>0){
 	$cmd_fourn = new CommandeFournisseur($line->db);
 	$res = $cmd_fourn->fetch($cmd_fourn_line->fk_commande);
 	if($res>0){
-		$ret = $langs->trans("SupplierOrder") . ' ';
+		$ret = $cmd_fourn->getLibStatut(3);
+		$ret.= ' '. $langs->trans("SupplierOrder") . ' ';
 		$ret.= $cmd_fourn->getNomUrl(1) . ' ';
 		$ret.= dol_print_date($cmd_fourn->date,'day') . ' ';
-		$ret.= $cmd_fourn->getLibStatut(3);
 		$solde = $cmd_fourn_line->array_options['options_solde'];
+		dol_include_once('/affaires/class/affaires.class.php');
+		$affaires_det = New Affaires_det($line->db);
+		$solde_amount = $affaires_det->getSumFactFournLn($line->id,0);
 		if(!empty($solde)){
 			$txt = 'Soldé';
 			$img = img_picto($txt, 'statut4');
-		}elseif(empty($solde) && 1){
+		}elseif(empty($solde) && ($solde_amount<>0 || $solde_amount==99999)){
 			$txt = 'Partiellement soldé';
 			$img = img_picto($txt, 'statut3');
+			$txt2 = ', Montant enregistré: ' . price($solde_amount) . ' €';
 		}else{
 			$txt = 'non soldé';
 			$img = img_picto($txt, 'statut0');
 		}
 
-		$ret.= ' - Statut: ' . $txt . ' ' . $img;
+		$ret.= '  -  ' . $img . ' Factures fournisseur: ' . $txt . ' ' . $txt2;
 
 	}else{
 		$ret = '';
