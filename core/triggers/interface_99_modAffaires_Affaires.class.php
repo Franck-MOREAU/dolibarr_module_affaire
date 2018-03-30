@@ -225,7 +225,39 @@ class InterfaceAffaires
 		}
 
 		if ($action=='LINEBILL_SUPPLIER_DELETE') {
+			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
+			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commande_fournisseurdet_extrafields SET solde=NULL WHERE ';
+			$sql .= 'fk_object IN (SELECT fk_supplierorderlineid FROM '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields WHERE fk_object=' . $object->id.')';
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$this->error = $this->db->lasterror;
 
+				dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+				return - 1;
+			}
+
+			return 1;
+
+			return 1;
+		}
+
+		if ($action=='BILL_SUPPLIER_DELETE') {
+			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
+			$sql = 'UPDATE ' . MAIN_DB_PREFIX . 'commande_fournisseurdet_extrafields SET solde=NULL WHERE ';
+			$sql .= 'fk_object IN (SELECT ffde.fk_supplierorderlineid FROM '.MAIN_DB_PREFIX.'facture_fourn_det_extrafields as ffde';
+			$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'facture_fourn_det as ffd ON ffd.rowid=ffde.fk_object ';
+			$sql .= ' INNER JOIN  '.MAIN_DB_PREFIX.'facture_fourn as ff ON ff.rowid=ffd.fk_facture_fourn AND ff.rowid=' . $object->id.')';
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$this->error = $this->db->lasterror;
+
+				dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+				return - 1;
+			}
+
+			return 1;
+
+			return 1;
 		}
 
 		return 0;
