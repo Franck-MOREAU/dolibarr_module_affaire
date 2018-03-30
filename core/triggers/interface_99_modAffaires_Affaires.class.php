@@ -260,6 +260,23 @@ class InterfaceAffaires
 			return 1;
 		}
 
+		if ($action=='ORDER_CLASSIFY_UNBILLED') {
+			dol_syslog("Trigger '" . $this->name . "' for action '$action' launched by " . $user->id . ". id=" . $object->id, LOG_DEBUG);
+			$sql = 'DELETE FROM ' . MAIN_DB_PREFIX . 'actioncomm ';
+			$sql .= "WHERE fk_element=".$object->id . " AND elementtype = 'order' AND label LIKE '%Commande " . $object->ref . " classée Facturée%'";
+			$resql = $this->db->query($sql);
+			if (! $resql) {
+				$this->error = $this->db->lasterror;
+
+				dol_syslog(get_class($this) . '::' . __METHOD__ . ' ERROR :' . $this->error, LOG_ERR);
+				return - 1;
+			}
+
+			return 1;
+
+			return 1;
+		}
+
 		return 0;
 	}
 }

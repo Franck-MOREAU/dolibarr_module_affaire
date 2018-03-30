@@ -212,7 +212,6 @@ class VolvoImportom extends VolvoImport
 			$sql = 'CREATE TABLE ' . $this->tempTable;
 			$sql .= '(';
 			$sql .= 'rowid integer NOT NULL auto_increment PRIMARY KEY,';
-			$sql .= 'fourn_cmd_id varchar(255) DEFAULT NULL,';
 			$sql .= 'cust_cmd_id integer DEFAULT NULL,';
 			$sql .= 'integration_status integer DEFAULT NULL,';
 			$sql .= 'integration_action varchar(20) DEFAULT NULL,';
@@ -412,117 +411,6 @@ class VolvoImportom extends VolvoImport
 		}
 
 
-		//update customer order id
-		$sql1 = "SELECT cf.rowid, ef.numom ";
-		$sql1.= "FROM " . MAIN_DB_PREFIX . "commande_fournisseur as cf ";
-		$sql1.= "INNER JOIN " . MAIN_DB_PREFIX . "commande as c on c.ref = cf.ref_supplier ";
-		$sql1.= "LEFT JOIN " . MAIN_DB_PREFIX . "commande_extrafields as ef on ef.fk_object = c.rowid ";
-		$sql1.= "INNER JOIN " .$this->tempTable . " as tmp ON tmp.numero_de_commande = ef.numom";
-		$resql1 = $this->db->query($sql1);
-
-		if($resql1){
-			while ($obj = $this->db->fetch_object($resql1)){
-				$arrayresult[$obj->numom].= $obj->rowid .',';
-			}
-			if(count($arrayresult)>1){
-				foreach ($arrayresult as $key =>$value){
-					$arrayresult[$key] = substr($value, 0,-1);
-				}
-			}
-		}
-
-		if(count($arrayresult)>0){
-			foreach ($arrayresult as $key =>$value){
-				$sql = "UPDATE " . $this->tempTable ." as tmp ";
-				$sql.= "SET tmp.fourn_cmd_id = '" . $value . "' ";
-				$sql.= "WHERE tmp.numero_de_commande = " . $key;
-// 				var_dump($sql);
-// 				exit;
-				dol_syslog(get_class($this) . '::' . __METHOD__ . ' update fourn_cmd_id', LOG_DEBUG);
-				$resql = $this->db->query($sql);
-				//var_dump($resql);
-				if (! $resql) {
-					$this->errors[] = $this->db->lasterror;
-					$error ++;
-				}
-			}
-		}
-
-
-
-
-		// Add supplier order not found integration comment
-		$sql = 'SELECT rowid FROM ' . $this->tempTable;
-		$sql .= ' WHERE fourn_cmd_id IS NULL';
-
-		dol_syslog(get_class($this) . '::' . __METHOD__ . ' update dictionnary problem', LOG_DEBUG);
-		$resql = $this->db->query($sql);
-		if (! $resql) {
-			$this->errors[] = $this->db->lasterror;
-			$error ++;
-		} else {
-			while ( $obj = $this->db->fetch_object($resql) ) {
-				$integration_comment = array(
-						'column' => $colnumom_tmptable,
-						'color' => 'red',
-						'message' => 'Commande fournisseur non trouvée',
-						'outputincell' => 1
-				);
-				$result = $this->addIntegrationComment($obj->rowid, $integration_comment, 3);
-				if ($result < 0) {
-					$error ++;
-				}
-			}
-		}
-
-		$sql = 'UPDATE ' . $this->tempTable . ' SET integration_status=1';
-		$sql .= ' WHERE fourn_cmd_id IS NOT NULL AND cust_cmd_id IS NOT NULL';
-		dol_syslog(get_class($this) . '::' . __METHOD__ . ' ok for import', LOG_DEBUG);
-		$resql = $this->db->query($sql);
-		if (! $resql) {
-			$this->errors[] = $this->db->lasterror;
-			$error ++;
-		}
-
-		// check date structure
-		foreach ( $this->targetInfoArray as $key => $data ) {
-			if (array_key_exists('type', $data) && $data['type'] == 'date') {
-				$columnTmpName = $matchColmunArray[$key];
-				$sql = ' SELECT rowid,' . $columnTmpName . ' as dateinfo FROM ' . $this->tempTable;
-				$resql = $this->db->query($sql);
-				if (! $resql) {
-					$this->errors[] = $this->db->lasterror;
-					$this->errors[] = $sql;
-					$error ++;
-				} else {
-					while ( $obj = $this->db->fetch_object($resql) ) {
-						if (! empty($obj->dateinfo)) {
-							try {
-								$day = substr($obj->dateinfo, 0,2);
-								$month = substr($obj->dateinfo, 2,2);
-								$year = substr($obj->dateinfo, 4,4);
-								$datetime = new DateTime($year . '-' . $month . '-' . $day);
-							} catch ( Exception $e ) {
-								$integration_comment = array(
-										'column' => $columnTmpName,
-										'color' => 'red',
-										'message' => $langs->trans('VolvoDateCannotBeConvert'),
-										'outputincell' => 1
-								);
-								$result = $this->addIntegrationComment($obj->rowid, $integration_comment, 0);
-								if ($result < 0) {
-									$error ++;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-
-
 		// Update intégration status OK
 		$sql = 'UPDATE ' . $this->tempTable . ' SET integration_status=1 WHERE integration_status IS NULL';
 		dol_syslog(get_class($this) . '::' . __METHOD__ . ' set status to 1', LOG_DEBUG);
@@ -563,15 +451,12 @@ class VolvoImportom extends VolvoImport
 		$now = dol_now();
 
 		$this->columnArray[] = array(
-				'name' => 'fourn_cmd_id',
-				'type' => 'int'
-		);
-		$this->columnArray[] = array(
 				'name' => 'cust_cmd_id',
 				'type' => 'int'
 		);
 
 		$this->db->begin();
+
 		$result = $this->fetchAllTempTable('', '', 0, 0, array(
 				'integration_status' => 1
 		));
@@ -579,139 +464,91 @@ class VolvoImportom extends VolvoImport
 			$error ++;
 		}
 		// Insert New customer
-		$cmd_data_array= array();
-		$cmdfourn_data_array= array();
+
 		foreach ( $this->lines as $line ) {
-			$cmd_fourn_array = explode(',', $line->fourn_cmd_id);
-			foreach ($this->targetInfoArray as $key => $col){
-				if($col['column'] == 'numom'){
-					$cmd_data_array[$line->cust_cmd_id]['numom'] = $line->$matchColmunArray[$key];
-					foreach ($cmd_fourn_array as $numcmdfourn){
-						$cmdfourn_data_array[$numcmdfourn]['numom'] = $line->$matchColmunArray[$key];
+			foreach ( $this->targetInfoArray as $key => $col ) {
+				$var = $line->{$matchColmunArray [$key]};
+				$cmd = new CommandeVolvo ( $this->db );
+				$res = $cmd->fetch ( $line->cust_cmd_id );
+				$cmd->fetchObjectLinked ( $cmd->id, 'commande', '', 'order_supplier' );
+				foreach ( $cmd->linkedObjects as $cmd_array ) {
+					foreach ( $cmd_array as $cmd_temp ) {
+						if ($cmd_temp->socid == $conf->global->VOLVO_FOURN_NOTREAT) {
+							$cmd_fourn = $cmd_temp;
+						}
 					}
-
-				}
-				if($col['column'] == 'vin'){
-					$cmd_data_array[$line->cust_cmd_id]['vin'] = $line->$matchColmunArray[$key];
-					foreach ($cmd_fourn_array as $numcmdfourn){
-						$cmdfourn_data_array[$numcmdfourn]['vin'] = $line->$matchColmunArray[$key];
-					}
-				}
-				if($col['column'] == 'dt_fact'){
-					$cmd_data_array[$line->cust_cmd_id]['dt_fact'] = $line->$matchColmunArray[$key];
-				}
-				if($col['column'] == 'date_livraison'){
-					foreach ($cmd_fourn_array as $numcmdfourn){
-						$cmdfourn_data_array[$numcmdfourn]['date_livraison'] = $line->$matchColmunArray[$key];
-					}
-				}
-				if($col['column'] == 'dt_blockupdate'){
-					foreach ($cmd_fourn_array as $numcmdfourn){
-						$cmdfourn_data_array[$numcmdfourn]['dt_blockupdate'] = $line->$matchColmunArray[$key];
-					}
-				}
-				if($col['column'] == 'dt_liv_maj'){
-					foreach ($cmd_fourn_array as $numcmdfourn){
-						$cmdfourn_data_array[$numcmdfourn]['dt_liv_maj'] = $line->$matchColmunArray[$key];
-					}
-				}
-				if($col['column'] == 'dt_lim_annul'){
-					foreach ($cmd_fourn_array as $numcmdfourn){
-						$cmdfourn_data_array[$numcmdfourn]['dt_lim_annul'] = $line->$matchColmunArray[$key];
-					}
-				}
-			}
-		}
-//   		var_dump($cmd_data_array);
-//   		exit;
-
-		foreach ($cmd_data_array as $key => $value){
-			$cmd = new CommandeVolvo($this->db);
-			$res = $cmd->fetch($key);
-			if ($res < 0) {
-				$error ++;
-			}else{
-				$cmd->array_options['options_numom'] = $value['numom'];
-				$cmd->array_options['options_vin'] = $value['vin'];
-				$cmd->insertExtraFields();
-				if(!empty($value['date_facture'])){
-					$day = substr($value['date_facture'], 0,2);
-					$month = substr($value['date_facture'], 2,2);
-					$year = substr($value['date_facture'], 4,4);
-					$cmd->date_billed = dol_mktime(0, 0, 0, $month, $day, $year);
-					$cmd->classifyBilled($user);
-
 				}
 
-				if(!empty($object->array_options['options_ctm'])){
-					dol_include_once('/societe/class/societe.class.php');
-					$socctm = New Societe($db);
-					$socctm->fetch($object->array_options['options_ctm']);
-					$note = 'Client: ' . $cmd->thirdparty->name . "\n";
-					$note.= 'Contremarque: ' . $socctm->name . "\n";
-					$note.= 'N° de Chassis :' . $cmd->array_options['options_vin'] . "\n";
-					$note.= 'Immatriculation :' . $cmd->array_options['options_immat'] . "\n";
-					$note.= 'Date de Livraison :' . dol_print_date($cmd->date_livraison, 'daytext');
+				if ($res < 0) {
+					$error ++;
 				} else {
-					$note = 'Client: ' . $cmd->thirdparty->name . "\n";
-					$note.= 'N° de Chassis :' . $cmd->array_options['options_vin'] . "\n";
-					$note.= 'Immatriculation :' . $cmd->array_options['options_immat'] . "\n";
-					$note.= 'Date de Livraison :' . dol_print_date($cmd->date_livraison, 'daytext');
-				}
+					if ($col ['column'] == 'numom') {
+						$cmd->array_options['options_numom'] = $var;
+					}
+					if ($col ['column'] == 'vin') {
+						$cmd->array_options['options_vin'] = $var;
+					}
+					if ($col ['column'] == 'dt_fact') {
+						if(!empty($var)){
+							$day = substr($var, 0,2);
+							$month = substr($var, 2,2);
+							$year = substr($var, 4,4);
+							$cmd->date_billed = dol_mktime(0, 0, 0, $month, $day, $year);
+							$cmd->classifyBilled($user);
+						}else{
+							$cmd->date_billed = null;
+							$cmd->classifyUnBilled();
+						}
+					}
+					if ($col ['column'] == 'date_livraison') {
+						if(!empty($var)){
+							$day = substr($var, 0,2);
+							$month = substr($var, 2,2);
+							$year = substr($var, 4,4);
+							$ret = $cmd_fourn->set_date_livraison($user,dol_mktime(0, 0, 0, $month, $day, $year));
+						}else{
+							$cmd_fourn->set_date_livraison($user,null);
+						}
+					}
+					if ($col ['column'] == 'dt_blockupdate') {
+						if(!empty($var)){
+							$day = substr($var, 0,2);
+							$month = substr($var, 2,2);
+							$year = substr($var, 4,4);
+							$cmd->array_options['options_dt_blockupdate'] = dol_mktime(0, 0, 0, $month, $day, $year);
+						}else{
+							$cmd->array_options['options_dt_blockupdate'] = null;
+						}
+					}
+					if ($col ['column'] == 'dt_liv_maj') {
+						if(!empty($var)){
+							$day = substr($var, 0,2);
+							$month = substr($var, 2,2);
+							$year = substr($var, 4,4);
+							$cmd->array_options['options_dt_liv_maj'] = dol_mktime(0, 0, 0, $month, $day, $year);
+						}else{
+							$cmd->array_options['options_dt_liv_maj'] = null;
+						}
+					}
+					if ($col ['column'] == 'dt_lim_annul') {
+						if(!empty($var)){
+							$day = substr($var, 0,2);
+							$month = substr($var, 2,2);
+							$year = substr($var, 4,4);
+							$cmd->array_options['options_dt_lim_annul'] = dol_mktime(0, 0, 0, $month, $day, $year);
+						}else{
+							$cmd->array_options['options_dt_lim_annul'] = null;
+						}
+					}
 
-			}
-		}
-		foreach ($cmdfourn_data_array as $key => $value){
-			$cmd_fourn = new CommandeFournisseur($this->db);
-			$res = $cmd_fourn->fetch($key);
-			if ($res < 0) {
-				$error ++;
-			}else{
-				$cmd_fourn->array_options['options_numom'] = $value['numom'];
-				$cmd_fourn->array_options['options_vin'] = $value['vin'];
-				if(!empty($value['dt_blockupdate'])){
-					$day = substr($value['dt_blockupdate'], 0,2);
-					$month = substr($value['dt_blockupdate'], 2,2);
-					$year = substr($value['dt_blockupdate'], 4,4);
-					$cmd_fourn->array_options['options_dt_blockupdate'] = dol_mktime(0, 0, 0, $month, $day, $year);
-				}
-				if(!empty($value['dt_liv_maj'])){
-					$day = substr($value['dt_liv_maj'], 0,2);
-					$month = substr($value['dt_liv_maj'], 2,2);
-					$year = substr($value['dt_liv_maj'], 4,4);
-					$cmd_fourn->array_options['options_dt_liv_maj'] = dol_mktime(0, 0, 0, $month, $day, $year);
-				}
-				if(!empty($value['dt_lim_annul'])){
-					$day = substr($value['dt_lim_annul'], 0,2);
-					$month = substr($value['dt_lim_annul'], 2,2);
-					$year = substr($value['dt_lim_annul'], 4,4);
-					$cmd_fourn->array_options['options_dt_lim_annul'] = dol_mktime(0, 0, 0, $month, $day, $year);
-				}
-				$cmd_fourn->insertExtraFields();
+					$cmd->insertExtraFields();
 
-
-				if(!empty($value['date_livraison'])){
-					$day = substr($value['date_livraison'], 0,2);
-					$month = substr($value['date_livraison'], 2,2);
-					$year = substr($value['date_livraison'], 4,4);
-					$date = dol_mktime(0, 0, 0, $month, $day, $year);
-					$result=$cmd_fourn->set_date_livraison($user,dol_mktime(0, 0, 0, $month, $day, $year));
-				}
-
-				if(!empty($object->array_options['options_ctm'])){
-					dol_include_once('/societe/class/societe.class.php');
-					$socctm = New Societe($db);
-					$socctm->fetch($object->array_options['options_ctm']);
-					$note = 'Client: ' . $cmd->thirdparty->name . "\n";
-					$note.= 'Contremarque: ' . $socctm->name . "\n";
-					$note.= 'N° de Chassis :' . $cmd->array_options['options_vin'] . "\n";
-					$note.= 'Immatriculation :' . $cmd->array_options['options_immat'] . "\n";
-					$note.= 'Date de Livraison :' . dol_print_date($cmd->date_livraison, 'daytext');
-				} else {
-					$note = 'Client: ' . $cmd->thirdparty->name . "\n";
-					$note.= 'N° de Chassis :' . $cmd->array_options['options_vin'] . "\n";
-					$note.= 'Immatriculation :' . $cmd->array_options['options_immat'] . "\n";
-					$note.= 'Date de Livraison :' . dol_print_date($cmd->date_livraison, 'daytext');
+					dol_include_once('/affaires/class/affaires.class.php');
+					$aff=new Affaires($this->db);
+					$result=$aff->copyExtrafieldsValuesFromObjToObjLinked($cmd);
+					if ($result<0) {
+						setEventMessages(null,$aff->errors,'errors');
+					}
 				}
 			}
 		}
@@ -853,5 +690,6 @@ class VolvoImportom extends VolvoImport
 				$cmd_fourn->insertExtraFields();
 			}
 		}
+
 	}
 }
