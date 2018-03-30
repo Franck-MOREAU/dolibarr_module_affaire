@@ -1604,7 +1604,7 @@ class Affaires_det extends CommonObject
 	 * @return number
 	 */
 	public function getMarginReelDate($vehid=0) {
-		return 0;
+		return $this->getSumFactFourn($vehid,1);
 	}
 
 	/**
@@ -1613,7 +1613,7 @@ class Affaires_det extends CommonObject
 	 * @return number
 	 */
 	public function getMarginDate($vehid=0) {
-		return 0;
+		return $this->getSumFactFourn($vehid,0);
 	}
 
 	public function getSumFactFournLn($orderlineid=0,$solde=0) {
