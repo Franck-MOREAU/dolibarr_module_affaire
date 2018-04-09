@@ -152,11 +152,7 @@ class Affaires extends CommonObject
 		$resql = $this->db->query($sql);
 		if ($resql) {
 			while ( $obj = $this->db->fetch_object($resql) ) {
-				$label = $langs->trans('AffairesType_' . $obj->code);
-				if ($label == 'AffairesType_' . $obj->code) {
-					$label = $obj->label;
-				}
-
+				$label = $obj->label;
 				$this->type[$obj->rowid] = $label;
 			}
 			$this->db->free($resql);
