@@ -6,7 +6,7 @@ if (! $res) {
 if (! $res) {
 	die("Include of main fails");
 }
-	
+
 //if (! defined('NOREQUIREUSER')) define('NOREQUIREUSER','1');	// Not disabled because need to load personalized language
 //if (! defined('NOREQUIREDB'))   define('NOREQUIREDB','1');	// Not disabled to increase speed. Language code is found on url.
 if (! defined('NOREQUIRESOC'))    define('NOREQUIRESOC','1');
@@ -37,7 +37,7 @@ table.noborderaffaires, div.noborderaffaires {
 	border-spacing: 0px;
 
 	border-top-width: 2px;
-	border-top-color: rgb(<?php echo $colortopbordertitle1;?>);
+	border-top-color: lightgrey;
 	border-top-style: solid;
 
 	border-bottom-width: 1px;
@@ -47,13 +47,13 @@ table.noborderaffaires, div.noborderaffaires {
 	margin: 0px 0px 5px 0px;
 }
 table.noborderaffaires:last-of-type {
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid lightgrey;
 }
 table.noborderaffaires {
     border-bottom: none;
 }
 table.noborderaffaires:last-of-type {
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid lightgrey;
 }
 table.noborderaffaires {
     border-bottom: none;
@@ -65,7 +65,7 @@ table.noborderaffaires {
 	white-space: normal;
 }
 table.noborderaffaires tr{
-	border-top-color: #FEFEFE;
+	border-top-color: lightgrey;
 	min-height: 20px;
 }
 table.noborderaffaires th, table.noborderaffaires tr.liste_titre td, table.noborderaffaires tr.box_titre td {
@@ -74,6 +74,55 @@ table.noborderaffaires th, table.noborderaffaires tr.liste_titre td, table.nobor
 table.noborderaffaires td, div.noborderaffaires form div {
 	padding: 7px 8px 7px 8px;			/* t r b l */
 	line-height: 1.2em;
+}
+
+.ficheaddleft table.borderaffairesbottom {
+	margin: 0px 0px 0px 0px;
+}
+table.borderaffairesbottom, div.borderaffairesbottom {
+	width: 100%;
+
+	border-collapse: separate !important;
+	border-spacing: 0px;
+
+	border-bottom-width: 1px;
+	border-bottom-color: lightgrey;
+	border-bottom-style: solid;
+
+	margin: 0px 0px 5px 0px;
+}
+table.borderaffairesbottom:last-of-type {
+    border-bottom: 1px solid lightgrey;
+}
+table.borderaffairesbottom {
+    border-top: none;
+}
+table.borderaffairesbottom:last-of-type {
+    border-bottom: 1px solid lightgrey;
+}
+table.borderaffairesbottom {
+    border-top: none;
+}
+.borderaffairesbottom {
+    white-space: nowrap;
+}
+.borderaffairesbottom {
+	white-space: normal;
+}
+table.borderaffairesbottom tr{
+	border-bottom-color: lightgrey;
+	min-height: 20px;
+}
+table.borderaffairesbottom th, table.borderaffairesbottom tr.liste_titre td, table.borderaffairesbottom tr.box_titre td {
+	padding: 7px 8px 7px 8px;			/* t r b l */
+}
+table.borderaffairesbottom td, div.borderaffairesbottom form div {
+	padding: 7px 8px 7px 8px;			/* t r b l */
+	line-height: 1.2em;
+}
+
+div.mainmenu.volvo {
+	background-image: url(<?php echo dol_buildpath($path.'/affaires/img/object_iron02.png',1) ?>);
 }
 <?php
 if (is_object($db)) $db->close();

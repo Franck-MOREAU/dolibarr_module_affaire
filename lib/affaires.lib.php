@@ -168,4 +168,51 @@ function affaires_stats_prepare_head()
 	return $head;
 }
 
+function getcmd_status($year, $type=0, $commercial=0,$soc=0){
+
+	global $db;
+	dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
+
+	$sql = "SELECT ";
+	$sql.= "MIN(c.fk_statut) as solde, ";
+	$sql.= "MIN(c.facture) as billed ";
+
+	$sql.= "FROM llx_affaires as a ";
+	$sql.= "INNER JOIN llx_affaires_det as d ON a.rowid = d.fk_affaires ";
+	$sql.= "INNER JOIN llx_commande as c ON c.rowid = d.fk_commande ";
+
+	if(!empty($year)){
+		$sql.= "WHERE a.year = " . $year . " ";
+		$sql.= "AND c.fk_statut <> -1 ";
+
+		if(!empty($type)){
+			$sql.= " AND a.fk_c_type = " . $type . " ";
+
+			if(!empty($commercial)){
+				$sql.= " AND a.fk_user_resp = " . $commercial. " ";
+
+				if(!empty($soc)){
+					$sql.= " AND c.fk_soc = " . $soc. " ";
+				}
+			}
+		}
+	}else{
+		$sql.= "WHERE a.year = -1 ";
+	}
+
+		$resql = $db->query($sql);
+	if($resql){
+		$obj = $db->fetch_object($resql);
+		$status = $obj->solde;
+		$billed = $obj->billed;
+	}else{
+		$status = -10;
+	}
+
+	$commande = new CommandeVolvo($db);
+	$result = $commande->LibStatut($status, $billed, 3);
+
+	return $result;
+
+}
 

@@ -26,8 +26,10 @@
  */
 
 require '../../main.inc.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/treeview.lib.php';
 dol_include_once('/fourn/class/fournisseur.commande.class.php');
+dol_include_once('/affaires/lib/affaires.lib.php');
+dol_include_once('/affaires/volvo/class/commandevolvo.class.php');
+dol_include_once('/affaires/lib/treeview.lib.php');
 
 global $db;
 
@@ -37,6 +39,7 @@ if (! $user->rights->user->user->lire && ! $user->admin)
 $langs->load("users");
 $langs->load("companies");
 $cf = New CommandeFournisseur($db);
+$cmd= new CommandeVolvo($db);
 
 // Security check (for external users)
 $socid=0;
@@ -60,25 +63,25 @@ $data[0]=array('rowid'=>0,'fk_menu'=>-1,'title'=>'racine','mainmenu'=>'','leftme
 $i = 1;
 
 $sql = "SELECT ";
-$sql.= "a.year, ";
+$sql.= "YEAR(c.date_creation) as year, ";
 $sql.= "a.fk_c_type, ";
-$sql.= "CONCAT(a.year,'_',a.fk_c_type) AS L2KEY, ";
+$sql.= "CONCAT(YEAR(c.date_creation),'_',a.fk_c_type) AS L2KEY, ";
 $sql.= "type.label as cv, ";
 $sql.= "CONCAT(u.firstname,' ',u.lastname) as commercial, ";
 $sql.= "u.rowid as uid, ";
-$sql.= "CONCAT(a.year, '_',a.fk_c_type,'_',a.fk_user_resp) as L3KEY, ";
+$sql.= "CONCAT(YEAR(c.date_creation), '_',a.fk_c_type,'_',a.fk_user_resp) as L3KEY, ";
 $sql.= "s.nom as soc, ";
 $sql.= "s.rowid as socid, ";
-$sql.= "CONCAT(a.year, '_',a.fk_c_type,'_',a.fk_user_resp,'_',s.rowid) as L4KEY, ";
+$sql.= "CONCAT(YEAR(c.date_creation), '_',a.fk_c_type,'_',a.fk_user_resp,'_',s.rowid) as L4KEY, ";
 $sql.= "CONCAT(c.ref,' ',g.genre, ' ',ga.gamme,' ',sh.silhouette) as cmdlabel, ";
 $sql.= "c.rowid as cmdid, ";
-$sql.= "CONCAT(a.year, '_',a.fk_c_type,'_',a.fk_user_resp,'_',a.rowid,'_',d.rowid) as L5KEY, ";
+$sql.= "CONCAT(YEAR(c.date_creation), '_',a.fk_c_type,'_',a.fk_user_resp,'_',a.rowid,'_',d.rowid) as L5KEY, ";
 $sql.= "CONCAT(cf.ref,' ',s2.nom) as cflabel, ";
 $sql.= "cf.rowid as cfid, ";
-$sql.= "CONCAT(a.year, '_',a.fk_c_type,'_',a.fk_user_resp,'_',a.rowid,'_',d.rowid,'_',cf.rowid) as L6KEY, ";
+$sql.= "CONCAT(YEAR(c.date_creation), '_',a.fk_c_type,'_',a.fk_user_resp,'_',a.rowid,'_',d.rowid,'_',cf.rowid) as L6KEY, ";
 $sql.= "CONCAT(fac.ref_supplier,' ',s3.nom) as faclabel, ";
 $sql.= "fac.rowid as facid, ";
-$sql.= "CONCAT(a.year, '_',a.fk_c_type,'_',a.fk_user_resp,'_',a.rowid,'_',d.rowid,'_',cf.rowid,'_',fac.rowid) as L7KEY, ";
+$sql.= "CONCAT(YEAR(c.date_creation), '_',a.fk_c_type,'_',a.fk_user_resp,'_',a.rowid,'_',d.rowid,'_',cf.rowid,'_',fac.rowid) as L7KEY, ";
 $sql.= "MIN(cf.fk_statut) as solde ";
 
 $sql.= "FROM llx_affaires as a ";
@@ -112,11 +115,11 @@ $sql.= "d.rowid, ";
 $sql.= "cf.rowid, ";
 $sql.= "fac.rowid ";
 
-$sql.= "ORDER BY a.year,type.label, commercial, s.nom ";
+$sql.= "ORDER BY YEAR(c.date_creation),type.label, commercial, s.nom ";
 
 
 
-// print $sql;
+//print $sql;
 // exit;
 
 $resql=$db->query($sql);
@@ -128,13 +131,14 @@ while ($arrayresult = $db->fetch_array($resql)){
 $year = array();
 $year = array_unique(array_column($result, 'year'));
 
-
-foreach ($year as $y){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+foreach ($year as $key=>$y){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= $y;
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$tableau.= getcmd_status($y);
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
+
 	$data[$i] = array('rowid'=>$y,'fk_menu'=>0,'statut'=>1,'entry'=>$tableau);
 	$i++;
 }
@@ -143,93 +147,111 @@ $tab = array();
 $tab = array_unique(array_column($result, 'L2KEY'));
 
 
+
 foreach ($tab as $key=>$val){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+	if(!empty($val)){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= $result[$key]['cv'];
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$tableau.= getcmd_status($result[$key]['year'],$result[$key]['fk_c_type']);
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
+
 	$data[$i]= array('rowid'=>$val,'fk_menu'=>$result[$key]['year'],'statut'=>1,'entry'=>$tableau);
 	$i++;
+	}
 }
 
 
 $tab = array();
 $tab = array_unique(array_column($result, 'L3KEY'));
 
-
 foreach ($tab as $key=>$val){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+	if(!empty($val)){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= '<a href="' . dol_buildpath('user/card.php',2) . '?id=' .$result[$key]['uid'] .'">' . $result[$key]['commercial'] .'</a>';
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$tableau.= getcmd_status($result[$key]['year'],$result[$key]['fk_c_type'],$result[$key]['uid']);
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
 
 	$data[$i]= array('rowid'=>$val,'fk_menu'=>$result[$key]['L2KEY'],'statut'=>1,'entry'=> $tableau);
 	$i++;
+	}
 }
 
 $tab = array();
 $tab = array_unique(array_column($result, 'L4KEY'));
 
+
 foreach ($tab as $key=>$val){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+	if(!empty($val)){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= '<a href="' . dol_buildpath('/societe/card.php',2) . '?socid=' .$result[$key]['socid'] .'">' . $result[$key]['soc'].'</a>';
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$tableau.= getcmd_status($result[$key]['year'],$result[$key]['fk_c_type'],$result[$key]['uid'],$result[$key]['socid']);
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
 
 	$data[$i]= array('rowid'=>$val,'fk_menu'=>$result[$key]['L3KEY'],'statut'=>1,'entry'=>$tableau);
 	$i++;
+	}
 }
 
 $tab = array();
 $tab = array_unique(array_column($result, 'L5KEY'));
 
+
 foreach ($tab as $key=>$val){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+	if(!empty($val)){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= '<a href="' . dol_buildpath('/affaires/volvo/commande/card.php',2) . '?id=' .$result[$key]['cmdid'] .'">' . $result[$key]['cmdlabel'].'</a>';
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$cmd->fetch($result[$key]['cmdid']);
+	$tableau.= $cmd->getLibStatut(3);
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
 
 	$data[$i]= array('rowid'=>$val,'fk_menu'=>$result[$key]['L4KEY'],'statut'=>1,'entry'=>$tableau);
 	$i++;
+	}
 }
 
 $tab = array();
 $tab = array_unique(array_column($result, 'L6KEY'));
-unset($tab[0]);
+//unset($tab[0]);
 
 foreach ($tab as $key=>$val){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+	if(!empty($val)){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= '<a href="' . dol_buildpath('/affaires/volvo/fourn/commande/card.php',2) . '?id=' .$result[$key]['cfid'] .'">' . $result[$key]['cflabel'].'</a>';
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$tableau.= '-';
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
 
 	$data[$i]= array('rowid'=>$val,'fk_menu'=>$result[$key]['L5KEY'],'statut'=>1,'entry'=> $tableau);
 	$i++;
+	}
 }
 
 $tab = array();
 $tab = array_unique(array_column($result, 'L7KEY'));
-unset($tab[0]);
+//unset($tab[0]);
 
 foreach ($tab as $key=>$val){
-	$tableau = '<table class="nobordernopadding centpercent"><tr><td class="usertdenabled">';
+	if(!empty($val)){
+	$tableau = '<table class="borderaffairesbottom centpercent"><tr><td class="borderaffairesbottom usertdenabled">';
 	$tableau.= '<a href="' . dol_buildpath('/fourn/facture/card.php',2) . '?id=' .$result[$key]['facid'] .'">' . $result[$key]['faclabel'].'</a>';
-	$tableau.= '</td><td align="right" class="usertdenabled">';
-	$tableau.= $cf->LibStatut($result[$key]['solde'],3);
+	$tableau.= '</td><td align="right" class="borderaffairesbottom usertdenabled">';
+	$tableau.= '-';
+	$tableau.= '-';
 	$tableau.= '</td></tr></table>';
 
 	$data[$i]= array('rowid'=>$val,'fk_menu'=>$result[$key]['L6KEY'],'statut'=>1,'entry'=> $tableau);
 	$i++;
+	}
 }
-
-
-
-//var_dump($data);
 
 print '<form method="POST" id="searchFormList" action="'.$_SERVER["PHP_SELF"].'">'."\n";
 
@@ -240,8 +262,7 @@ print '<table class="liste nohover" width="100%">';
 print '<tr class="liste_titre">';
 print_liste_field_titre("HierarchicView");
 print_liste_field_titre('<div id="iddivjstreecontrol"><a href="#">'.img_picto('','object_category').' '.$langs->trans("UndoExpandAll").'</a> | <a href="#">'.img_picto('','object_category-expanded').' '.$langs->trans("ExpandAll").'</a></div>',$_SERVER['PHP_SELF'],"",'',"",'align="center"');
-print_liste_field_titre("Status",$_SERVER['PHP_SELF'],"",'',"",'align="right"');
-print_liste_field_titre('',$_SERVER["PHP_SELF"],"",'','','','','','maxwidthsearch ');
+print_liste_field_titre("Statut Commandes clients/fournisseurs",$_SERVER['PHP_SELF'],"",'',"",'align="right"');
 print '</tr>';
 
 
@@ -249,16 +270,16 @@ $nbofentries=(count($data) - 1);
 
 if ($nbofentries > 0)
 {
-	print '<tr '.$bc[false].'><td colspan="3">';
+	print '<tr>';
+	print '<td colspan="4">';
 	tree_recur($data,$data[0],0);
 	print '</td>';
-	print '<td></td>';
 	print '</tr>';
 }
 else
 {
 	print '<tr '.$bc[true].'>';
-	print '<td colspan="3">';
+	print '<td colspan="4">';
 	print '<table class="nobordernopadding"><tr class="nobordernopadding"><td>'.img_picto_common('','treemenu/branchbottom.gif').'</td>';
 	print '<td valign="middle">';
 	print $langs->trans("NoCategoryYet");
@@ -266,7 +287,6 @@ else
 	print '<td>&nbsp;</td>';
 	print '</table>';
 	print '</td>';
-	print '<td></td>';
 	print '</tr>';
 }
 

@@ -76,7 +76,7 @@ if($line->rang%2==0){
 
 print '<tr id="row-' . $line->id . '" ' . $bc . '>';
 // article
-print '<td class="linecoldescription" style="border-bottom-style: none; border-top: 1px solid black;" colspan="2">';
+print '<td class="linecoldescription" style="border-bottom-style: none; border-top: 1px solid lightgrey;" colspan="2">';
 print '<div id="line_' . $line->id . '"></div>';
 $format = $conf->global->MAIN_USE_HOURMIN_IN_DATE_RANGE ? 'dayhour' : 'day';
 print $form->textwithtooltip ( $text, $description, 3, '', '', $i, 0, (! empty ( $line->fk_parent_line ) ? img_picto ( '', 'rightarrow' ) : '') );
@@ -89,7 +89,7 @@ if (! empty ( $conf->global->PRODUIT_DESC_IN_FORM )) {
 print '</td>';
 
 //quantité
-print '<td align="right" class="linecolqty nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
+print '<td align="right" class="linecolqty nowrap" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 if ((($line->info_bits & 2) != 2) && $line->special_code != 3) {
 	print $line->qty;
 } else {
@@ -98,17 +98,17 @@ if ((($line->info_bits & 2) != 2) && $line->special_code != 3) {
 print '</td>';
 
 // prix unitaire
-print '<td align="right" class="linecoluht nowrap"	style="border-bottom-style: none; border-top: 1px solid black;">';
+print '<td align="right" class="linecoluht nowrap"	style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 print price ( $line->subprice );
 print '</td>';
 
 //prix achat
-print '<td align="right" class="linecolmargin1 nowrap margininfos"	style="border-bottom-style: none; border-top: 1px solid black;">';
+print '<td align="right" class="linecolmargin1 nowrap margininfos"	style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 print price ( $line->pa_ht );
 print '</td>';
 
 // prix réel
-print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
+print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 $affaires_det = New Affaires_det($line->db);
 $solde_amount_reel = $affaires_det->getSumFactFournLn($line->id,1);
 if($solde_amount_reel == -99999) $solde_amount_reel = '';
@@ -116,7 +116,7 @@ print price ($solde_amount_reel);
 print '</td>';
 
 // écart
-print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid black;">';
+print '<td align="right" class="linecoluht nowrap" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 if(!empty($solde_amount_reel)){
 	$ecart = $line->subprice - $solde_amount_reel;
 }else{
@@ -131,16 +131,16 @@ $soltrs = array_merge ( $soltrs1, $soltrs2 );
 
 if ($this->statut == 0 && $object_rights->creer) {
 	// editer
-	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 	if (empty ( $disableedit )) {
 		print '<a href="' . $_SERVER ["PHP_SELF"] . '?id=' . $this->id . '&amp;action=editline&amp;lineid=' . $line->id . '#line_' . $line->id . '">' . img_edit () . '</a>';
 	}
 	print '</td>';
-	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 	print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete() . '</a>';
 	print '</td>';
 
-	print '<td class="linecolmove tdlineupdown" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td class="linecolmove tdlineupdown" align="center" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 	if ($i > 0) {
 		print '<a class="lineupdown" href="' . $_SERVER["PHP_SELF"].'?id='.$this->id.'&amp;action=up&amp;rowid='.$line->id .'">' . img_up('default',0,'imgupforline') .'</a>';
 	}
@@ -151,22 +151,22 @@ if ($this->statut == 0 && $object_rights->creer) {
 
 } elseif (($this->statut > 0 && ($object_rights->creer)) && (in_array ( $line->product_ref, $soltrs ))) {
 	// supprimer
-	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td class="linecoledit" align="center" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 	if (!$line->total_ht==0) {
 		print '<a href="' . $_SERVER["PHP_SELF"].'?id='.$this->id.'&amp;action=editline&amp;lineid='.$line->id.'#line_'.$line->id. '">' . img_edit() . '</a>';
 	}
 	print '</td>';
-	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td class="linecoldelete" align="center" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 	if ($line->total_ht == 0) {
 		print '<a href="' . $_SERVER["PHP_SELF"] . '?id=' . $this->id . '&amp;action=ask_deleteline&amp;lineid=' . $line->id . '">' . img_delete() . '</a>';
 	}
 	print '</td>';
-	print '<td align="center" class="linecolmove tdlineupdown" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td align="center" class="linecolmove tdlineupdown" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 
 	print '</td>';
 
 } else {
-	print '<td colspan="3" style="border-bottom-style: none; border-top: 1px solid black;">';
+	print '<td colspan="3" style="border-bottom-style: none; border-top: 1px solid lightgrey;">';
 	print '</td></tr>';
 }
 

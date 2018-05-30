@@ -1,0 +1,3083 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Dolibarr Development Team">
+<link rel="shortcut icon" type="image/x-icon"
+	href="/edsa-dolibarrdev/theme/eldy/img/favicon.ico" />
+<title>Commande</title>
+<!-- Includes CSS for JQuery (Ajax library) -->
+<link rel="stylesheet" type="text/css"
+	href="/edsa-dolibarrdev/includes/jquery/css/base/jquery-ui.css?layout=classic&version=7.0.2">
+<link rel="stylesheet" type="text/css"
+	href="/edsa-dolibarrdev/includes/jquery/plugins/jnotify/jquery.jnotify-alt.min.css?layout=classic&version=7.0.2">
+<link rel="stylesheet" type="text/css"
+	href="/edsa-dolibarrdev/includes/jquery/plugins/select2/dist/css/select2.css?layout=classic&version=7.0.2">
+<!-- Includes CSS for font awesome -->
+<link rel="stylesheet" type="text/css"
+	href="/edsa-dolibarrdev/theme/common/fontawesome/css/font-awesome.min.css?layout=classic&version=7.0.2">
+<!-- Includes CSS for Dolibarr theme -->
+<link rel="stylesheet" type="text/css"
+	href="/edsa-dolibarrdev/theme/eldy/style.css.php?lang=fr_FR&amp;theme=eldy&amp;userid=1&amp;entity=1&amp;layout=classic&version=7.0.2">
+<!-- Includes CSS added by module affaires -->
+<link rel="stylesheet" type="text/css"
+	href="/edsa-dolibarrdev/custom//affaires/css/affaires.css.php?lang=fr_FR&amp;theme=eldy&amp;userid=1&amp;entity=1&amp;layout=classic&version=7.0.2">
+<!-- Includes JS for JQuery -->
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/js/jquery.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/js/jquery-migrate.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/js/jquery-ui.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/plugins/tablednd/jquery.tablednd.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/plugins/jnotify/jquery.jnotify.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/plugins/flot/jquery.flot.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/plugins/flot/jquery.flot.pie.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/plugins/flot/jquery.flot.stack.min.js?layout=classic&version=7.0.2"></script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/jquery/plugins/select2/dist/js/select2.full.min.js?layout=classic&version=7.0.2"></script>
+<!-- Includes JS for CKEditor -->
+<script type="text/javascript">
+	var CKEDITOR_BASEPATH = '/edsa-dolibarrdev/includes/ckeditor/ckeditor/';
+	var ckeditorConfig = '/edsa-dolibarrdev/theme/eldy/ckeditor/config.js?layout=classic&version=7.0.2';
+	var ckeditorFilebrowserBrowseUrl = '/edsa-dolibarrdev/core/filemanagerdol/browser/default/browser.php?Connector=/edsa-dolibarrdev/core/filemanagerdol/connectors/php/connector.php';
+	var ckeditorFilebrowserImageBrowseUrl = '/edsa-dolibarrdev/core/filemanagerdol/browser/default/browser.php?Type=Image&Connector=/edsa-dolibarrdev/core/filemanagerdol/connectors/php/connector.php';
+</script>
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/includes/ckeditor/ckeditor/ckeditor.js?layout=classic&version=7.0.2"></script>
+<!-- Includes JS of Dolibarr -->
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/core/js/lib_head.js.php?lang=fr_FR&layout=classic&version=7.0.2"></script>
+<!-- Include JS added by module affaires-->
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/custom//affaires/volvo/js/jquery.flot.orderBars.js"></script>
+<!-- Include JS added by module docpreview-->
+<script type="text/javascript"
+	src="/edsa-dolibarrdev/docpreview/js/docpreview.js.php"></script>
+</head>
+
+<body id="mainbody">
+
+	<!-- Start top horizontal -->
+	<div class="side-nav-vert">
+		<div id="id-top">
+			<div id="tmenu_tooltip" class="tmenu">
+				<div class="tmenudiv">
+					<ul class="tmenu">
+						<li class="tmenusel" id="mainmenutd_home"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/index.php?mainmenu=home&amp;leftmenu=home"><div
+										class="mainmenu home topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_home"></span>
+									</div></a><a class="tmenusel" id="mainmenua_home"
+									href="/edsa-dolibarrdev/index.php?mainmenu=home&amp;leftmenu=home"><span
+									class="mainmenuaspan">Accueil</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_agenda"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/comm/action/index.php?idmenu=38102&mainmenu=agenda&amp;leftmenu="><div
+										class="mainmenu agenda topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_agenda"></span>
+									</div></a><a class="tmenu" id="mainmenua_agenda"
+									href="/edsa-dolibarrdev/comm/action/index.php?idmenu=38102&mainmenu=agenda&amp;leftmenu="><span
+									class="mainmenuaspan">Agenda</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_companies"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/societe/index.php?mainmenu=companies&amp;leftmenu="><div
+										class="mainmenu companies topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_companies"></span>
+									</div></a><a class="tmenu" id="mainmenua_companies"
+									href="/edsa-dolibarrdev/societe/index.php?mainmenu=companies&amp;leftmenu="><span
+									class="mainmenuaspan">Tiers</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_products"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/product/index.php?mainmenu=products&amp;leftmenu="><div
+										class="mainmenu products topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_products"></span>
+									</div></a><a class="tmenu" id="mainmenua_products"
+									href="/edsa-dolibarrdev/product/index.php?mainmenu=products&amp;leftmenu="><span
+									class="mainmenuaspan">Produits</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_commercial"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/comm/index.php?mainmenu=commercial&amp;leftmenu="><div
+										class="mainmenu commercial topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_commercial"></span>
+									</div></a><a class="tmenu" id="mainmenua_commercial"
+									href="/edsa-dolibarrdev/comm/index.php?mainmenu=commercial&amp;leftmenu="><span
+									class="mainmenuaspan">Commercial</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_billing"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/compta/index.php?mainmenu=billing&amp;leftmenu="><div
+										class="mainmenu billing topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_billing"></span>
+									</div></a><a class="tmenu" id="mainmenua_billing"
+									href="/edsa-dolibarrdev/compta/index.php?mainmenu=billing&amp;leftmenu="><span
+									class="mainmenuaspan">Facturation | Paiement</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_tools"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/core/tools.php?mainmenu=tools&amp;leftmenu="><div
+										class="mainmenu tools topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_tools"></span>
+									</div></a><a class="tmenu" id="mainmenua_tools"
+									href="/edsa-dolibarrdev/core/tools.php?mainmenu=tools&amp;leftmenu="><span
+									class="mainmenuaspan">Outils</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_affaires"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/custom//affaires/index.php?idmenu=38579&mainmenu=affaires&amp;leftmenu="><div
+										class="mainmenu affaires topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_affaires"></span>
+									</div></a><a class="tmenu" id="mainmenua_affaires"
+									href="/edsa-dolibarrdev/custom//affaires/index.php?idmenu=38579&mainmenu=affaires&amp;leftmenu="><span
+									class="mainmenuaspan">Affaires</span></a>
+							</div></li>
+						<li class="tmenu" id="mainmenutd_volvo"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter">
+								<a class="tmenuimage" tabindex="-1"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/index.php?idmenu=38592&mainmenu=volvo&amp;leftmenu="><div
+										class="mainmenu volvo topmenuimage">
+										<span class="mainmenu tmenuimage" id="mainmenuspan_volvo"></span>
+									</div></a><a class="tmenu" id="mainmenua_volvo"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/index.php?idmenu=38592&mainmenu=volvo&amp;leftmenu="><span
+									class="mainmenuaspan">Volvo</span></a>
+							</div></li>
+						<li class="tmenuend" id="mainmenutd_"><div
+								class="tmenuleft tmenusep"></div>
+							<div class="tmenucenter"></div></li>
+					</ul>
+				</div>
+			</div>
+			<div class="login_block">
+				<div class="login_block_user">
+					<div class="inline-block nowrap">
+						<div class="inline-block login_block_elem login_block_elem_name"
+							style="padding: 0px;">
+							<a href="/edsa-dolibarrdev/user/card.php?id=1"
+								title="&lt;div class=&quot;centpercent&quot;&gt;&lt;u&gt;Utilisateur&lt;/u&gt;&lt;br&gt;&lt;b&gt;Nom:&lt;/b&gt; SuperAdmin&lt;br&gt;&lt;b&gt;Identifiant:&lt;/b&gt; admin_theobald&lt;br&gt;&lt;b&gt;Email:&lt;/b&gt; dolibarr@theobald-groupe.com&lt;br&gt;&lt;b&gt;Administrateur&lt;/b&gt;: Oui&lt;br&gt;&lt;b&gt;Type:&lt;/b&gt; Interne&lt;br&gt;&lt;b&gt;&Eacute;tat&lt;/b&gt;: Actif&lt;/div&gt;&lt;br&gt;&lt;br&gt;&lt;u&gt;Connexion&lt;/u&gt;&lt;br&gt;&lt;b&gt;Adresse IP&lt;/b&gt;: 127.0.0.1&lt;br&gt;&lt;b&gt;Mode authentification:&lt;/b&gt; dolibarr&lt;br&gt;&lt;b&gt;Connect&eacute; depuis:&lt;/b&gt; 29/03/2018 08:53&lt;br&gt;&lt;b&gt;Connexion pr&eacute;c&eacute;dente:&lt;/b&gt; 26/03/2018 15:45&lt;br&gt;&lt;b&gt;Th&egrave;me courant:&lt;/b&gt; eldy&lt;br&gt;&lt;b&gt;Gestionnaire de menu courant:&lt;/b&gt; eldy&lt;br&gt;&lt;b&gt;Langue utilisateur actuelle:&lt;/b&gt; &lt;img src=&quot;/edsa-dolibarrdev/theme/common/flags/fr.png&quot; alt=&quot;&quot; title=&quot;fr_FR&quot; class=&quot;inline-block&quot;&gt; fr_FR&lt;br&gt;&lt;b&gt;Navigateur:&lt;/b&gt; chrome 65.0.3325.181 (Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36)&lt;br&gt;&lt;b&gt;Pr&eacute;sentation:&lt;/b&gt; classic&lt;br&gt;&lt;b&gt;Ecran:&lt;/b&gt; 1518 x 708"
+								class="classfortooltip atoplogin">
+								<!-- picto photo user -->
+								<div class="inline-block nopadding userimg atoplogin"
+									style="margin-right: 3px;">
+									<img class="photouserphoto userphoto" alt="No photo"
+										src="/edsa-dolibarrdev/public/theme/common/user_anonymous.png">
+								</div>
+								<div
+									class="inline-block nopadding valignmiddle usertext atoplogin">SuperAdmin</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="login_block_other">
+					<div class="inline-block">
+						<div
+							class="classfortooltip inline-block login_block_elem inline-block"
+							style="padding: 0px; padding: 0px; padding-right: 3px !important;"
+							title="Afficher page d'impression de la zone centrale">
+							<a
+								href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=confirm_modif&amp;confirm=yes&optioncss=print"
+								target="_blank"><span class="fa fa-print atoplogin"></span></a>
+						</div>
+					</div>
+					<div class="inline-block">
+						<div
+							class="classfortooltip inline-block login_block_elem inline-block"
+							style="padding: 0px; padding: 0px; padding-right: 3px !important;"
+							title="Dolibarr 7.0.2&lt;br&gt;Niveau de fonctionnalit&eacute;s: 2&lt;br&gt;Consulter l'aide (n&eacute;cessite un acc&egrave;s internet) - Page Wiki &quot;Commandes Clients&quot;">
+							<a class="help" target="_blank" rel="noopener"
+								href="http://wiki.dolibarr.org/index.php/Commandes_Clients"><span
+								class="fa fa-question-circle atoplogin"></span></a>
+						</div>
+					</div>
+					<div class="inline-block">
+						<div
+							class="classfortooltip inline-block login_block_elem inline-block"
+							style="padding: 0px; padding: 0px; padding-right: 3px !important;"
+							title="D&eacute;connexion&lt;br&gt;">
+							<a href="/edsa-dolibarrdev/user/logout.php"><span
+								class="fa fa-sign-out atoplogin"></span></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="clear: both;"></div>
+	<!-- End top horizontal menu -->
+
+	<!-- Begin div id-container -->
+	<div id="id-container" class="id-container">
+		<!-- Begin side-nav id-left -->
+		<div class="side-nav">
+			<div id="id-left">
+
+				<!-- Begin left menu -->
+				<div class="vmenu">
+
+
+					<!-- Show logo on menu -->
+					<div class="blockvmenuimpair blockvmenulogo">
+						<div class="menu_titre" id="menu_titre_logo"></div>
+						<div class="menu_top" id="menu_top_logo"></div>
+						<div class="menu_contenu" id="menu_contenu_logo">
+							<div class="center">
+								<img class="mycompany"
+									title="Allez dans Accueil - Configuration - Soci&eacute;t&eacute;/institution pour changer le  logo ou aller dans Accueil - Configuration - Affichage pour le cacher."
+									alt="" src="/edsa-dolibarrdev/theme/dolibarr_logo.png"
+									style="max-width: 70%">
+							</div>
+						</div>
+						<div class="menu_end" id="menu_end_logo"></div>
+					</div>
+
+					<!-- Begin SearchForm -->
+					<div id="blockvmenusearch" class="blockvmenusearch">
+						<select type="text"
+							class="searchselectcombo vmenusearchselectcombo"
+							name="searchselectcombo"></select>
+					</div>
+					<!-- End SearchForm -->
+					<div class="blockvmenu blockvmenupair blockvmenufirst">
+						<!-- Process menu entry with mainmenu=home, leftmenu=home, level=0 enabled=1, position=0 -->
+						<div class="menu_titre">
+							<a class="vmenu"
+								href="/edsa-dolibarrdev/index.php?mainmenu=home&amp;leftmenu=home"><i
+								class="fa fa-bar-chart fa-fw paddingright"></i>Mon tableau de
+								bord</a>
+						</div>
+						<div class="menu_top"></div>
+						<div class="menu_end"></div>
+					</div>
+					<div class="blockvmenu blockvmenuimpair">
+						<!-- Process menu entry with mainmenu=home, leftmenu=setup, level=0 enabled=1, position=0 -->
+						<div class="menu_titre">
+							<a class="vmenu"
+								href="/edsa-dolibarrdev/admin/index.php?mainmenu=home&amp;leftmenu=setup"><i
+								class="fa fa-wrench fa-fw paddingright"></i>Configuration</a>
+						</div>
+						<div class="menu_top"></div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_company">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/company.php?mainmenu=home">Soci&eacute;t&eacute;/Organisation</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_modules">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/modules.php?mainmenu=home">Modules/Applications</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_menus">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/menus.php?mainmenu=home">Menus</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_ihm">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/ihm.php?mainmenu=home">Affichage</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_translation">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/translation.php?mainmenu=home">Traduction</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_defaultvalues">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/defaultvalues.php?mainmenu=home">Valeurs
+								par d&eacute;faut</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_boxes">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/boxes.php?mainmenu=home">Widgets</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_delais">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/delais.php?mainmenu=home">Alertes</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_security_other">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/security_other.php?mainmenu=home">S&eacute;curit&eacute;</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_limits">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/limits.php?mainmenu=home">Limites
+								et pr&eacute;cision</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_pdf">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/pdf.php?mainmenu=home">PDF</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_mails">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/mails.php?mainmenu=home">Emails</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_sms">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/sms.php?mainmenu=home">SMS</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_dict">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/dict.php?mainmenu=home">Dictionnaires</a><br>
+						</div>
+						<!-- Process menu entry with mainmenu=, leftmenu=, level=1 enabled=1, position=0 -->
+						<div class="menu_contenu menu_contenu_admin_const">
+							<a class="vsmenu"
+								href="/edsa-dolibarrdev/admin/const.php?mainmenu=home">Divers</a><br>
+						</div>
+						<div class="menu_end"></div>
+					</div>
+					<div class="blockvmenu blockvmenupair">
+						<!-- Process menu entry with mainmenu=home, leftmenu=admintools, level=0 enabled=1, position=0 -->
+						<div class="menu_titre">
+							<a class="vmenu"
+								href="/edsa-dolibarrdev/admin/tools/index.php?mainmenu=home&amp;leftmenu=admintools"><i
+								class="fa fa-server fa-fw paddingright"></i>Outils
+								d'administration</a>
+						</div>
+						<div class="menu_top"></div>
+						<div class="menu_end"></div>
+					</div>
+					<div class="blockvmenu blockvmenuimpair blockvmenulast">
+						<!-- Process menu entry with mainmenu=home, leftmenu=users, level=0 enabled=1, position=0 -->
+						<div class="menu_titre">
+							<a class="vmenu"
+								href="/edsa-dolibarrdev/user/home.php?leftmenu=users"><i
+								class="fa fa-users fa-fw paddingright"></i>Utilisateurs &amp;
+								Groupes</a>
+						</div>
+						<div class="menu_top"></div>
+						<div class="menu_end"></div>
+					</div>
+					<div class="blockvmenuend"></div>
+					<!-- Begin Help Block-->
+					<div id="blockvmenuhelp" class="blockvmenuhelp">
+						<div id="blockvmenuhelpapp" class="blockvmenuhelp">
+							<a class="help" target="_blank" rel="noopener"
+								href="https://www.dolibarr.fr">Dolibarr 7.0.2</a>
+						</div>
+					</div>
+					<!-- End Help Block-->
+
+				</div>
+				<!-- End left menu -->
+
+			</div>
+		</div>
+		<!-- End side-nav id-left -->
+		<!-- Begin right area -->
+		<div id="id-right">
+			<!-- Begin div class="fiche" -->
+			<div class="fiche">
+				<script type="text/javascript">
+					$(document)
+							.ready(
+									function() {
+										$tr = $('<tr class="impair"><td>Marge rééle </td><td align="right">83 525,00</td><td align="right">80 175,00</td><td align="right">3 350,00</td>');
+										$('div.fiche table.margintable').last()
+												.append($tr);
+									});
+				</script>
+
+				<div class="tabs" data-role="controlgroup" data-type="horizontal">
+					<a class="tabTitle"><img
+						src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+						title="Commande client" class="inline-block"> <span
+						class="tabTitleText">Commande client</span></a>
+					<div class="inline-block tabsElem tabsElemActive">
+						<!-- id tab = order -->
+						<a id="order" class="tabactive tab inline-block"
+							href="/edsa-dolibarrdev/commande/card.php?id=712">Fiche
+							commande</a>
+					</div>
+					<div class="inline-block tabsElem">
+						<!-- id tab = vcm -->
+						<a id="vcm" class="tabunactive tab inline-block"
+							href="http://127.0.0.1/edsa-dolibarrdev/custom//affaires/volvo/commande/vcm.php?id=712">VCM
+							<span class="badge"><img
+								src="/edsa-dolibarrdev/custom//affaires/img/off.png" alt=""
+								class="inline-block"></span>
+						</a>
+					</div>
+					<div class="inline-block tabsElem">
+						<!-- id tab = documents -->
+						<a id="documents" class="tabunactive tab inline-block"
+							href="http://127.0.0.1/edsa-dolibarrdev/custom//affaires/volvo/commande/document.php?id=712">Fichiers
+							joints <span class="badge">3</span>
+						</a>
+					</div>
+					<div class="inline-block tabsElem">
+						<!-- id tab = info -->
+						<a id="info" class="tabunactive tab inline-block"
+							href="http://127.0.0.1/edsa-dolibarrdev/custom//affaires/volvo/commande/info.php?id=712">Suivi</a>
+					</div>
+				</div>
+
+				<div class="tabBar tabBarWithBottom">
+					<div class="arearef heightref valignmiddle" width="100%">
+						<!-- Start banner content -->
+						<div style="vertical-align: middle">
+							<div class="pagination paginationref">
+								<ul class="right">
+									<li class="noborder litext"><a
+										href="/edsa-dolibarrdev/commande/list.php">Retour liste</a></li>
+									<li class="pagination"><a accesskey="p"
+										href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?ref=%28PROV695%29"><i
+											class="fa fa-chevron-left"></i></a></li>
+									<li class="pagination"><a accesskey="n"
+										href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?ref=V001%2F17"><i
+											class="fa fa-chevron-right"></i></a></li>
+								</ul>
+							</div>
+							<div class="statusref">
+								<span class="hideonsmartphone">Brouillon </span><img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+							</div>
+							<div class="inline-block floatleft">
+								<div class="floatleft inline-block valignmiddle divphotoref">
+									<!-- No photo to show -->
+									<div class="floatleft inline-block valignmiddle divphotoref">
+										<div class="photoref">
+											<img class="photounknown photorefcenter" alt="No photo"
+												border="0"
+												src="/edsa-dolibarrdev/custom//affaires/img/object_volvo.png">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div
+								class="inline-block floatleft valignmiddle refid refidpadding">
+								<div class="refidno">
+									<strong style="font-size: 25px;">Dossier Commercial N°
+										: S001/18 du: 29 Mars 2018</Strong>
+								</div>
+								<div class="refidno">
+									<!-- BEGIN part to show address block -->
+									<div style="clear: both;"></div>
+									<!-- END Part to show address block -->
+								</div>
+							</div>
+						</div>
+						<!-- End banner content -->
+					</div>
+					<div class="underrefbanner clearboth"></div>
+					<table class="border" width="100%">
+						<tr style="height: 25px">
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="lefr">Numéro d'affaire: FUN030/17</td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_numom_712"
+											class="commande_extras_numom">Numéro D'O.M.:</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=numom"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left">Client: <a
+											href="/edsa-dolibarrdev/comm/card.php?socid=31317"
+											title="&lt;div class=&quot;centpercent&quot;&gt;&lt;u&gt;Afficher client&lt;/u&gt;&lt;br&gt;&lt;b&gt;Nom:&lt;/b&gt; BERBERAT PERE ET FILS&lt;br&gt;&lt;b&gt;Email:&lt;/b&gt; &lt;br&gt;&lt;b&gt;Pays:&lt;/b&gt; FR&lt;br&gt;&lt;b&gt;Num&eacute;ro de TVA:&lt;/b&gt; FR87487120057&lt;br&gt;&lt;b&gt;Code client:&lt;/b&gt; 9339489486&lt;/div&gt;"
+											class="classfortooltip refurl"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/object_company.png"
+												alt="" class="paddingright classfortooltip valigntextbottom">BERBERAT
+												PERE ET FILS</a></td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_ctm_712"
+											class="commande_extras_ctm">Contremarque:</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=ctm"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr style="height: 25px">
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="lefr">Date de facture:</td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left">Conditions de r&egrave;glement: 54 jours</td>
+										<td align="center"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?action=editconditions&amp;id=712"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="D&eacute;finir conditions de r&egrave;glement"
+												style="float: right" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td height="10"><table width="100%"
+									class="nobordernopadding">
+									<tr>
+										<td align="left">Date pr&eacute;vue de livraison:</td>
+										<td align="center"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?action=editdate_livraison&amp;id=712"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="D&eacute;finir la date d'exp&eacute;dition"
+												style="float: right" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left">Lieu de Livraison: &nbsp;</td>
+										<td align="center"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?action=editdemandreason&amp;id=712"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="D&eacute;finir la source" style="float: right"
+												class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_vin_712"
+											class="commande_extras_vin">VIN: YV2RT40A1HB819040</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=vin"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_immat_712"
+											class="commande_extras_immat">Immat:</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=immat"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td valign="top" width="50%" colspan="2" rowspan="4"><div
+									class="div-table-responsive-no-min">
+									<!-- Margin table -->
+									<table class="noborder margintable centpercent">
+										<tr class="liste_titre">
+											<td class="liste_titre">Marges</td>
+											<td class="liste_titre" align="right">Prix de vente</td>
+											<td class="liste_titre" align="right">Prix de revient</td>
+											<td class="liste_titre" align="right">Marge</td>
+										</tr>
+										<tr class="oddeven">
+											<td>Marge / Produits</td>
+											<td align="right">83 525,00</td>
+											<td align="right">80 175,00</td>
+											<td align="right">3 350,00</td>
+										</tr>
+									</table>
+								</div></td>
+						</tr>
+						<tr>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_dt_blockupdate_712"
+											class="commande_extras_dt_blockupdate">Date blocage
+											modification:</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=dt_blockupdate"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_dt_lim_annul_712"
+											class="commande_extras_dt_lim_annul">Date limite
+											d'annulation:</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=dt_lim_annul"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_dt_liv_maj_712"
+											class="commande_extras_dt_liv_maj">Date de livraison
+											mise a jour:</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=dt_liv_maj"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+							<td>Délai Cash: Jour(s)</td>
+						</tr>
+						<tr style="height: 25px">
+							<td>Montant HT: 83&nbsp;525,00 €</td>
+							<td><table width="100%" class="nobordernopadding">
+									<tr>
+										<td align="left" id="commande_extras_vnac_712"
+											class="commande_extras_vnac">VNC: -80 225 €</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=edit_extras&attribute=vnac"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+												title="Modifier" class="pictoedit"></a></td>
+									</tr>
+								</table></td>
+					</table>
+					<!-- BEGIN PHP TEMPLATE bloc_showhide.tpl.php -->
+
+					<script type="text/javascript">
+						$(document)
+								.ready(
+										function() {
+											$("#hide-notes")
+													.click(
+															function() {
+																setShowHide(0);
+																$("#notes_bloc")
+																		.hide(
+																				"blind",
+																				{
+																					direction : "vertical"
+																				},
+																				300)
+																		.removeClass(
+																				"nohideobject");
+																$(this).hide();
+																$("#show-notes")
+																		.show();
+															});
+											$("#show-notes")
+													.click(
+															function() {
+																setShowHide(1);
+																$("#notes")
+																		.show(
+																				"blind",
+																				{
+																					direction : "vertical"
+																				},
+																				300)
+																		.addClass(
+																				"nohideobject");
+																$(this).hide();
+																$("#hide-notes")
+																		.show();
+															});
+											function setShowHide(status) {
+												var id = 712;
+												var element = 'commande';
+												var htmlelement = 'notes';
+												var type = "showhide";
+												$
+														.get("/edsa-dolibarrdev/core/ajax/extraparams.php?id="
+																+ id
+																+ "&element="
+																+ element
+																+ "&htmlelement="
+																+ htmlelement
+																+ "&type="
+																+ type
+																+ "&value="
+																+ status);
+											}
+										});
+					</script>
+					<div
+						style="float: right; position: relative; top: 3px; right: 5px;"
+						id="hide-notes" class="linkobject">
+						<img src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+							class="inline-block">
+					</div>
+					<div
+						style="float: right; position: relative; top: 3px; right: 5px;"
+						id="show-notes" class="linkobject hideobject">
+						<img src="/edsa-dolibarrdev/theme/eldy/img/1downarrow.png" alt=""
+							class="inline-block">
+					</div>
+					<div id="notes_title" class="liste_titre">Notes</div>
+					<div id="notes_bloc" class="nohideobject">
+						<!-- BEGIN PHP TEMPLATE NOTES -->
+						<div class="tagtable border table-border centpercent">
+							<div class="tagtr table-border-row">
+								<div class="tagtd tdtop table-key-border-col" style="width: 25%">
+									<table class="nobordernopadding" width="100%">
+										<tr>
+											<td class="nowrap">Note (publique)</td>
+											<td align="right"><a
+												href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?action=editnote_public&amp;id=712"><img
+													src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+													title="&Eacute;diter" style="float: right"
+													class="pictoedit"></a></td>
+										</tr>
+									</table>
+								</div>
+								<div class="tagtd table-val-border-col">
+									Client: BERBERAT PERE ET FILS<br> N&deg; de Chassis
+									:YV2RT40A1HB819040<br> Immatriculation :<br> Date de
+									Livraison :
+								</div>
+							</div>
+							<div class="tagtr table-border-row">
+								<div class="tagtd tdtop table-key-border-col" style="width: 25%">
+									<table class="nobordernopadding" width="100%">
+										<tr>
+											<td class="nowrap">Note (priv&eacute;e)</td>
+											<td align="right"><a
+												href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?action=editnote_private&amp;id=712"><img
+													src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+													title="&Eacute;diter" style="float: right"
+													class="pictoedit"></a></td>
+										</tr>
+									</table>
+								</div>
+								<div class="tagtd table-val-border-col"></div>
+							</div>
+						</div>
+						<!-- END PHP TEMPLATE NOTES-->
+					</div>
+					<br>
+					<!-- END PHP TEMPLATE BLOC SHOW/HIDE -->
+					<form name="addproduct" id="addproduct"
+						action="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712#add"
+						method="POST">
+						<input type="hidden" name="token"
+							value="bc1815bbbcc5bed421354063bfab9ccf"> <input
+							type="hidden" name="action" value="addline"> <input
+							type="hidden" name="mode" value=""> <input type="hidden"
+							name="id" value="712">
+
+						<!-- BEGIN PHP TEMPLATE AJAXROW.TPL.PHP - Script to enable drag and drop on tables -->
+						<script type="text/javascript">
+							$(document)
+									.ready(
+											function() {
+												$(".imgupforline").hide();
+												$(".imgdownforline").hide();
+												$(".lineupdown").removeAttr(
+														'href');
+												$(".tdlineupdown")
+														.css(
+																"background-image",
+																'url(/edsa-dolibarrdev/theme/eldy/img/grip.png)');
+												$(".tdlineupdown").css(
+														"background-repeat",
+														"no-repeat");
+												$(".tdlineupdown").css(
+														"background-position",
+														"center center");
+
+												console
+														.log("Prepare tableDnd for #tablelines");
+												$("#tablelines")
+														.tableDnD(
+																{
+																	onDrop : function(
+																			table,
+																			row) {
+																		var reloadpage = "0";
+																		console
+																				.log("tableDND onDrop");
+																		console
+																				.log(decodeURI($(
+																						"#tablelines")
+																						.tableDnDSerialize()));
+																		var roworder = cleanSerialize(decodeURI($(
+																				"#tablelines")
+																				.tableDnDSerialize()));
+																		var table_element_line = "commandedet";
+																		var fk_element = "fk_commande";
+																		var element_id = "712";
+																		var filepath = "";
+																		$
+																				.post(
+																						"/edsa-dolibarrdev/core/ajax/row.php",
+																						{
+																							roworder : roworder,
+																							table_element_line : table_element_line,
+																							fk_element : fk_element,
+																							element_id : element_id,
+																							filepath : filepath
+																						},
+																						function() {
+																							console
+																									.log("tableDND end of ajax call");
+																							if (reloadpage == 1) {
+																								//console.log('id=712&action=confirm_modif&confirm=yes');
+																								location.href = '/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=confirm_modif&confirm=yes';
+																							} else {
+																								$(
+																										"#tablelines .drag")
+																										.each(
+																												function(
+																														intIndex) {
+																													// $(this).removeClass("pair impair");
+																													//if (intIndex % 2 == 0) $(this).addClass('impair');
+																													//if (intIndex % 2 == 1) $(this).addClass('pair');
+																												});
+																							}
+																						});
+																	},
+																	onDragClass : "dragClass",
+																	dragHandle : "td.tdlineupdown"
+																});
+												$(".tdlineupdown")
+														.hover(
+																function() {
+																	$(this)
+																			.addClass(
+																					'showDragHandle');
+																},
+																function() {
+																	$(this)
+																			.removeClass(
+																					'showDragHandle');
+																});
+											});
+						</script>
+						<!-- END PHP TEMPLATE AJAXROW.TPL.PHP -->
+						<table id="tablelines" class="noborderaffaires noshadow"
+							width="100%">
+							<tr class="liste_titre nodrag nodrop">
+								<td class="linecoldescription" colspan="2">Description</td>
+								<td class="linecolqty" align="right">Qt&eacute;</td>
+								<td class="linecoluht" align="right" width="80">P.U. HT</td>
+								<td class="linecolht" align="right">Prix achat</td>
+								<td class="linecolht" align="right">Cout Réel</td>
+								<td class="linecolht" align="right">Ecart</td>
+								<td class="linecoledit" width="10"></td>
+								<td class="linecoldelete" width="10"></td>
+								<td class="linecolmove" width="10"></td>
+								<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11584" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11584"></div>
+									<table class="nobordernopadding" summary="">
+										<tr style="height: auto;">
+											<td class="cursorpointer classfortooltip inline-block"
+												style="padding: 0px;"
+												title="FE 62 Porteur Train&eacute; Fixe/Directeur Suspension Arri&egrave;re Pneumatique"><a
+												href="/edsa-dolibarrdev/product/card.php?id=148"
+												title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; FE"
+												class="classfortooltip"><img
+													src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+													alt="" class="paddingright classfortooltip">FE</a> -
+												Volvo FE</td>
+										</tr>
+									</table></td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">71
+									281,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">71
+									281,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11584#line_11584"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11584"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11584"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11584" class="drag drop impair">
+								<td colspan="10" style="border-style: none"><b><span
+										style="text-decoration: underline;">Commentaire:</span></b>FE 62
+									Porteur Trainé Fixe/Directeur Suspension Arrière Pneumatique</td>
+							</tr>
+							<tr id="row-11584" class="drag drop impair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2062"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; VTFRA-18-0001&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 72 051,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 72 051,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">VTFRA-18-0001</a>
+									30/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut3.png" alt=""
+									title="Approuv&eacute;e" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11585" class="drag drop pair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11585"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=2"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; TCH"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">TCH</a> -
+									Étalonnage Tachygraphe</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">190,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">190,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11585#line_11585"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11585"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11585"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11585" class="drag drop pair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2059"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2059)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 607,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 121,40 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 728,40 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2059)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11586" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11586"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=6"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; MEM"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">MEM</a> - Mise
+									en Main</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">130,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">130,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11586#line_11586"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11586"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11586"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11586" class="drag drop impair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2060"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2060)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 6 380,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 6 380,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2060)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11587" class="drag drop pair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11587"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=10"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; LIV"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">LIV</a> -
+									Forfait Livraison</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">342,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">342,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11587#line_11587"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11587"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11587"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11587" class="drag drop pair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2059"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2059)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 607,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 121,40 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 728,40 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2059)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11588" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11588"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=14"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; LIVUSI"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">LIVUSI</a> -
+									Livraison Usine</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">620,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">620,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11588#line_11588"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11588"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11588"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11588" class="drag drop impair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2062"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; VTFRA-18-0001&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 72 051,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 72 051,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">VTFRA-18-0001</a>
+									30/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut3.png" alt=""
+									title="Approuv&eacute;e" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11589" class="drag drop pair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11589"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=15"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; TPNEU"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">TPNEU</a> - Taxe
+									Pneumatique</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">150,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">150,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11589#line_11589"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11589"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11589"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11589" class="drag drop pair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2062"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; VTFRA-18-0001&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 72 051,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 72 051,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">VTFRA-18-0001</a>
+									30/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut3.png" alt=""
+									title="Approuv&eacute;e" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11590" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11590"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=60"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; VOSP"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">VOSP</a> - Plan
+									d'entretien VOSP</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">0,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">0,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11590#line_11590"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11590"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11590"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11590" class="drag drop impair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2060"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2060)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 6 380,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 6 380,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2060)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<tr ldata-id="11591" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="subtotal" rel="subtotal"
+								id="row-11591" style="background: #adadcf;">
+
+								<td colspan="6" style="text-align: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal2.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -1px;">1</span>&nbsp;&nbsp;Sous-Total
+									Véhicule :
+								</td>
+
+								<td class="nowrap liencolht" align="right"
+									style="font-weight: bold;" rel="subtotal_total">72 713,00</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11591"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11591"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<tr cdata-id="11592" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="title" rel="subtotal"
+								id="row-11592" style="background: #adadcf;">
+
+								<td colspan="6" style=""><img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -3px;">1</span>&nbsp;&nbsp;Travaux
+									Interne</td>
+
+								<td class="liencolht movetitleblock">&nbsp;</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11592"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11592"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteallline&lineid=11592"><img
+										src="/edsa-dolibarrdev/custom//subtotal/img/delete_all.3.8.png"
+										alt="" title="Supprimer avec toutes les lignes contenues"
+										class="inline-block"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11593" class="drag drop pair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11593"></div>
+									<table class="nobordernopadding" summary="">
+										<tr style="height: auto;">
+											<td class="cursorpointer classfortooltip inline-block 9"
+												style="padding: 0px;" title="SIV"><a
+												href="/edsa-dolibarrdev/product/card.php?id=3"
+												title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; IMM"
+												class="classfortooltip"><img
+													src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+													alt="" class="paddingright classfortooltip">IMM</a> -
+												Immat</td>
+										</tr>
+									</table></td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">80,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">80,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11593#line_11593"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11593"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11593"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11593" class="drag drop pair">
+								<td colspan="10" style="border-style: none"><b><span
+										style="text-decoration: underline;">Commentaire:</span></b>SIV</td>
+							</tr>
+							<tr id="row-11593" class="drag drop pair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2061"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2061)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 1 137,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 1 137,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2061)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11594" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11594"></div>
+									<table class="nobordernopadding" summary="">
+										<tr style="height: auto;">
+											<td class="cursorpointer classfortooltip inline-block 10"
+												style="padding: 0px;" title="Carte Grise"><a
+												href="/edsa-dolibarrdev/product/card.php?id=8"
+												title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; CG"
+												class="classfortooltip"><img
+													src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+													alt="" class="paddingright classfortooltip">CG</a> -
+												Prise en charge Carte grise</td>
+										</tr>
+									</table></td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1
+									057,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">1
+									057,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11594#line_11594"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11594"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11594"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11594" class="drag drop impair">
+								<td colspan="10" style="border-style: none"><b><span
+										style="text-decoration: underline;">Commentaire:</span></b>Carte
+									Grise</td>
+							</tr>
+							<tr id="row-11594" class="drag drop impair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2061"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2061)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 1 137,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 1 137,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2061)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<tr ldata-id="11595" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="subtotal" rel="subtotal"
+								id="row-11595" style="background: #adadcf;">
+
+								<td colspan="6" style="text-align: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal2.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -1px;">1</span>&nbsp;&nbsp;Sous-Total
+									Travaux Interne Travaux Interne :
+								</td>
+
+								<td class="nowrap liencolht" align="right"
+									style="font-weight: bold;" rel="subtotal_total">1 137,00</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11595"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11595"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<tr cdata-id="11596" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="title" rel="subtotal"
+								id="row-11596" style="background: #adadcf;">
+
+								<td colspan="6" style=""><img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -3px;">1</span>&nbsp;&nbsp;Travaux
+									Externe</td>
+
+								<td class="liencolht movetitleblock">&nbsp;</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11596"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11596"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteallline&lineid=11596"><img
+										src="/edsa-dolibarrdev/custom//subtotal/img/delete_all.3.8.png"
+										alt="" title="Supprimer avec toutes les lignes contenues"
+										class="inline-block"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<tr ldata-id="11597" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="subtotal" rel="subtotal"
+								id="row-11597" style="background: #adadcf;">
+
+								<td colspan="6" style="text-align: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal2.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -1px;">1</span>&nbsp;&nbsp;Sous-Total
+									Travaux Externe Travaux Externe :
+								</td>
+
+								<td class="nowrap liencolht" align="right"
+									style="font-weight: bold;" rel="subtotal_total">0,00</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11597"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11597"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<tr cdata-id="11598" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="title" rel="subtotal"
+								id="row-11598" style="background: #adadcf;">
+
+								<td colspan="6" style=""><img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -3px;">1</span>&nbsp;&nbsp;Divers</td>
+
+								<td class="liencolht movetitleblock">&nbsp;</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11598"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11598"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteallline&lineid=11598"><img
+										src="/edsa-dolibarrdev/custom//subtotal/img/delete_all.3.8.png"
+										alt="" title="Supprimer avec toutes les lignes contenues"
+										class="inline-block"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11599" class="drag drop pair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11599"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=26"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; PVC"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">PVC</a> - Pack
+									Protection Véhicule Connecté</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">6
+									250,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">6
+									250,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11599#line_11599"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11599"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11599"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11599" class="drag drop pair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2060"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2060)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 6 380,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 0,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 6 380,00 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2060)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<tr cdata-id="11600" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="subtotal" rel="subtotal"
+								id="row-11600" style="background: #adadcf;">
+
+								<td colspan="6" style="text-align: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal2.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -1px;">1</span>&nbsp;&nbsp;Sous-Total
+									Divers Divers :
+								</td>
+
+								<td class="nowrap liencolht" align="right"
+									style="font-weight: bold;" rel="subtotal_total">6 250,00</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11600"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11600"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<tr ldata-id="11601" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="title" rel="subtotal"
+								id="row-11601" style="background: #adadcf;">
+
+								<td colspan="6" style=""><img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -3px;">1</span>&nbsp;&nbsp;Commission
+									Volvo</td>
+
+								<td class="liencolht movetitleblock">&nbsp;</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11601"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11601"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteallline&lineid=11601"><img
+										src="/edsa-dolibarrdev/custom//subtotal/img/delete_all.3.8.png"
+										alt="" title="Supprimer avec toutes les lignes contenues"
+										class="inline-block"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11602" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11602"></div>
+									<a href="/edsa-dolibarrdev/product/card.php?id=13"
+									title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; COM"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+										alt="" class="paddingright classfortooltip">COM</a> -
+									Commission Volvo</td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">3
+									300,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">0,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11602#line_11602"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11602"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11602"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+								<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<tr ldata-id="11603" data-product_type="9" data-qty="0"
+								data-level="1" data-issubtotal="subtotal" rel="subtotal"
+								id="row-11603" style="background: #adadcf;">
+
+								<td colspan="6" style="text-align: right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+									src="/edsa-dolibarrdev/custom//subtotal/img/subtotal2.png"
+									alt="" class="inline-block"><span
+									style="font-size: 9px; margin-left: -1px;">1</span>&nbsp;&nbsp;Sous-Total
+									Commission Volvo Commission Volvo :
+								</td>
+
+								<td class="nowrap liencolht" align="right"
+									style="font-weight: bold;" rel="subtotal_total">3 300,00</td>
+								<td align="center" class="nowrap linecoledit"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=editline&lineid=11603"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+
+								<td align="center" nowrap="nowrap" class="linecoldelete"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=ask_deleteline&lineid=11603"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+
+								<td align="center" class="tdlineupdown"></td>
+
+
+							</tr>
+							<!-- BEGIN PHP PERSONAL TEMPLATE objectline_view.tpl.php for order-->
+							<tr id="row-11604" class="drag drop impair">
+								<td class="linecoldescription"
+									style="border-bottom-style: none; border-top: 1px solid black;"
+									colspan="2"><div id="line_11604"></div>
+									<table class="nobordernopadding" summary="">
+										<tr style="height: auto;">
+											<td class="cursorpointer classfortooltip inline-block 20"
+												style="padding: 0px;" title="test"><a
+												href="/edsa-dolibarrdev/product/card.php?id=2"
+												title="&lt;u&gt;Afficher produit&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f. produit:&lt;/b&gt; TCH"
+												class="classfortooltip"><img
+													src="/edsa-dolibarrdev/theme/eldy/img/object_product.png"
+													alt="" class="paddingright classfortooltip">TCH</a> -
+												Étalonnage Tachygraphe</td>
+										</tr>
+									</table></td>
+								<td align="right" class="linecolqty nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">1</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;">125,00</td>
+								<td align="right" class="linecolmargin1 nowrap margininfos"
+									style="border-bottom-style: none; border-top: 1px solid black;">75,00</td>
+								<td align="right" class="linecoluht nowrap"
+									style="border-bottom-style: none; border-top: 1px solid black;"></td>
+								<td class="linecoledit" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=editline&amp;lineid=11604#line_11604"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/edit.png" alt=""
+										title="Modifier" class="pictoedit"></a></td>
+								<td class="linecoldelete" align="center"
+									style="border-bottom-style: none; border-top: 1px solid black;"><a
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=ask_deleteline&amp;lineid=11604"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+										title="Supprimer" class="pictodelete"></a></td>
+								<td><a class="lineupdown"
+									href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=up&amp;rowid=11604"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/1uparrow.png" alt=""
+										title="Up" class="imgup imgupforline"></a></td>
+							<tr id="row-11604" class="drag drop impair">
+								<td colspan="10" style="border-style: none"><b><span
+										style="text-decoration: underline;">Commentaire:</span></b>test</td>
+							</tr>
+							<tr id="row-11604" class="drag drop impair">
+								<td colspan="10" style="border-style: none">Commande
+									fournisseur <a
+									href="/edsa-dolibarrdev/fourn/commande/card.php?id=2059"
+									title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; (PROV2059)&lt;br&gt;&lt;b&gt;R&eacute;f. fournisseur:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 607,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 121,40 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 728,40 &euro;"
+									class="classfortooltip"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/object_order.png" alt=""
+										class="paddingright classfortooltip">(PROV2059)</a>
+									29/03/2018 <img
+									src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+									title="Brouillon (&agrave; valider)" class="inline-block">
+								</td>
+							</tr>
+							<!-- END PHP TEMPLATE objectline_view.tpl.php for order -->
+							<!-- BEGIN PHP TEMPLATE objectline_create.tpl.php for order-->
+							<tr class="liste_titre liste_titre_add_nodrag nodrop">
+								<td class="linecoldescription minwidth500imp"><div id="add"></div>
+									<span class="hideonsmartphone">Ajout nouvelle ligne</span></td>
+								<td class="linecoluht" align="right"><span id="title_up_ht">P.U.
+										HT</span></td>
+								<td class="linecolqty" align="right">Qt&eacute;</td>
+								<td align="right" class="margininfos linecolmargin1" colspan="2">Prix
+									de revient</td>
+								<td class="linecoledit" colspan="8">&nbsp;</td>
+							</tr>
+							<td class="nobottom linecoldescription minwidth500imp"><br>
+							<span class="prod_entry_mode_predef"><label
+									for="prod_entry_mode_predef"><input type="radio"
+										class="prod_entry_mode_predef" name="prod_entry_mode"
+										id="prod_entry_mode_predef" value="predef" checked>
+										Produits/Services pr&eacute;d&eacute;finis en vente</label> <input
+									type="hidden" name="idprod" id="idprod" value="" />
+								<!-- Javascript code for autocomplete of field idprod --> <script
+										type="text/javascript">
+									$(document)
+											.ready(
+													function() {
+														var autoselect = 0;
+														var options = [];
+
+														/* Remove selected id as soon as we type or delete a char (it means old selection is wrong). Use keyup/down instead of change to avoid loosing the product id. This is needed only for select of predefined product */
+														$("input#search_idprod")
+																.keydown(
+																		function(
+																				e) {
+																			if (e.keyCode != 9) /* If not "Tab" key */
+																			{
+																				console
+																						.log("Clear id previously selected for field idprod");
+																				$(
+																						"#idprod")
+																						.val(
+																								"");
+																			}
+																		});
+
+														// Check options for secondary actions when keyup
+														$("input#search_idprod")
+																.keyup(
+																		function() {
+																			if ($(
+																					this)
+																					.val().length == 0) {
+																				$(
+																						"#search_idprod")
+																						.val(
+																								"");
+																				$(
+																						"#idprod")
+																						.val(
+																								"")
+																						.trigger(
+																								"change");
+																				if (options.option_disabled) {
+																					$(
+																							"#"
+																									+ options.option_disabled)
+																							.removeAttr(
+																									"disabled");
+																				}
+																				if (options.disabled) {
+																					$
+																							.each(
+																									options.disabled,
+																									function(
+																											key,
+																											value) {
+																										$(
+																												"#"
+																														+ value)
+																												.removeAttr(
+																														"disabled");
+																									});
+																				}
+																				if (options.update) {
+																					$
+																							.each(
+																									options.update,
+																									function(
+																											key,
+																											value) {
+																										$(
+																												"#"
+																														+ key)
+																												.val(
+																														"")
+																												.trigger(
+																														"change");
+																									});
+																				}
+																				if (options.show) {
+																					$
+																							.each(
+																									options.show,
+																									function(
+																											key,
+																											value) {
+																										$(
+																												"#"
+																														+ value)
+																												.hide()
+																												.trigger(
+																														"hide");
+																									});
+																				}
+																				if (options.update_textarea) {
+																					$
+																							.each(
+																									options.update_textarea,
+																									function(
+																											key,
+																											value) {
+																										if (typeof CKEDITOR == "object"
+																												&& typeof CKEDITOR.instances != "undefined"
+																												&& CKEDITOR.instances[key] != "undefined") {
+																											CKEDITOR.instances[key]
+																													.setData("");
+																										} else {
+																											$(
+																													"#"
+																															+ key)
+																													.html(
+																															"");
+																										}
+																									});
+																				}
+																			}
+																		});
+														$("input#search_idprod")
+																.autocomplete(
+																		{
+																			source : function(
+																					request,
+																					response) {
+																				$
+																						.get(
+																								"http://127.0.0.1/edsa-dolibarrdev/custom//affaires/ajax/products.php?htmlname=idprod&outjson=1&price_level=0&type=&mode=1&status=1&finished=2&hidepriceinlabel=0&warehousestatus=&filterbycat=33&socid=31317",
+																								{
+																									idprod : request.term
+																								},
+																								function(
+																										data) {
+																									if (data != null) {
+																										response($
+																												.map(
+																														data,
+																														function(
+																																item) {
+																															if (autoselect == 1
+																																	&& data.length == 1) {
+																																$(
+																																		"#search_idprod")
+																																		.val(
+																																				item.value);
+																																$(
+																																		"#idprod")
+																																		.val(
+																																				item.key)
+																																		.trigger(
+																																				"change");
+																															}
+																															var label = item.label
+																																	.toString();
+																															var update = {};
+																															if (options.update) {
+																																$
+																																		.each(
+																																				options.update,
+																																				function(
+																																						key,
+																																						value) {
+																																					update[key] = item[value];
+																																				});
+																															}
+																															var textarea = {};
+																															if (options.update_textarea) {
+																																$
+																																		.each(
+																																				options.update_textarea,
+																																				function(
+																																						key,
+																																						value) {
+																																					textarea[key] = item[value];
+																																				});
+																															}
+																															return {
+																																label : label,
+																																value : item.value,
+																																id : item.key,
+																																update : update,
+																																textarea : textarea,
+																																disabled : item.disabled
+																															}
+																														}));
+																									} else
+																										console
+																												.error("Error: Ajax url http://127.0.0.1/edsa-dolibarrdev/custom//affaires/ajax/products.php?htmlname=idprod&outjson=1&price_level=0&type=&mode=1&status=1&finished=2&hidepriceinlabel=0&warehousestatus=&filterbycat=33&socid=31317 has returned an empty page. Should be an empty json array.");
+																								},
+																								"json");
+																			},
+																			dataType : "json",
+																			minLength : 1,
+																			select : function(
+																					event,
+																					ui) { // Function ran once new value has been selected into javascript combo
+																				console
+																						.log("Call change on input idprod because of select definition of autocomplete select call on input#search_idprod");
+																				console
+																						.log("Selected id = "
+																								+ ui.item.id
+																								+ " - If this value is null, it means you select a record with key that is null so selection is not effective");
+																				$(
+																						"#idprod")
+																						.val(
+																								ui.item.id)
+																						.trigger(
+																								"change"); // Select new value
+																				// Disable an element
+																				if (options.option_disabled) {
+																					console
+																							.log("Make action option_disabled on #"
+																									+ options.option_disabled
+																									+ " with disabled="
+																									+ ui.item.disabled)
+																					if (ui.item.disabled) {
+																						$(
+																								"#"
+																										+ options.option_disabled)
+																								.prop(
+																										"disabled",
+																										true);
+																						if (options.error) {
+																							$
+																									.jnotify(
+																											options.error,
+																											"error",
+																											true); // Output with jnotify the error message
+																						}
+																						if (options.warning) {
+																							$
+																									.jnotify(
+																											options.warning,
+																											"warning",
+																											false); // Output with jnotify the warning message
+																						}
+																					} else {
+																						$(
+																								"#"
+																										+ options.option_disabled)
+																								.removeAttr(
+																										"disabled");
+																					}
+																				}
+																				if (options.disabled) {
+																					console
+																							.log("Make action disabled on each "
+																									+ options.option_disabled)
+																					$
+																							.each(
+																									options.disabled,
+																									function(
+																											key,
+																											value) {
+																										$(
+																												"#"
+																														+ value)
+																												.prop(
+																														"disabled",
+																														true);
+																									});
+																				}
+																				if (options.show) {
+																					console
+																							.log("Make action show on each "
+																									+ options.show)
+																					$
+																							.each(
+																									options.show,
+																									function(
+																											key,
+																											value) {
+																										$(
+																												"#"
+																														+ value)
+																												.show()
+																												.trigger(
+																														"show");
+																									});
+																				}
+																				// Update an input
+																				if (ui.item.update) {
+																					console
+																							.log("Make action update on each ui.item.update")
+																					// loop on each "update" fields
+																					$
+																							.each(
+																									ui.item.update,
+																									function(
+																											key,
+																											value) {
+																										$(
+																												"#"
+																														+ key)
+																												.val(
+																														value)
+																												.trigger(
+																														"change");
+																									});
+																				}
+																				if (ui.item.textarea) {
+																					console
+																							.log("Make action textarea on each ui.item.textarea")
+																					$
+																							.each(
+																									ui.item.textarea,
+																									function(
+																											key,
+																											value) {
+																										if (typeof CKEDITOR == "object"
+																												&& typeof CKEDITOR.instances != "undefined"
+																												&& CKEDITOR.instances[key] != "undefined") {
+																											CKEDITOR.instances[key]
+																													.setData(value);
+																											CKEDITOR.instances[key]
+																													.focus();
+																										} else {
+																											$(
+																													"#"
+																															+ key)
+																													.html(
+																															value);
+																											$(
+																													"#"
+																															+ key)
+																													.focus();
+																										}
+																									});
+																				}
+																				console
+																						.log("ajax_autocompleter new value selected, we trigger change on original component so field #search_idprod");
+
+																				$(
+																						"#search_idprod")
+																						.trigger(
+																								"change"); // We have changed value of the combo select, we must be sure to trigger all js hook binded on this event. This is required to trigger other javascript change method binded on original field by other code.
+																			},
+																			delay : 500
+																		})
+																.data(
+																		"ui-autocomplete")._renderItem = function(
+																ul, item) {
+															return $("<li>")
+																	.data(
+																			"ui-autocomplete-item",
+																			item)
+																	// jQuery UI > 1.10.0
+																	.append(
+																			'<a><span class="tag">'
+																					+ item.label
+																					+ "</span></a>")
+																	.appendTo(
+																			ul);
+														};
+
+													});
+								</script><input type="text" class="minwidth100" name="search_idprod"
+									id="search_idprod" value="" /><input type="hidden" name="pbq"
+									id="pbq" value=""></span></td>
+							<td class="nobottom linecoluht" align="right"><input
+								type="text" size="5" name="price_ht" id="price_ht"
+								class="flat right" value=""></td>
+							<td class="nobottom linecolqty" align="right"><input
+								type="text" size="2" name="qty" id="qty" class="flat right"
+								value="1"></td>
+							<td align="right" class="nobottom margininfos linecolmargin"><select
+								id="fournprice_predef" name="fournprice_predef" class="flat"></select></td>
+							<td align="right" class="nobottom margininfos linecolmargin"><input
+								type="text" size="5" style="display: none" id="buying_price"
+								name="buying_price" class="flat right" value=""></td>
+							<td class="nobottom linecoledit" align="right" valign="middle"
+								colspan="8"><input type="submit" class="button"
+								value="Ajouter" name="addline" id="addline"></td>
+							</tr>
+							<td class="nobottom linecoldescription minwidth500imp"
+								align="left" colspan="20">Commentaire: <input type="text"
+								size="150" name="dp_desc" id="dp_desc" class="flat left"
+								value=""></td>
+							</tr>
+							<script type="text/javascript">
+								/* JQuery for product free or predefined select */
+								jQuery(document)
+										.ready(
+												function() {
+													$("#prod_entry_mode_predef")
+															.on(
+																	"click",
+																	function() {
+																		console
+																				.log("click prod_entry_mode_predef");
+																		setforpredef();
+																		jQuery(
+																				'#trlinefordates')
+																				.show();
+																	});
+
+													/* When changing predefined product, we reload list of supplier prices required for margin combo */
+													$(
+															"#idprod, #idprodfournprice")
+															.change(
+																	function() {
+																		console
+																				.log("#idprod, #idprodfournprice change triggered");
+
+																		setforpredef(); // TODO Keep vat combo visible and set it to first entry into list that match result of get_default_tva
+
+																		jQuery(
+																				'#trlinefordates')
+																				.show();
+
+																		/* Code for margin */
+																		$(
+																				"#fournprice_predef")
+																				.find(
+																						"option")
+																				.remove();
+																		$(
+																				"#fournprice_predef")
+																				.hide();
+																		$(
+																				"#buying_price")
+																				.val(
+																						"")
+																				.show();
+																		/* Call post to load content of combo list fournprice_predef */
+																		$
+																				.post(
+																						'/edsa-dolibarrdev/fourn/ajax/getSupplierPrices.php?bestpricefirst=1',
+																						{
+																							'idprod' : $(
+																									this)
+																									.val()
+																						},
+																						function(
+																								data) {
+																							if (data
+																									&& data.length > 0) {
+																								var options = '';
+																								var defaultkey = '';
+																								var defaultprice = '';
+																								var bestpricefound = 0;
+
+																								var bestpriceid = 0;
+																								var bestpricevalue = 0;
+																								var pmppriceid = 0;
+																								var pmppricevalue = 0;
+																								var costpriceid = 0;
+																								var costpricevalue = 0;
+
+																								/* setup of margin calculation */
+																								var defaultbuyprice = 'pmp';
+																								console
+																										.log("we will set the field for margin. defaultbuyprice="
+																												+ defaultbuyprice);
+
+																								var i = 0;
+																								$(
+																										data)
+																										.each(
+																												function() {
+																													if (this.id != 'pmpprice'
+																															&& this.id != 'costprice') {
+																														i++;
+																														this.price = parseFloat(this.price);
+																														if (bestpricefound == 0
+																																&& this.price > 0) {
+																															defaultkey = this.id;
+																															defaultprice = this.price;
+																															bestpriceid = this.id;
+																															bestpricevalue = this.price;
+																															bestpricefound = 1;
+																														} // bestpricefound is used to take the first price > 0
+																													}
+																													if (this.id == 'pmpprice') {
+																														// If margin is calculated on PMP, we set it by defaut (but only if value is not 0)
+																														//console.log("id="+this.id+"-price="+this.price);
+																														if ('pmp' == defaultbuyprice
+																																|| 'costprice' == defaultbuyprice) {
+																															if (this.price > 0) {
+																																defaultkey = this.id;
+																																defaultprice = this.price;
+																																pmppriceid = this.id;
+																																pmppricevalue = this.price;
+																																//console.log("pmppricevalue="+pmppricevalue);
+																															}
+																														}
+																													}
+																													if (this.id == 'costprice') {
+																														// If margin is calculated on Cost price, we set it by defaut (but only if value is not 0)
+																														//console.log("id="+this.id+"-price="+this.price+"-pmppricevalue="+pmppricevalue);
+																														if ('costprice' == defaultbuyprice) {
+																															if (this.price > 0) {
+																																defaultkey = this.id;
+																																defaultprice = this.price;
+																																costpriceid = this.id;
+																																costpricevalue = this.price;
+																															} else if (pmppricevalue > 0) {
+																																defaultkey = pmppriceid;
+																																defaultprice = pmppricevalue;
+																															}
+																														}
+																													}
+																													options += '<option value="'+this.id+'" price="'+this.price+'">'
+																															+ this.label
+																															+ '</option>';
+																												});
+																								options += '<option value="inputprice" price="'+defaultprice+'">Saisir un prix</option>';
+
+																								console
+																										.log("finally selected defaultkey="
+																												+ defaultkey
+																												+ " defaultprice="
+																												+ defaultprice);
+
+																								$(
+																										"#fournprice_predef")
+																										.html(
+																												options)
+																										.show();
+																								if (defaultkey != '') {
+																									$(
+																											"#fournprice_predef")
+																											.val(
+																													defaultkey);
+																								}
+
+																								/* At loading, no product are yet selected, so we hide field of buying_price */
+																								$(
+																										"#buying_price")
+																										.hide();
+
+																								/* Define default price at loading */
+																								var defaultprice = $(
+																										"#fournprice_predef")
+																										.find(
+																												'option:selected')
+																										.attr(
+																												"price");
+																								$(
+																										"#buying_price")
+																										.val(
+																												defaultprice);
+
+																								$(
+																										"#fournprice_predef")
+																										.change(
+																												function() {
+																													console
+																															.log("change on fournprice_predef");
+																													/* Hide field buying_price according to choice into list (if 'inputprice' or not) */
+																													var linevalue = $(
+																															this)
+																															.find(
+																																	'option:selected')
+																															.val();
+																													var pricevalue = $(
+																															this)
+																															.find(
+																																	'option:selected')
+																															.attr(
+																																	"price");
+																													if (linevalue != 'inputprice'
+																															&& linevalue != 'pmpprice') {
+																														$(
+																																"#buying_price")
+																																.val(
+																																		pricevalue)
+																																.hide(); /* We set value then hide field */
+																													}
+																													if (linevalue == 'inputprice') {
+																														$(
+																																'#buying_price')
+																																.show();
+																													}
+																													if (linevalue == 'pmpprice') {
+																														$(
+																																"#buying_price")
+																																.val(
+																																		pricevalue);
+																														$(
+																																'#buying_price')
+																																.hide();
+																													}
+																												});
+																							}
+																						},
+																						'json');
+
+																		/* To process customer price per quantity */
+																		var pbq = $(
+																				'option:selected',
+																				this)
+																				.attr(
+																						'data-pbq');
+																		var pbqqty = $(
+																				'option:selected',
+																				this)
+																				.attr(
+																						'data-pbqqty');
+																		var pbqpercent = $(
+																				'option:selected',
+																				this)
+																				.attr(
+																						'data-pbqpercent');
+																		if (jQuery(
+																				'#idprod')
+																				.val() > 0
+																				&& typeof pbq !== "undefined") {
+																			console
+																					.log("We choose a price by quanty price_by_qty id = "
+																							+ pbq
+																							+ " price_by_qty qty = "
+																							+ pbqqty
+																							+ " price_by_qty percent = "
+																							+ pbqpercent);
+																			jQuery(
+																					"#pbq")
+																					.val(
+																							pbq);
+																			if (jQuery(
+																					"#qty")
+																					.val() < pbqqty) {
+																				jQuery(
+																						"#qty")
+																						.val(
+																								pbqqty);
+																			}
+																			if (jQuery(
+																					"#remise_percent")
+																					.val() < pbqpercent) {
+																				jQuery(
+																						"#remise_percent")
+																						.val(
+																								pbqpercent);
+																			}
+																		} else {
+																			jQuery(
+																					"#pbq")
+																					.val(
+																							'');
+																		}
+
+																		/* To set focus */
+																		if (jQuery(
+																				'#idprod')
+																				.val() > 0
+																				|| jQuery(
+																						'#idprodfournprice')
+																						.val() > 0) {
+																			/* focus work on a standard textarea but not if field was replaced with CKEDITOR */
+																			jQuery(
+																					'#dp_desc')
+																					.focus();
+																			/* focus if CKEDITOR */
+																			if (typeof CKEDITOR == "object"
+																					&& typeof CKEDITOR.instances != "undefined") {
+																				var editor = CKEDITOR.instances['dp_desc'];
+																				if (editor) {
+																					editor
+																							.focus();
+																				}
+																			}
+																		}
+																	});
+
+												});
+
+								/* Function to set fields from choice */
+
+								function setforpredef() {
+									console
+											.log("Call setforpredef. We hide some fields");
+									jQuery("#select_type").val(-1);
+
+									jQuery("#prod_entry_mode_free").prop(
+											'checked', false).change();
+									jQuery("#prod_entry_mode_predef").prop(
+											'checked', true).change();
+									jQuery("#buying_price").show();
+									jQuery("#units, #title_units").hide();
+								}
+							</script>
+
+							<!-- END PHP TEMPLATE objectline_create.tpl.php -->
+						</table>
+					</form>
+
+				</div>
+				<div class="tabsAction">
+
+					<script type="text/javascript">
+						$(document)
+								.ready(
+										function() {
+
+											// target some elements
+											var titleRow = $('tr[data-issubtotal="title"]');
+											var lastTitleCol = titleRow
+													.find('td:last-child');
+											var moveBlockCol = titleRow
+													.find('td.liencolht');
+
+											moveBlockCol.disableSelection(); // prevent selection
+
+											// apply some graphical stuff
+											moveBlockCol
+													.css("background-image",
+															'url(http://127.0.0.1/edsa-dolibarrdev/custom//subtotal/img/grip_all.png)');
+											moveBlockCol.css(
+													"background-repeat",
+													"no-repeat");
+											moveBlockCol.css(
+													"background-position",
+													"center center");
+											moveBlockCol.css("cursor", "move");
+											titleRow
+													.attr('title',
+															'Déplacer le bloc titre complet');
+
+											$("#tablelines")
+													.sortable(
+															{
+																cursor : "move",
+																handle : ".movetitleblock",
+																items : 'tr:not(.nodrag,.nodrop,.noblockdrop)',
+																delay : 150, //Needed to prevent accidental drag when trying to select
+																opacity : 0.8,
+																axis : "y", // limit y axis
+																placeholder : "ui-state-highlight",
+																start : function(
+																		event,
+																		ui) {
+																	//console.log('X:' + e.screenX, 'Y:' + e.screenY);
+																	//console.log(ui.item);
+																	var colCount = ui.item
+																			.children().length;
+																	ui.placeholder
+																			.html('<td colspan="'+colCount+'">&nbsp;</td>');
+
+																	var TcurrentChilds = getSubtotalTitleChilds(ui.item);
+																	ui.item
+																			.data(
+																					'childrens',
+																					TcurrentChilds); // store data
+
+																	for ( var key in TcurrentChilds) {
+																		$(
+																				'#'
+																						+ TcurrentChilds[key])
+																				.addClass(
+																						'noblockdrop');//'#row-'+
+																		$(
+																				'#'
+																						+ TcurrentChilds[key])
+																				.fadeOut();//'#row-'+
+																	}
+
+																	$(this)
+																			.sortable(
+																					"refresh"); // "refresh" of source sortable is required to make "disable" work!
+
+																},
+																stop : function(
+																		event,
+																		ui) {
+																	// call we element is droped
+																	$(
+																			'.noblockdrop')
+																			.removeClass(
+																					'noblockdrop');
+
+																	var TcurrentChilds = ui.item
+																			.data('childrens'); // reload child list from data and not attr to prevent load error
+
+																	for (var i = TcurrentChilds.length; i >= 0; i--) {
+																		$(
+																				'#'
+																						+ TcurrentChilds[i])
+																				.insertAfter(
+																						ui.item); //'#row-'+
+																		$(
+																				'#'
+																						+ TcurrentChilds[i])
+																				.fadeIn(); //'#row-'+
+																	}
+																	console
+																			.log('onstop');
+																	console
+																			.log(cleanSerialize($(
+																					this)
+																					.sortable(
+																							'serialize')));
+
+																	$
+																			.ajax({
+																				data : {
+																					objet_id : 712,
+																					roworder : cleanSerialize($(
+																							this)
+																							.sortable(
+																									'serialize')),
+																					table_element_line : "commandedet",
+																					fk_element : "fk_commande",
+																					element_id : "712",
+																					filepath : ""
+																				},
+																				type : 'POST',
+																				url : '/edsa-dolibarrdev/core/ajax/row.php',
+																				success : function(
+																						data) {
+																					console
+																							.log(data);
+																				},
+																			});
+
+																},
+																update : function(
+																		event,
+																		ui) {
+
+																	// POST to server using $.post or $.ajax
+																	$(
+																			'.noblockdrop')
+																			.removeClass(
+																					'noblockdrop');
+																	//console.log('onupdate');
+																	//console.log(cleanSerialize($(this).sortable('serialize')));
+																}
+															});
+
+											function getSubtotalTitleChilds(
+													item) {
+												var TcurrentChilds = []; // = JSON.parse(item.attr('data-childrens'));
+												var level = item.data('level');
+
+												var indexOfFirstSubtotal = -1;
+												var indexOfFirstTitle = -1;
+
+												item
+														.nextAll('[id^="row-"]')
+														.each(
+																function(index) {
+
+																	var dataLevel = $(
+																			this)
+																			.attr(
+																					'data-level');
+																	var dataIsSubtotal = $(
+																			this)
+																			.attr(
+																					'data-issubtotal');
+
+																	if (dataIsSubtotal != 'undefined'
+																			&& dataLevel != 'undefined') {
+
+																		if (dataLevel <= level
+																				&& indexOfFirstSubtotal < 0
+																				&& dataIsSubtotal == 'subtotal') {
+																			indexOfFirstSubtotal = index;
+																			if (indexOfFirstTitle < 0) {
+																				TcurrentChilds
+																						.push($(
+																								this)
+																								.attr(
+																										'id'));
+																			}
+																		}
+
+																		if (dataLevel <= level
+																				&& indexOfFirstSubtotal < 0
+																				&& indexOfFirstTitle < 0
+																				&& dataIsSubtotal == 'title') {
+																			indexOfFirstTitle = index;
+																		}
+																	}
+
+																	if (indexOfFirstTitle < 0
+																			&& indexOfFirstSubtotal < 0) {
+																		TcurrentChilds
+																				.push($(
+																						this)
+																						.attr(
+																								'id'));
+
+																		// Add extraffield support for dolibarr > 7
+																		var thisId = $(
+																				this)
+																				.attr(
+																						'data-id');
+																		var thisElement = $(
+																				this)
+																				.attr(
+																						'data-element');
+																		if (thisId != undefined
+																				&& thisElement != undefined) {
+																			$(
+																					'[data-targetid="'
+																							+ thisId
+																							+ '"][data-element="extrafield"][data-targetelement="'
+																							+ thisElement
+																							+ '"]')
+																					.each(
+																							function(
+																									index) {
+																								TcurrentChilds
+																										.push($(
+																												this)
+																												.attr(
+																														'id'));
+																							});
+																		}
+
+																	}
+
+																});
+												return TcurrentChilds;
+											}
+
+										});
+					</script>
+					<style type="text/css">
+tr.ui-state-highlight td {
+	border: 1px solid #dad55e;
+	background: #fffa90;
+	color: #777620;
+}
+</style>
+					<div class="inline-block divButAction">
+						<a class="butAction"
+							href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=validate">Valider</a>
+					</div>
+					<div class="inline-block divButAction">
+						<a class="butAction"
+							href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;socid=31317&amp;action=clone&amp;object=order">Cloner</a>
+					</div>
+					<div class="inline-block divButAction">
+						<a class="butActionDelete"
+							href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=delete">Supprimer</a>
+					</div>
+				</div>
+				<div class="fichecenter">
+					<div class="fichehalfleft">
+						<!-- Start show_document -->
+						<form
+							action="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712"
+							id="builddoc_form" method="post">
+							<input type="hidden" name="action" value="builddoc"><input
+								type="hidden" name="token"
+								value="bc1815bbbcc5bed421354063bfab9ccf">
+							<table summary="" class="centpercent notopnoleftnoright"
+								style="margin-bottom: 2px;">
+								<tr>
+									<td class="nobordernopadding" valign="middle"><div
+											class="titre">Fichiers joints</div></td>
+								</tr>
+							</table>
+							<div class="div-table-responsive-no-min">
+								<table class="liste formdoc noborder"
+									summary="listofdocumentstable" width="100%">
+									<tr class="liste_titre">
+										<th align="center" colspan="5"
+											class="formdoc liste_titre maxwidthonsmartphone"><span
+											class="hideonsmartphone">Mod&egrave;le de document </span><select
+											id="model" class="flat model minwidth100" name="model"><option
+													value="analysevolvo" selected>analysevolvo</option>
+												<option value="analysevolvolg">Analyse Lg</option>
+												<option value="vcm">vcm</option>
+												<option value="einstein">einstein</option>
+										</select> <!-- JS CODE TO ENABLE select2 for id = model --> <script
+												type="text/javascript">
+											$(document)
+													.ready(
+															function() {
+																$('#model')
+																		.select2(
+																				{
+																					dir : 'ltr',
+																					width : 'resolve', /* off or resolve */
+																					minimumInputLength : 0,
+																					language : select2arrayoflanguage,
+																					containerCssClass : ':all:', /* Line to add class of origin SELECT propagated to the new <span class="select2-selection...> tag */
+																					templateResult : function(
+																							data,
+																							container) { /* Format visible output into combo list */
+																						/* Code to add class of origin OPTION propagated to the new select2 <li> tag */
+																						if (data.element) {
+																							$(
+																									container)
+																									.addClass(
+																											$(
+																													data.element)
+																													.attr(
+																															"class"));
+																						}
+																						//console.log(data.html);
+																						if ($(
+																								data.element)
+																								.attr(
+																										"data-html") != undefined)
+																							return htmlEntityDecodeJs($(
+																									data.element)
+																									.attr(
+																											"data-html")); // If property html set, we decode html entities and use this
+																						return data.text;
+																					},
+																					templateSelection : function(
+																							selection) { /* Format visible output of selected value */
+																						return selection.text;
+																					},
+																					escapeMarkup : function(
+																							markup) {
+																						return markup;
+																					}
+																				});
+															});
+										</script> &nbsp;<input class="button buttongen" id="builddoc_generatebutton"
+											name="builddoc_generatebutton" type="submit"
+											value="G&eacute;n&eacute;rer"></th>
+									</tr>
+									<tr c>
+										<td colspan="4" align="right"><label for="hideInnerLines">Cacher
+												le d&eacute;tail des ensembles</label> <input type="checkbox"
+											onclick="if($(this).is(':checked')) { $('#hidedetails').prop('checked', 'checked')  }"
+											id="hideInnerLines" name="hideInnerLines" value="1" /></td>
+									</tr>
+									<tr l>
+										<td colspan="4" align="right"><label for="hidedetails">Cacher
+												le prix et quantit&eacute;s des lignes des ensembles</label> <input
+											type="checkbox" id="hidedetails" name="hidedetails" value="1" />
+										</td>
+									</tr>
+									<tr c>
+										<td colspan="4" align="right"><label for="hidedetails">Cacher
+												le prix des lignes des ensembles</label> <input type="checkbox"
+											id="hideprices" name="hideprices" value="1" /></td>
+									</tr>
+									<!-- html.formfile::showdocuments -->
+									<tr class="oddeven">
+										<td class="minwidth200"><a
+											class="documentdownload paddingright"
+											href="/edsa-dolibarrdev/document.php?modulepart=commande&amp;file=S001_18%2Fanalyse_S001_18.pdf"
+											target="_blank"><i class="fa fa-file-pdf-o paddingright"></i>analyse_S001_18.pdf</a>
+											<a class="pictopreview documentpreview"
+											href="/edsa-dolibarrdev/document.php?modulepart=commande&attachment=0&file=S001_18%2Fanalyse_S001_18.pdf"
+											mime="application/pdf" target="_blank"><span
+												class="fa fa-search-plus" style="color: gray"></span></a></td>
+										<td align="right" class="nowrap">13462 Octets</td>
+										<td align="right" class="nowrap">30/03/2018 09:57</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=remove_file&amp;file=S001_18%2Fanalyse_S001_18.pdf"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+												title="Supprimer" class="inline-block"></a></td>
+									</tr>
+									<tr class="oddeven">
+										<td class="minwidth200"><a
+											class="documentdownload paddingright"
+											href="/edsa-dolibarrdev/document.php?modulepart=commande&amp;file=S001_18%2Fanalyse_%28PROV712%29.pdf"
+											target="_blank"><i class="fa fa-file-pdf-o paddingright"></i>analyse_(PROV712).pdf</a>
+											<a class="pictopreview documentpreview"
+											href="/edsa-dolibarrdev/document.php?modulepart=commande&attachment=0&file=S001_18%2Fanalyse_%28PROV712%29.pdf"
+											mime="application/pdf" target="_blank"><span
+												class="fa fa-search-plus" style="color: gray"></span></a></td>
+										<td align="right" class="nowrap">13474 Octets</td>
+										<td align="right" class="nowrap">29/03/2018 17:00</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=remove_file&amp;file=S001_18%2Fanalyse_%28PROV712%29.pdf"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+												title="Supprimer" class="inline-block"></a></td>
+									</tr>
+									<tr class="oddeven">
+										<td class="minwidth200"><a
+											class="documentdownload paddingright"
+											href="/edsa-dolibarrdev/document.php?modulepart=commande&amp;file=S001_18%2F20180329162044-V011_18-FDD++DECEMBRE+2017+.xlsm"
+											target="_blank"><i
+												class="fa fa-file-excel-o paddingright"></i>20180329162044-V011_18-FDD
+												DECEMBRE 2017 .xlsm</a></td>
+										<td align="right" class="nowrap">1398326 Octets</td>
+										<td align="right" class="nowrap">29/03/2018 16:21</td>
+										<td align="right"><a
+											href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&amp;action=remove_file&amp;file=S001_18%2F20180329162044-V011_18-FDD++DECEMBRE+2017+.xlsm"><img
+												src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+												title="Supprimer" class="inline-block"></a></td>
+									</tr>
+								</table>
+							</div>
+						</form>
+						<!-- End show_document -->
+						<br>
+						<table summary="" class="centpercent notopnoleftnoright"
+							style="margin-bottom: 2px;">
+							<tr>
+								<td class="nobordernopadding widthpictotitle" valign="middle"><img
+									src="/edsa-dolibarrdev/theme/eldy/img/title_generic.png" alt=""
+									class="valignmiddle widthpictotitle" id="pictotitle"></td>
+								<td class="nobordernopadding" valign="middle"><div
+										class="titre">Affaires</div></td>
+							</tr>
+						</table>
+						<table class='noborder allwidth'>
+							<tr class='liste_titre'>
+								<td>Affaire(s) associ&eacute;(s)</td>
+							</tr>
+							<tr>
+								<td><div id="vh_927"
+										style="background: #aad4ff; background: -webkit-gradient(linear, left top, left bottom, from(#aad4ff), to(#56aaff)); border-radius: 6px; margin-bottom: 3px; width: 100%; height: 23px; padding-left: 10px; padding-top: 5px">
+										<div style="display: inline-block;">
+											<a
+												href="/edsa-dolibarrdev/custom//affaires/form/card.php?id=242">FUN030/17</a>
+											- <img
+												src="/edsa-dolibarrdev/custom//affaires/img/porteur.png"
+												alt="" title="porteur" class="inline-block"> FH - 4x2
+											- Fourgon - Spécification: - Commande: <a
+												href="/edsa-dolibarrdev/commande/card.php?id=712"
+												title="&lt;u&gt;Afficher commande&lt;/u&gt;&lt;br&gt;&lt;b&gt;R&eacute;f.:&lt;/b&gt; S001/18&lt;br&gt;&lt;b&gt;R&eacute;f. client:&lt;/b&gt; FUN030/17&lt;br&gt;&lt;b&gt;Montant HT:&lt;/b&gt; 83 525,00 &euro;&lt;br&gt;&lt;b&gt;TVA:&lt;/b&gt; 25,00 &euro;&lt;br&gt;&lt;b&gt;Montant TTC:&lt;/b&gt; 83 550,00 &euro;"
+												class="classfortooltip">S001/18</a> du 29/03/2018 - <img
+												src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+												title="Brouillon (&agrave; valider)" class="inline-block">
+											Brouillon
+										</div>
+										<div style="display: inline-block; float: right;"></div>
+									</div></td>
+							</tr>
+						</table>
+						<!-- showLinkedObjectBlock -->
+						<table summary=""
+							class="centpercent notopnoleftnoright showlinkedobjectblock"
+							style="margin-bottom: 2px;">
+							<tr>
+								<td class="nobordernopadding" valign="middle"><div
+										class="titre">Objets li&eacute;s</div></td>
+							</tr>
+						</table>
+						<div class="div-table-responsive-no-min">
+							<table class="noborder allwidth">
+								<tr class="liste_titre">
+									<td>Type</td>
+									<td>R&eacute;f.</td>
+									<td align="center"></td>
+									<td align="center">Date</td>
+									<td align="right">Montant HT</td>
+									<td align="right">&Eacute;tat</td>
+									<td></td>
+								</tr>
+								<!-- BEGIN PHP TEMPLATE -->
+
+								<tr class="pair">
+									<td>Commande fournisseur</td>
+									<td><a
+										href="/edsa-dolibarrdev/fourn/commande/card.php?id=2059"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/object_order.png"
+											alt="" title="Afficher commande" class="inline-block">
+											(PROV2059)</a></td>
+									<td align="left">S001/18</td>
+									<td align="center">29/03/2018</td>
+									<td align="right">607,00</td>
+									<td align="right"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+										title="Brouillon (&agrave; valider)" class="inline-block"></td>
+									<td align="right"><a
+										href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=dellink&dellinkid=3262"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+											title="Supprimer le lien" class="pictodelete"></a></td>
+								</tr>
+								<tr class="pair">
+									<td>Commande fournisseur</td>
+									<td><a
+										href="/edsa-dolibarrdev/fourn/commande/card.php?id=2060"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/object_order.png"
+											alt="" title="Afficher commande" class="inline-block">
+											(PROV2060)</a></td>
+									<td align="left">S001/18</td>
+									<td align="center">29/03/2018</td>
+									<td align="right">6 380,00</td>
+									<td align="right"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+										title="Brouillon (&agrave; valider)" class="inline-block"></td>
+									<td align="right"><a
+										href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=dellink&dellinkid=3263"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+											title="Supprimer le lien" class="pictodelete"></a></td>
+								</tr>
+								<tr class="pair">
+									<td>Commande fournisseur</td>
+									<td><a
+										href="/edsa-dolibarrdev/fourn/commande/card.php?id=2061"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/object_order.png"
+											alt="" title="Afficher commande" class="inline-block">
+											(PROV2061)</a></td>
+									<td align="left">S001/18</td>
+									<td align="center">29/03/2018</td>
+									<td align="right">1 137,00</td>
+									<td align="right"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/statut0.png" alt=""
+										title="Brouillon (&agrave; valider)" class="inline-block"></td>
+									<td align="right"><a
+										href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=dellink&dellinkid=3264"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+											title="Supprimer le lien" class="pictodelete"></a></td>
+								</tr>
+								<tr class="pair">
+									<td>Commande fournisseur</td>
+									<td><a
+										href="/edsa-dolibarrdev/fourn/commande/card.php?id=2062"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/object_order.png"
+											alt="" title="Afficher commande" class="inline-block">
+											VTFRA-18-0001</a></td>
+									<td align="left">S001/18</td>
+									<td align="center">30/03/2018</td>
+									<td align="right">72 051,00</td>
+									<td align="right"><img
+										src="/edsa-dolibarrdev/theme/eldy/img/statut3.png" alt=""
+										title="Approuv&eacute;e" class="inline-block"></td>
+									<td align="right"><a
+										href="/edsa-dolibarrdev/custom//affaires/volvo/commande/card.php?id=712&action=dellink&dellinkid=3265"><img
+											src="/edsa-dolibarrdev/theme/eldy/img/delete.png" alt=""
+											title="Supprimer le lien" class="pictodelete"></a></td>
+								</tr>
+								<tr class="liste_total ">
+									<td>Total</td>
+									<td></td>
+									<td align="center"></td>
+									<td align="center"></td>
+									<td align="right">80 175,00</td>
+									<td align="right"></td>
+									<td align="right"></td>
+								</tr>
+
+								<!-- END PHP TEMPLATE -->
+							</table>
+						</div>
+					</div>
+					<div class="fichehalfright">
+						<div class="ficheaddleft"></div>
+					</div>
+				</div>
+
+			</div>
+			<!-- End div class="fiche" -->
+		</div>
+		<!-- End div id-right -->
+	</div>
+	<!-- End div id-container -->
+
+
+	<!-- Common footer for private page -->
+
+	<script type="text/javascript" language="javascript">
+
+/* JS CODE TO ENABLE to enable handler to switch left menu page (menuhider) */
+jQuery(".menuhider").click(function() {  console.log("We click on .menuhider");
+  $('.side-nav').toggle()
+  $('.login_block').toggle()
+});
+
+</script>
+
+	<!-- JS CODE TO ENABLE select2 for id searchselectcombo -->
+	<script type="text/javascript">
+	    	$(document).ready(function () {
+
+    	        var saveRemoteData = [];
+
+                $(".searchselectcombo").select2({
+			    	ajax: {
+				    	dir: "ltr",
+				    	url: "/edsa-dolibarrdev/core/ajax/selectsearchbox.php",
+				    	dataType: 'json',
+				    	delay: 250,
+				    	data: function (params) {
+				    		return {
+						    	q: params.term, 	// search term
+				    			page: params.page
+				    		};
+			    		},
+			    		processResults: function (data) {
+			    			// parse the results into the format expected by Select2.
+			    			// since we are using custom formatting functions we do not need to alter the remote JSON data
+			    			//console.log(data);
+							saveRemoteData = data;
+				    	    /* format json result for select2 */
+				    	    result = []
+				    	    $.each( data, function( key, value ) {
+				    	       result.push({id: key, text: value.text});
+                            });
+			    			//return {results:[{id:'none', text:'aa'}, {id:'rrr', text:'Red'},{id:'bbb', text:'Search a into projects'}], more:false}
+			    			//console.log(result);
+			    			return {results: result, more: false}
+			    		},
+			    		cache: true
+			    	},
+	 				language: select2arrayoflanguage,
+					containerCssClass: ':all:',					/* Line to add class of origin SELECT propagated to the new <span class="select2-selection...> tag */
+				    placeholder: "Rechercher",
+			    	escapeMarkup: function (markup) { return markup; }, 	// let our custom formatter work
+			    	minimumInputLength: 1,
+			        formatResult: function(result, container, query, escapeMarkup) {
+                        return escapeMarkup(result.text);
+                    },
+			    });
+
+                
+                /* Code to execute a GET when we select a value */
+                $(".searchselectcombo").change(function() {
+			    	var selected = $(".searchselectcombo").val();
+                	console.log("We select "+selected)
+			        $(".searchselectcombo").val("");  /* reset visible combo value */
+    			    $.each( saveRemoteData, function( key, value ) {
+    				        if (key == selected)
+    			            {
+    			                 console.log("selectArrayAjax - Do a redirect to "+value.url)
+    			                 location.assign(value.url);
+    			            }
+                    });
+    			});
+
+    	   });
+	       </script>
+	<!-- Includes JS Footer of Dolibarr -->
+	<script type="text/javascript"
+		src="/edsa-dolibarrdev/core/js/lib_foot.js.php?lang=fr_FR&layout=classic&version=7.0.2"></script>
+
+	<!-- A div to allow dialog popup -->
+	<div id="dialogforpopup" style="display: none;"></div>
+</body>
+</html>

@@ -1426,6 +1426,7 @@ class modAffaires extends DolibarrModules
 		$res = $extrafields->addExtraField('notupdatecost', 'Cout non modifiable (MAJ prix commande)', 'boolean', 0, '', 'product',0, 0,'', array('options'=>''),1,1,3);
 		$res = $extrafields->addExtraField('notupdatecostreal', 'Pas de maj du prix de reviens automatique (MAJ prix commande)', 'boolean', 1, '', 'product',0, 0,'', array('options'=>''),1,1,3);
 		$res = $extrafields->addExtraField('supplierorderable', 'Disponible pour la commande fournisseur', 'boolean', 2, '', 'product',0, 0,'', array('options'=>''),1,1,3);
+		$res = $extrafields->addExtraField('supplierinvoiceable', 'Produit facturable par le fournisseur', 'boolean', 2, '', 'product',0, 0,1, array('options'=>''),1,1,3);
 
 		//extrafields agenda
 		$res = $extrafields->addExtraField('affaire', 'Affaire', 'sellist', 0, '', 'actioncomm',0, 0,'', array('options'=>array('lead:ref|ref_int:rowid:socid|fk_soc:fk_c_status IN (4,8,9,12)'=>null)),1,1,1);
